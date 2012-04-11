@@ -1,5 +1,11 @@
 # uv.rb - libuv FFI bindings for Ruby
 
+Libuv is a cross platform asynchronous IO implementation that powers NodeJS. It supports sockets, both UDP and TCP, filesystem operations, TTY, Pipes and other asynchronous primitives like timer, check, prepare and idle.
+
+UV.rb is FFI Ruby bindings for libuv.
+
+## Usage
+
 Create a uv loop or use a default one
 
 ```ruby
@@ -18,10 +24,20 @@ end
 loop.run
 ```
 
+Find more examples in examples directory
+
 ## Installation
 
 ```shell
 gem install uvrb
+```
+
+or
+
+```shell
+git clone ...
+cd ...
+bundle install
 ```
 
 Make sure you have libuv compiled and a .dylib file available in your
@@ -34,9 +50,6 @@ by running:
 brew install Formula/libuv.rb --HEAD --with-dylib
 ```
 
-## How to
-
-find examples in examples directory
 
 ## What's supported
 
