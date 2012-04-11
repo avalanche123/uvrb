@@ -1,0 +1,3 @@
+[submodule "ext/libuv"]
+	path = ext/libuv
+	url = https://github.com/joyent/libuv.git
