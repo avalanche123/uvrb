@@ -345,9 +345,6 @@ module UV
 
   # memory management
   attach_function :malloc, [:size_t], :pointer
-  attach_function :calloc, [:size_t], :pointer
-  attach_function :valloc, [:size_t], :pointer
-  attach_function :realloc, [:pointer, :size_t], :pointer
   attach_function :free, [:pointer], :void
   attach_function :ntohs, [:ushort], :ushort
 
