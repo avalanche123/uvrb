@@ -61,6 +61,22 @@ module UV
       Pipe.new(self, ipc)
     end
 
+    def prepare
+      Prepare.new(self)
+    end
+
+    def check
+      Check.new(self)
+    end
+
+    def idle
+      Idle.new(self)
+    end
+
+    def async(&block)
+      Async.new(self, &block)
+    end
+
     attr_reader :pointer
   end
 end

@@ -1,6 +1,6 @@
 module UV
   class Pipe
-    include Stream, Handle, Resource, Listener, Net
+    include Stream, Handle, Resource, Listener
 
     def initialize(loop, ipc = false)
       super(loop)

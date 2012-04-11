@@ -366,4 +366,8 @@ module UV
   autoload :UDP, 'uv/udp'
   autoload :TTY, 'uv/tty'
   autoload :Pipe, 'uv/pipe'
+  autoload :Prepare, 'uv/prepare'
+  autoload :Check, 'uv/check'
+  autoload :Idle, 'uv/idle'
+  autoload :Async, 'uv/async'
 end

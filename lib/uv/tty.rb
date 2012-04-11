@@ -1,6 +1,6 @@
 module UV
   class TTY
-    include Stream, Handle, Resource, Listener, Net
+    include Stream, Handle, Resource, Listener
 
     def initialize(loop, io, readable = true)
       super(loop)
