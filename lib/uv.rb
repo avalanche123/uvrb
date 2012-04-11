@@ -365,4 +365,5 @@ module UV
   autoload :TCP, 'uv/tcp'
   autoload :UDP, 'uv/udp'
   autoload :TTY, 'uv/tty'
+  autoload :Pipe, 'uv/pipe'
 end

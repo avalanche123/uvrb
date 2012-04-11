@@ -53,8 +53,12 @@ module UV
       TCP.new(self)
     end
 
-    def tty(io, readable=false)
+    def tty(io, readable = false)
       TTY.new(self, io, readable)
+    end
+
+    def pipe(ipc = false)
+      Pipe.new(self, ipc)
     end
 
     attr_reader :pointer
