@@ -15,27 +15,27 @@ module UV
     end
 
     def run
-      check_result UV.run(@pointer) unless @pointer.null?
+      check_result UV.run(@pointer)
     end
 
     def run_once
-      check_result UV.run_once(@pointer) unless @pointer.null?
+      check_result UV.run_once(@pointer)
     end
 
     def ref
-      UV.ref(@pointer) unless @pointer.null?
+      UV.ref(@pointer)
     end
 
     def unref
-      UV.unref(@pointer) unless @pointer.null?
+      UV.unref(@pointer)
     end
 
     def update_time
-      UV.update_time(@pointer) unless @pointer.null?
+      UV.update_time(@pointer)
     end
 
     def now
-      UV.now(@pointer) unless @pointer.null?
+      UV.now(@pointer)
     end
 
     def last_error
