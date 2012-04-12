@@ -1,4 +1,3 @@
-require 'ref'
 require 'ffi'
 
 module UV
