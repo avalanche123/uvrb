@@ -43,8 +43,6 @@ uv_buf_t on_alloc(uv_handle_t* client, size_t suggested_size)
 
 void on_connect(uv_stream_t* server, int status)
 {
-  puts("client accepted");
-
   uv_tcp_t* client = malloc(sizeof(uv_tcp_t));
 
   uv_tcp_init(uv_default_loop(), client);
