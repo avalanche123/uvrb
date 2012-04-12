@@ -1,3 +1,5 @@
+require 'rubygems'
+require 'bundler/setup'
 require 'uvrb'
 
 loop = UV::Loop.default

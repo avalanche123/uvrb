@@ -1,4 +1,6 @@
-require 'uv'
+require 'rubygems'
+require 'bundler/setup'
+require 'uvrb'
 
 def on_read(client, nread, buf)
   if nread == -1

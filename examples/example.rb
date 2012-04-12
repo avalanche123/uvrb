@@ -1,4 +1,6 @@
-require 'uv'
+require 'rubygems'
+require 'bundler/setup'
+require 'uvrb'
 
 start = Time.now
 
