@@ -5,13 +5,12 @@ module UV
     include Stream, Handle, Resource, Listener, Net
 
     def bind(ip, port)
-      @ip, @port = ip, port
+      @ip, @port = IPAddr.new(String(ip)), Integer(port)
       socket.bind
     end
 
     def connect(ip, port, &block)
-      raise "no block given" unless block_given?
-      @ip, @port = ip, port
+      @ip, @port = IPAddr.new(String(ip)), Integer(port)
       socket.connect &block
     end
 
@@ -53,10 +52,14 @@ module UV
 
     private
     def socket
-      @socket ||= if IPAddr.new(@ip).ipv4?
-        Socket4.new(@loop, handle, @ip, Integer(@port))
-      else
-        Socket6.new(@loop, handle, @ip, Integer(@port))
+      @socket ||= begin
+        socket = if @ip.ipv4?
+          Socket4.new(@loop, handle, @ip.to_s, @port)
+        else
+          Socket6.new(@loop, handle, @ip.to_s, @port)
+        end
+        @ip, @port = nil, nil
+        socket
       end
     end
 
@@ -81,7 +84,7 @@ module UV
         UV.free(req)
         @connect_block.call(check_result(status))
       end
-      
+
       def connect_req
         UV.malloc(UV.req_size(:uv_connect))
       end
