@@ -12,15 +12,15 @@ module UV
     end
 
     def get_ip_and_port(sockaddr, len=nil)
-      if sockaddr[:family] == Socket::Constants::AF_INET6
+      if sockaddr[:sa_family] == Socket::Constants::AF_INET6
         len ||= Socket::Constants::INET6_ADDRSTRLEN
-        sockaddr_in6 = UV::SockaddrIn6.new(sockaddr.pointer)
+        sockaddr_in6 = UV::SockaddrIn6.new(sockaddr)
         ip_ptr = FFI::MemoryPointer.new(:char, len)
         UV.ip6_name(sockaddr_in6, ip_ptr, len)
         port = UV.ntohs(sockaddr_in6[:port])
       else
         len ||= Socket::Constants::INET_ADDRSTRLEN
-        sockaddr_in = UV::SockaddrIn.new(sockaddr.pointer)
+        sockaddr_in = UV::SockaddrIn.new(sockaddr)
         ip_ptr = FFI::MemoryPointer.new(:char, len)
         UV.ip4_name(sockaddr_in, ip_ptr, len)
         port = UV.ntohs(sockaddr_in[:port])

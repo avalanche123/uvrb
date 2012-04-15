@@ -46,47 +46,41 @@ module UV
   typedef UvBuf.by_value, :uv_buf_t
 
   class Sockaddr < FFI::Struct
-    layout :len, :uint8,
-    :family, :sa_family_t,
-    :data, [:char, 14]
+    layout :sa_len, :uint8,
+    :sa_family, :sa_family_t,
+    :sa_data, [:char, 14]
   end
-
-  typedef Sockaddr.by_ref, :sockaddr
 
   class InAddr < FFI::Struct
     layout :s_addr, :in_addr_t
   end
 
   class SockaddrIn < FFI::Struct
-    layout :len, :uint8,
-    :family, :sa_family_t,
-    :port, :in_port_t,
-    :addr, InAddr,
-    :_sa_zero, [:char, 8]
+    layout :sin_len, :uint8,
+    :sin_family, :sa_family_t,
+    :sin_port, :in_port_t,
+    :sin_addr, InAddr,
+    :sin_zero, [:char, 8]
   end
 
-  typedef SockaddrIn.by_ref, :sockaddr_in
-
   class U6Addr < FFI::Union
-    layout :addr8, [:uint8, 16],
-    :addr16, [:uint16, 8],
-    :addr32, [:uint32, 4]
+    layout :__u6_addr8, [:uint8, 16],
+    :__u6_addr16, [:uint16, 8]
+    # :addr32, [:uint32, 4]
   end
 
   class In6Addr < FFI::Struct
-    layout :s6_addr, U6Addr
+    layout :__u6_addr, U6Addr
   end
 
   class SockaddrIn6 < FFI::Struct
-    layout :len, :uint8,
-    :family, :sa_family_t,
-    :port, :in_port_t,
-    :flowinfo, :uint32,
-    :addr, In6Addr,
-    :scope_id, :uint32
+    layout :sin6_len, :uint8,
+    :sin6_family, :sa_family_t,
+    :sin6_port, :in_port_t,
+    :sin6_flowinfo, :uint32,
+    :sin6_addr, In6Addr,
+    :sin6_scope_id, :uint32
   end
-
-  typedef SockaddrIn6.by_ref, :sockaddr_in6
 
   typedef :pointer, :uv_handle_t
   typedef :pointer, :uv_fs_event_t
@@ -101,7 +95,6 @@ module UV
   typedef :pointer, :uv_async_t
   typedef :pointer, :uv_timer_t
   typedef :pointer, :uv_process_t
-  typedef :pointer, :uv_connect_t
   typedef :pointer, :uv_getaddrinfo_cb
   typedef :pointer, :addrinfo
   typedef :pointer, :uv_fs_t
@@ -216,23 +209,23 @@ module UV
   attach_function :tcp_nodelay, :uv_tcp_nodelay, [:uv_tcp_t, :int], :int
   attach_function :tcp_keepalive, :uv_tcp_keepalive, [:uv_tcp_t, :int, :uint], :int
   attach_function :tcp_simultaneous_accepts, :uv_tcp_simultaneous_accepts, [:uv_tcp_t, :int], :int
-  attach_function :tcp_bind, :uv_tcp_bind, [:uv_tcp_t, :sockaddr_in], :int
-  attach_function :tcp_bind6, :uv_tcp_bind6, [:uv_tcp_t, :sockaddr_in6], :int
+  attach_function :tcp_bind, :uv_tcp_bind, [:uv_tcp_t, SockaddrIn.by_value], :int
+  attach_function :tcp_bind6, :uv_tcp_bind6, [:uv_tcp_t, SockaddrIn6.by_value], :int
   attach_function :tcp_getsockname, :uv_tcp_getsockname, [:uv_tcp_t, :pointer, :pointer], :int
   attach_function :tcp_getpeername, :uv_tcp_getpeername, [:uv_tcp_t, :pointer, :pointer], :int
-  attach_function :tcp_connect, :uv_tcp_connect, [:uv_connect_t, :uv_tcp_t, :sockaddr_in, :uv_connect_cb], :int
-  attach_function :tcp_connect6, :uv_tcp_connect6, [:uv_connect_t, :uv_tcp_t, :sockaddr_in6, :uv_connect_cb], :int
+  attach_function :tcp_connect, :uv_tcp_connect, [:uv_connect_t, :uv_tcp_t, SockaddrIn.by_value, :uv_connect_cb], :int
+  attach_function :tcp_connect6, :uv_tcp_connect6, [:uv_connect_t, :uv_tcp_t, SockaddrIn6.by_value, :uv_connect_cb], :int
   attach_function :udp_init, :uv_udp_init, [:uv_loop_t, :uv_udp_t], :int
-  attach_function :udp_bind, :uv_udp_bind, [:uv_udp_t, :sockaddr_in, :uint], :int
-  attach_function :udp_bind6, :uv_udp_bind6, [:uv_udp_t, :sockaddr_in6, :uint], :int
+  attach_function :udp_bind, :uv_udp_bind, [:uv_udp_t, SockaddrIn.by_value, :uint], :int
+  attach_function :udp_bind6, :uv_udp_bind6, [:uv_udp_t, SockaddrIn6.by_value, :uint], :int
   attach_function :udp_getsockname, :uv_udp_getsockname, [:uv_udp_t, :pointer, :pointer], :int
   attach_function :udp_set_membership, :uv_udp_set_membership, [:uv_udp_t, :string, :string, :uv_membership], :int
   attach_function :udp_set_multicast_loop, :uv_udp_set_multicast_loop, [:uv_udp_t, :int], :int
   attach_function :udp_set_multicast_ttl, :uv_udp_set_multicast_ttl, [:uv_udp_t, :int], :int
   attach_function :udp_set_broadcast, :uv_udp_set_broadcast, [:uv_udp_t, :int], :int
   attach_function :udp_set_ttl, :uv_udp_set_ttl, [:uv_udp_t, :int], :int
-  attach_function :udp_send, :uv_udp_send, [:uv_udp_send_t, :uv_udp_t, :uv_buf_t, :int, :sockaddr_in, :uv_udp_send_cb], :int
-  attach_function :udp_send6, :uv_udp_send6, [:uv_udp_send_t, :uv_udp_t, :uv_buf_t, :int, :sockaddr_in6, :uv_udp_send_cb], :int
+  attach_function :udp_send, :uv_udp_send, [:uv_udp_send_t, :uv_udp_t, :uv_buf_t, :int, SockaddrIn.by_value, :uv_udp_send_cb], :int
+  attach_function :udp_send6, :uv_udp_send6, [:uv_udp_send_t, :uv_udp_t, :uv_buf_t, :int, SockaddrIn6.by_value, :uv_udp_send_cb], :int
   attach_function :udp_recv_start, :uv_udp_recv_start, [:uv_udp_t, :uv_alloc_cb, :uv_udp_recv_cb], :int
   attach_function :udp_recv_stop, :uv_udp_recv_stop, [:uv_udp_t], :int
   attach_function :tty_init, :uv_tty_init, [:uv_loop_t, :uv_tty_t, :uv_file, :int], :int
@@ -307,10 +300,10 @@ module UV
   attach_function :fs_fchown, :uv_fs_fchown, [:uv_loop_t, :uv_fs_t, :uv_file, :int, :int, :uv_fs_cb], :int
   attach_function :loadavg, :uv_loadavg, [:pointer], :void
   attach_function :fs_event_init, :uv_fs_event_init, [:uv_loop_t, :uv_fs_event_t, :string, :uv_fs_event_cb, :int], :int
-  attach_function :ip4_addr, :uv_ip4_addr, [:string, :int], :sockaddr_in
-  attach_function :ip6_addr, :uv_ip6_addr, [:string, :int], :sockaddr_in6
-  attach_function :ip4_name, :uv_ip4_name, [:pointer, :pointer, :size_t], :int
-  attach_function :ip6_name, :uv_ip6_name, [:pointer, :pointer, :size_t], :int
+  attach_function :ip4_addr, :uv_ip4_addr, [:string, :int], SockaddrIn.by_value
+  attach_function :ip6_addr, :uv_ip6_addr, [:string, :int], SockaddrIn6.by_value
+  attach_function :ip4_name, :uv_ip4_name, [SockaddrIn.by_ref, :pointer, :size_t], :int
+  attach_function :ip6_name, :uv_ip6_name, [SockaddrIn6.by_ref, :pointer, :size_t], :int
   attach_function :exepath, :uv_exepath, [:pointer, :size_t], :int
   attach_function :cwd, :uv_cwd, [:pointer, :size_t], :uv_err_t
   attach_function :chdir, :uv_chdir, [:string], :uv_err_t
