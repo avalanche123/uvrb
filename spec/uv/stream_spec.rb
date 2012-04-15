@@ -12,12 +12,12 @@ shared_examples_for 'a stream' do
           server.close
         end
       end
-    end
 
-    start_client do |client|
-      client.start_read do |data, err|
-        @received << data
-        client.close
+      start_client(server) do |client|
+        client.start_read do |data, err|
+          @received << data
+          client.close
+        end
       end
     end
 
