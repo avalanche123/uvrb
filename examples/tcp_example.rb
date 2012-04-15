@@ -7,9 +7,9 @@ def on_read(client, nread, buf)
     ptr = UV.last_error(@loop)
     p [UV.err_name(ptr), UV.strerror(ptr)]
   else
-    puts UV.buf_base(buf).read_string(nread)
+    puts buf[:base].read_string(nread)
   end
-  UV.free(UV.buf_base(buf))
+  UV.free(buf[:base])
   UV.close(client, proc {|client| exit})
 end
 
@@ -33,7 +33,7 @@ def main
 
   UV.tcp_bind(server, UV.ip4_addr('0.0.0.0', 10000))
   UV.listen(server, 128, method(:on_connect))
-
+  
   UV.run(@loop)
   UV.loop_delete(@loop)
 end
