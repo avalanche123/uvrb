@@ -12,6 +12,7 @@ module UV
       base.extend(ClassMethods)
     end
 
+    private
     def callbacks
       @callbacks ||= Set.new
     end
