@@ -51,11 +51,11 @@ module UV
     end
 
     def readable?
-      UV.is_readable(handle) != 0
+      UV.is_readable(handle) > 0
     end
 
     def writable?
-      UV.is_writable(handle) != 0
+      UV.is_writable(handle) > 0
     end
 
     private

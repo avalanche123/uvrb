@@ -13,11 +13,11 @@ module UV
     end
 
     def active?
-      UV.is_active(handle) != 0
+      UV.is_active(handle) > 0
     end
 
     def closing?
-      UV.is_closing(handle) != 0
+      UV.is_closing(handle) > 0
     end
 
     protected
