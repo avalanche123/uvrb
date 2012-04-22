@@ -359,4 +359,6 @@ module UV
   autoload :Check, 'uv/check'
   autoload :Idle, 'uv/idle'
   autoload :Async, 'uv/async'
+  autoload :Filesystem, 'uv/filesystem'
+  autoload :File, 'uv/file'
 end

@@ -3,23 +3,26 @@ require 'thread'
 module UV
   class Loop
     def self.default
-      @default ||= allocate.tap do |i|
-        i.instance_variable_set(:@pointer, FFI::AutoPointer.new(UV.default_loop, UV.method(:loop_delete)))
-      end
+      new(true)
     end
 
     include Resource
 
-    def initialize
-      @pointer = FFI::AutoPointer.new(UV.loop_new, UV.method(:loop_delete))
+    def initialize(default = false)
+      ptr = if default
+        UV.default_loop
+      else
+        UV.loop_new
+      end
+      @pointer = FFI::AutoPointer.new(ptr, UV.method(:loop_delete))
     end
 
     def run
-      check_result UV.run(@pointer)
+      check_result! UV.run(@pointer)
     end
 
     def run_once
-      check_result UV.run_once(@pointer)
+      check_result! UV.run_once(@pointer)
     end
 
     def ref
@@ -77,6 +80,8 @@ module UV
       Async.new(self, &block)
     end
 
-    attr_reader :pointer
+    def to_ptr
+      @pointer
+    end
   end
 end

@@ -28,7 +28,7 @@ module UV
     private
     def create_handle
       ptr = UV.malloc(UV.handle_size(:uv_tty))
-      check_result! UV.tty_init(loop.pointer, ptr, @fd, @readable ? 1 : 0)
+      check_result! UV.tty_init(loop.to_ptr, ptr, @fd, @readable ? 1 : 0)
       @fd = @readable = nil
       ptr
     end

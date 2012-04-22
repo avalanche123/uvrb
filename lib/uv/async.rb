@@ -18,7 +18,7 @@ module UV
 
     def create_handle
       ptr = UV.malloc(UV.handle_size(:uv_async))
-      check_result! UV.async_init(loop.pointer, ptr, callback(:on_async))
+      check_result! UV.async_init(loop.to_ptr, ptr, callback(:on_async))
       ptr
     end
   end

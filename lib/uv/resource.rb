@@ -1,9 +1,5 @@
 module UV
   module Resource
-    def self.included(base)
-      base.extend(self)
-    end
-
     def check_result(rc)
       @loop.last_error if rc == -1
     end
@@ -11,6 +7,10 @@ module UV
     def check_result!(rc)
       e = check_result(rc)
       raise e if e
+    end
+
+    def to_ptr
+      @pointer
     end
 
     protected
