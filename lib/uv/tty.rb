@@ -3,11 +3,11 @@ module UV
     include Stream, Handle, Resource, Listener
 
     def initialize(loop, io, readable = true)
-      super(loop)
       @fd = Integer(io.fileno)
-      @readable = readable
       raise "not a tty" unless UV.guess_handle(@fd) == :uv_tty
       ObjectSpace.define_finalizer(self, UV.method(:tty_reset_mode))
+      @readable = readable
+      super(loop)
     end
 
     def enable_raw_mode
@@ -27,7 +27,7 @@ module UV
 
     private
     def create_handle
-      ptr = UV.malloc(UV.handle_size(:uv_tty))
+      ptr = UV.create_handle(:uv_tty)
       check_result! UV.tty_init(loop.to_ptr, ptr, @fd, @readable ? 1 : 0)
       @fd = @readable = nil
       ptr

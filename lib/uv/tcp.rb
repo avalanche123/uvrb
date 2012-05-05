@@ -86,7 +86,7 @@ module UV
       end
 
       def connect_req
-        UV.malloc(UV.req_size(:uv_connect))
+        UV.create_request(:uv_connect)
       end
     end
 

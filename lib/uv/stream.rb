@@ -33,7 +33,7 @@ module UV
     def write(data, &block)
       @write_block = block
       check_result! UV.write(
-        UV.malloc(UV.req_size(:uv_write)),
+        UV.create_request(:uv_write),
         handle,
         UV.buf_init(FFI::MemoryPointer.from_string(data), data.respond_to?(:bytesize) ? data.bytesize : data.size),
         1,
@@ -44,7 +44,7 @@ module UV
     def shutdown(&block)
       @shutdown_block = block
       check_result! UV.shutdown(
-        UV.malloc(UV.req_size(:uv_shutdown)),
+        UV.create_request(:uv_shutdown),
         handle,
         callback(:on_shutdown)
       )

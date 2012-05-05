@@ -3,8 +3,8 @@ module UV
     include Stream, Handle, Resource, Listener
 
     def initialize(loop, ipc = false)
-      super(loop)
       @ipc = ipc
+      super(loop)
     end
 
     def open(io)
@@ -18,7 +18,7 @@ module UV
     def connect(name, &block)
       raise "no block given" unless block_given?
       @connect_block = block
-      UV.pipe_connect(UV.malloc(UV.req_size(:uv_connect)), handle, String(name), callback(:on_connect))
+      UV.pipe_connect(UV.create_request(:uv_connect), handle, String(name), callback(:on_connect))
     end
 
     def pending_instances=(count)
@@ -32,8 +32,8 @@ module UV
     end
 
     def create_handle
-      ptr = UV.malloc(UV.handle_size(:uv_pipe))
-      check_result! UV.tty_init(loop.to_ptr, ptr, @ipc ? 1 : 0)
+      ptr = UV.create_handle(:uv_pipe)
+      check_result! UV.pipe_init(loop.to_ptr, ptr, @ipc ? 1 : 0)
       @ipc = nil
       ptr
     end

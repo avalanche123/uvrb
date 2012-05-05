@@ -6,7 +6,7 @@ start = Time.now
 
 loop = UV.default_loop
 
-timer = UV.malloc(UV.handle_size(:uv_timer))
+timer = UV.create_handle(:uv_timer)
 # timer = FFI::MemoryPointer.new(UV::Timer, UV::Timer.size, 1)
 count = 0
 UV.timer_init(loop, timer)

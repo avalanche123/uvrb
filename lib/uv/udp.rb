@@ -106,7 +106,7 @@ module UV
       end
 
       def send_req
-        UV.malloc(UV.req_size(:uv_udp_send))
+        UV.create_request(:uv_udp_send)
       end
 
       def buf_init(data)

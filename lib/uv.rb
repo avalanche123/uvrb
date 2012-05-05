@@ -343,6 +343,14 @@ module UV
   attach_function :handle_size, :uv_handle_size, [:uv_handle_type], :size_t
   attach_function :req_size, :uv_req_size, [:uv_req_type], :size_t
 
+  def self.create_handle(type)
+    UV.malloc(UV.handle_size(type))
+  end
+
+  def self.create_request(type)
+    UV.malloc(UV.req_size(type))
+  end
+
   autoload :Resource, 'uv/resource'
   autoload :Listener, 'uv/listener'
   autoload :Handle, 'uv/handle'
