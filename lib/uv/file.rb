@@ -60,6 +60,14 @@ module UV
     end
 
     def sync(&block)
+      raise "no block given" unless block_given?
+      @sync_block = block
+      check_result! UV.fs_fsync(
+        loop.to_ptr,
+        UV.create_request(:uv_fs),
+        @fd,
+        callback(:on_sync)
+      )
     end
 
     def datasync(&block)
@@ -80,9 +88,10 @@ module UV
     private
 
     def on_close(req)
+      e = check_result(UV.fs_req_result(req))
       UV.fs_req_cleanup(req)
       UV.free(req)
-      @close_block.call if @close_block
+      @close_block.call(e) if @close_block
     end
 
     def on_read(req)
@@ -119,6 +128,13 @@ module UV
       @stat_block.call(stat, e)
       UV.fs_req_cleanup(req)
       UV.free(req)
+    end
+
+    def on_sync(req)
+      e = check_result(UV.fs_req_result(req))
+      UV.fs_req_cleanup(req)
+      UV.free(req)
+      @sync_block.call(e)
     end
   end
 end
