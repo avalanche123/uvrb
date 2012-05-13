@@ -71,6 +71,14 @@ module UV
     end
 
     def datasync(&block)
+      raise "no block given" unless block_given?
+      @datasync_block = block
+      check_result! UV.fs_fdatasync(
+        loop.to_ptr,
+        UV.create_request(:uv_fs),
+        @fd,
+        callback(:on_datasync)
+      )
     end
 
     def truncate(offset, &block)
@@ -135,6 +143,13 @@ module UV
       UV.fs_req_cleanup(req)
       UV.free(req)
       @sync_block.call(e)
+    end
+
+    def on_datasync(req)
+      e = check_result(UV.fs_req_result(req))
+      UV.fs_req_cleanup(req)
+      UV.free(req)
+      @datasync_block.call(e)
     end
   end
 end
