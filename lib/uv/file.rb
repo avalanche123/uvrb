@@ -111,17 +111,8 @@ module UV
       unless e
         uv_stat    = UV.fs_req_stat(req)
         uv_members = uv_stat.members
-        # todo: add reasonable defaults for cross-platform compatibility
-        defaults   = {}
-        values     = []
 
-        Stat.members.each do |member|
-          if members.include?(member)
-            values << uv_stat[member]
-          else
-            values << defaults[member]
-          end
-        end
+        values = Stat.members.map { |k| uv_members.include?(k) ? uv_stat[k] : nil }
 
         stat = Stat.new(*values)
       end
