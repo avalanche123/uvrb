@@ -20,6 +20,7 @@ describe UV::File do
         loop_pointer.should == loop_ptr
         uv_fs_t.should == pointer
         fno.should == fileno
+        UV.should_receive(:fs_req_result).once.with(uv_fs_t).and_return(0)
         UV.should_receive(:fs_req_cleanup).once.with(uv_fs_t)
         UV.should_receive(:free).once.with(uv_fs_t)
         callback.call(uv_fs_t)
