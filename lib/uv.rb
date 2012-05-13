@@ -37,13 +37,28 @@ module UV
     class UvBuf < FFI::Struct
       layout :len, :ulong, :base, :pointer
     end
+
+    # win32 uses _stati64
+    class UvFSStat < FFI::Struct
+      layout :st_gid, :gid_t, :st_atime, :time_t, :st_ctime, :time_t, :st_dev, :dev_t,
+      :st_ino, :ino_t, :st_mode, :mode_t, :st_mtime, :time_t, :st_nlink, :nlink_t,
+      :st_rdev, :dev_t, :st_size, :off_t, :st_uid, :uid_t
+    end
   else 
     class UvBuf < FFI::Struct
       layout :base, :pointer, :len, :size_t
     end
+
+    class UvFSStat < FFI::Struct
+      layout :st_dev, :dev_t, :st_ino, :ino_t, :st_mode, :mode_t, :st_nlink, :nlink_t,
+      :st_uid, :uid_t, :st_gid, :gid_t, :st_rdev, :dev_t, :st_size, :off_t,
+      :st_blksize, :blksize_t, :st_blocks, :blkcnt_t, :st_atime, :time_t,
+      :st_mtime, :time_t, :st_ctime, :time_t
+    end
   end
 
   typedef UvBuf.by_value, :uv_buf_t
+  typedef UvFSStat.by_value, :uv_fs_stat_t
 
   class Sockaddr < FFI::Struct
     layout :sa_len, :uint8,
@@ -272,6 +287,10 @@ module UV
   attach_function :free_cpu_info, :uv_free_cpu_info, [:uv_cpu_info_t, :int], :void
   attach_function :interface_addresses, :uv_interface_addresses, [:uv_interface_address_t, :pointer], :uv_err_t
   attach_function :free_interface_addresses, :uv_free_interface_addresses, [:uv_interface_address_t, :int], :void
+
+  attach_function :fs_req_result, :uv_fs_req_result, [:uv_fs_t], :ssize_t
+  attach_function :fs_req_stat, :uv_fs_req_stat, [:uv_fs_t], :uv_fs_stat_t
+
   attach_function :fs_req_cleanup, :uv_fs_req_cleanup, [:uv_fs_t], :void
   attach_function :fs_close, :uv_fs_close, [:uv_loop_t, :uv_fs_t, :uv_file, :uv_fs_cb], :int
   attach_function :fs_open, :uv_fs_open, [:uv_loop_t, :uv_fs_t, :string, :int, :int, :uv_fs_cb], :int
@@ -313,8 +332,8 @@ module UV
   attach_function :dlopen, :uv_dlopen, [:string, :uv_lib_t], :uv_err_t
   attach_function :dlclose, :uv_dlclose, [:uv_lib_t], :uv_err_t
   # attach_function :dlsym, :uv_dlsym, [:uv_lib_t], :ev_err_t
-  attach_function :dlerror, :uv_dlerror, [:uv_lib_t], :string
-  attach_function :dlerror_free, :uv_dlerror_free, [:uv_lib_t, :string], :void
+  # attach_function :dlerror, :uv_dlerror, [:uv_lib_t], :string
+  # attach_function :dlerror_free, :uv_dlerror_free, [:uv_lib_t, :string], :void
 
   attach_function :mutex_init, :uv_mutex_init, [:uv_mutex_t], :int
   attach_function :mutex_destroy, :uv_mutex_destroy, [:uv_mutex_t], :void
