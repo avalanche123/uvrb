@@ -82,6 +82,15 @@ module UV
     end
 
     def truncate(offset, &block)
+      raise "no block given" unless block_given?
+      @truncate_block = block
+      check_result! UV.fs_ftruncate(
+        loop.to_ptr,
+        UV.create_request(:uv_fs),
+        @fd,
+        Integer(offset),
+        callback(:on_truncate)
+      )
     end
 
     def utime(atime, mtime, &block)
@@ -150,6 +159,13 @@ module UV
       UV.fs_req_cleanup(req)
       UV.free(req)
       @datasync_block.call(e)
+    end
+
+    def on_truncate(req)
+      e = check_result(UV.fs_req_result(req))
+      UV.fs_req_cleanup(req)
+      UV.free(req)
+      @truncate_block.call(e)
     end
   end
 end
