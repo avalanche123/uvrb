@@ -28,7 +28,7 @@ module UV
         @fd,
         @read_buffer,
         @read_buffer_length,
-        offset,
+        Integer(offset),
         callback(:on_read)
       )
     end
@@ -86,23 +86,48 @@ module UV
     end
 
     def on_read(req)
+      e = check_result(UV.fs_req_result(req))
+      unless e
+        data = @read_buffer.read_string(@read_buffer_length)
+      end
       UV.fs_req_cleanup(req)
       UV.free(req)
-      data = @read_buffer.read_string(@read_buffer_length)
       @read_buffer = nil
       @read_buffer_length = nil
-      @read_block.call(data)
+      @read_block.call(data, e)
     end
 
     def on_write(req)
+      e = check_result(UV.fs_req_result(req))
       UV.fs_req_cleanup(req)
       UV.free(req)
       @write_buffer = nil
       @write_buffer_length = nil
-      @write_block.call if @write_block
+      @write_block.call(e) if @write_block
     end
 
     def on_stat(req)
+      e = check_result(UV.fs_req_result(req))
+      unless e
+        uv_stat    = UV.fs_req_stat(req)
+        uv_members = uv_stat.members
+        # todo: add reasonable defaults for cross-platform compatibility
+        defaults   = {}
+        values     = []
+
+        Stat.members.each do |member|
+          if members.include?(member)
+            values << uv_stat[member]
+          else
+            values << defaults[member]
+          end
+        end
+
+        stat = Stat.new(*values)
+      end
+      @stat_block.call(stat, e)
+      UV.fs_req_cleanup(req)
+      UV.free(req)
     end
   end
 end
