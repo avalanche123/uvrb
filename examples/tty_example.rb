@@ -4,7 +4,7 @@ require 'uvrb'
 
 loop = UV::Loop.default
 
-stdin = loop.tty($stdin, true)
+stdin = loop.tty($stdin.fileno, true)
 stdin.enable_raw_mode
 stdin.start_read do |data|
   $stdout << data

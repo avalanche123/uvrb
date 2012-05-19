@@ -8,9 +8,8 @@ describe UV::File do
   let(:pointer) { double() }
   let(:subject) do
     loop.stub(:to_ptr) { loop_ptr }
-    io.stub(:fileno) { fileno }
 
-    UV::File.new(loop, io)
+    UV::File.new(loop, fileno)
   end
 
   describe "#close" do

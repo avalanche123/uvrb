@@ -2,8 +2,8 @@ module UV
   class TTY
     include Stream, Handle, Resource, Listener
 
-    def initialize(loop, io, readable = true)
-      @fd = Integer(io.fileno)
+    def initialize(loop, fd, readable = true)
+      @fd = Integer(fd)
       raise "not a tty" unless UV.guess_handle(@fd) == :uv_tty
       ObjectSpace.define_finalizer(self, UV.method(:tty_reset_mode))
       @readable = readable

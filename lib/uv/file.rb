@@ -2,9 +2,9 @@ module UV
   class File
     include Resource, Listener
 
-    def initialize(loop, io)
+    def initialize(loop, fd)
       @loop = loop
-      @fd = Integer(io.fileno)
+      @fd = Integer(fd)
     end
 
     def close(&block)
@@ -94,12 +94,41 @@ module UV
     end
 
     def utime(atime, mtime, &block)
+      raise "no block given" unless block_given?
+      @utime_block = block
+      check_result! UV.fs_futime(
+        loop.to_ptr,
+        UV.create_request(:uv_fs),
+        @fd,
+        Integer(atime),
+        Integer(mtime),
+        callback(:on_utime)
+      )
     end
 
     def chmod(mode, &block)
+      raise "no block given" unless block_given?
+      @chmod_block = block
+      check_result! UV.fs_fchmod(
+        loop.to_ptr,
+        UV.create_request(:uv_fs),
+        @fd,
+        Integer(mode),
+        callback(:on_chmod)
+      )
     end
 
     def chown(uid, gid, &block)
+      raise "no block given" unless block_given?
+      @chown_block = block
+      check_result! UV.fs_fchown(
+        loop.to_ptr,
+        UV.create_request(:uv_fs),
+        @fd,
+        Integer(uid),
+        Integer(gid),
+        callback(:on_chown)
+      )
     end
 
     private
@@ -166,6 +195,27 @@ module UV
       UV.fs_req_cleanup(req)
       UV.free(req)
       @truncate_block.call(e)
+    end
+
+    def on_utime(req)
+      e = check_result(UV.fs_req_result(req))
+      UV.fs_req_cleanup(req)
+      UV.free(req)
+      @utime_block.call(e)
+    end
+
+    def on_chmod(req)
+      e = check_result(UV.fs_req_result(req))
+      UV.fs_req_cleanup(req)
+      UV.free(req)
+      @chmod_block.call(e)
+    end
+
+    def on_chown(req)
+      e = check_result(UV.fs_req_result(req))
+      UV.fs_req_cleanup(req)
+      UV.free(req)
+      @chown_block.call(e)
     end
   end
 end
