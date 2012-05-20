@@ -1,31 +1,109 @@
 require 'spec_helper'
 
 shared_examples_for 'a stream' do
-  it_behaves_like 'a handle'
+  describe "#listen" do
+    it "raises if no block given" do
+      expect { subject.listen(128) }.to raise_error(ArgumentError)
+    end
 
-  let(:loop) { double() }
-  let(:handle) { double() }
-
-  let(:stream) do
-    described_class.new(loop).tap do |s|
-      s.stub(:handle) { handle }
+    it "calls UV.listen" do
+      backlog = 128
+      UV.should_receive(:listen).once.with(pointer, backlog, subject.method(:on_listen))
+      subject.listen(backlog) {}
     end
   end
 
-  # describe "#listen" do
-  #   it "raises if no block given" do
-  #     expect { stream.listen(128) }.to raise_error(RuntimeError)
-  #   end
-  # 
-  #   it "calls uv_listen" do
-  #     UV.should_receive(:listen)
-  #     stream.listen(128)
-  #   end
-  # end
-
   describe "#accept" do
-    # it "raises when not used inside listen" do
-    #   expect { stream.accept }.to raise_error(UV::Error)
-    # end
+    let(:client_pointer) { double() }
+    let(:client) { double() }
+
+    before(:each) do
+      client.stub(:handle) { client_pointer }
+    end
+
+    it "makes another stream and calls UV.accept with current and other pointers" do
+      loop.should_receive(handle_name).once.and_return(client)
+      UV.should_receive(:accept).with(pointer, client_pointer)
+      subject.accept
+    end
+  end
+
+  describe "#start_read" do
+    it "raises if no block given" do
+      expect { subject.start_read }.to raise_error(ArgumentError)
+    end
+
+    it "calls UV.read_start" do
+      UV.should_receive(:read_start).with(pointer, subject.method(:on_allocate), subject.method(:on_read))
+      subject.start_read {}
+    end
+  end
+
+  describe "#stop_read" do
+    it "calls UV.read_stop" do
+      UV.should_receive(:read_stop).with(pointer)
+      subject.stop_read
+    end
+  end
+
+  describe "#write" do
+    let(:write_request) { double() }
+    let(:buffer) { double() }
+    let(:buffer_pointer) { double() }
+
+    it "raises if no block given" do
+      expect { subject.write("123") }.to raise_error(ArgumentError)
+    end
+
+    it "calls UV.write" do
+      data = "some random string"
+      size = data.size
+
+      FFI::MemoryPointer.should_receive(:from_string).with(data).and_return(buffer_pointer)
+      UV.should_receive(:buf_init).with(buffer_pointer, size).and_return(buffer)
+      UV.should_receive(:create_request).with(:uv_write).and_return(write_request)
+      UV.should_receive(:write).with(write_request, pointer, buffer, 1, subject.method(:on_write))
+
+      subject.write(data) {}
+    end
+  end
+
+  describe "#shutdown" do
+    let(:shutdown_request) { double() }
+
+    it "raises if no block given" do
+      expect { subject.shutdown }.to raise_error(ArgumentError)
+    end
+
+    it "calls UV.shutdown" do
+      UV.should_receive(:create_request).with(:uv_shutdown).and_return(shutdown_request)
+      UV.should_receive(:shutdown).with(shutdown_request, pointer, subject.method(:on_shutdown))
+
+      subject.shutdown {}
+    end
+  end
+
+  describe "#readable?" do
+    it "is true for positive integers" do
+      UV.should_receive(:is_readable).with(pointer).and_return(1)
+      subject.readable?.should be_true
+    end
+
+    it "is false for integers less than 1" do
+      UV.should_receive(:is_readable).with(pointer).and_return(-1)
+      subject.readable?.should be_false
+    end
+  end
+
+  describe "#writable?" do
+    it "is true for positive integers" do
+      UV.should_receive(:is_writable).with(pointer).and_return(1)
+      subject.writable?.should be_true
+    end
+
+    it "is false for integers less than 1" do
+      UV.should_receive(:is_writable).with(pointer).and_return(-1)
+      subject.writable?.should be_false
+    end
   end
 end

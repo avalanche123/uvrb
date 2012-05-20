@@ -11,7 +11,7 @@ describe UV::Loop do
     end
   end
 
-  describe "#initialize" do
+  describe ".new" do
     it "calls uv_loop_new" do
       UV.should_receive(:loop_new).once.and_return(loop)
       FFI::AutoPointer.should_receive(:new).once.with(loop, UV.method(:loop_delete))
