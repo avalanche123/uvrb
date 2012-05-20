@@ -31,10 +31,13 @@ server.listen(128) do |err|
 end
 
 stoper = loop.timer
-stoper.start(50000, 0) do
+stoper.start(50000, 0) do |e|
   puts "50 seconds passed"
   server.close {}
   stoper.close {}
+  if e
+    raise e
+  end
 end
 
 loop.run
