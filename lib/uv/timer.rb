@@ -1,6 +1,6 @@
 module UV
   class Timer
-    include Handle, Resource, Listener
+    include Handle
 
     def start(timeout, repeat, &block)
       assert_block(block)

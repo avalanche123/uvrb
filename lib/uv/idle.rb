@@ -1,6 +1,6 @@
 module UV
   class Idle
-    include Handle, Resource, Listener
+    include Handle
 
     def start(&block)
       assert_block(block)

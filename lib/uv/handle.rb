@@ -1,6 +1,6 @@
 module UV
   module Handle
-    include Assertions
+    include Assertions, Resource, Listener
 
     def initialize(loop, pointer)
       @loop, @pointer = loop, pointer

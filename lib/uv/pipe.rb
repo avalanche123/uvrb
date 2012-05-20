@@ -1,6 +1,6 @@
 module UV
   class Pipe
-    include Stream, Resource, Listener
+    include Stream
 
     def open(io)
       fileno = io.fileno

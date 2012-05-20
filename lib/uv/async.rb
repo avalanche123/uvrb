@@ -1,6 +1,6 @@
 module UV
   class Async
-    include Handle, Resource, Listener
+    include Handle
 
     def initialize(loop, async_ptr, &block)
       assert_block(block)

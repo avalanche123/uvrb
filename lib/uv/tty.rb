@@ -1,6 +1,6 @@
 module UV
   class TTY
-    include Stream, Handle, Resource, Listener
+    include Stream
 
     def enable_raw_mode
       check_result! UV.tty_set_mode(handle, 1)

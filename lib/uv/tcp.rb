@@ -2,7 +2,7 @@ require 'ipaddr'
 
 module UV
   class TCP
-    include Stream, Resource, Listener, Net
+    include Stream, Net
 
     def bind(ip, port)
       assert_type(String, ip, "ip must be a String")

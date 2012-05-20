@@ -1,6 +1,6 @@
 module UV
   class UDP
-    include Handle, Resource, Listener, Net
+    include Handle, Net
 
     def bind(ip, port, ipv6_only = false)
       assert_type(String, ip, "ip must be a String")
