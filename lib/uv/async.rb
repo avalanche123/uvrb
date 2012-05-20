@@ -11,7 +11,7 @@ module UV
       super(loop, async_ptr)
     end
 
-    def send
+    def call
       check_result UV.async_send(handle)
     end
 

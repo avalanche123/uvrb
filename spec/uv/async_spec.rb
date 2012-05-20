@@ -14,11 +14,11 @@ describe UV::Async do
     end
   end
 
-  describe "#send" do
+  describe "#call" do
     it "calls UV.async_send" do
       UV.should_receive(:async_send).with(pointer)
 
-      subject.send
+      subject.call
     end
   end
 end
