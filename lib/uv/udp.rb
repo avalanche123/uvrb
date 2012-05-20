@@ -76,7 +76,7 @@ module UV
       end
       UV.free(base)
       ip, port = get_ip_and_port(sockaddr)
-      @recv_block.call(data, ip, port, e)
+      @recv_block.call(e, data, ip, port)
     end
 
     def on_send(req, status)

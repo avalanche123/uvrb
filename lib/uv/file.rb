@@ -149,7 +149,7 @@ module UV
       UV.free(req)
       @read_buffer = nil
       @read_buffer_length = nil
-      @read_block.call(data, e)
+      @read_block.call(e, data)
     end
 
     def on_write(req)
@@ -171,7 +171,7 @@ module UV
 
         stat = Stat.new(*values)
       end
-      @stat_block.call(stat, e)
+      @stat_block.call(e, stat)
       UV.fs_req_cleanup(req)
       UV.free(req)
     end
