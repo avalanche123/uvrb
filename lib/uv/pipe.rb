@@ -3,7 +3,7 @@ module UV
     include Stream, Handle, Resource, Listener
 
     def open(io)
-      check_result! UV.pipe_open(handle, io.fileno)
+      check_result! UV.pipe_open(handle, Integer(io.fileno))
     end
 
     def bind(name)
