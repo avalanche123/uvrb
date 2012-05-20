@@ -17,7 +17,7 @@ module UV
     def winsize
       width = FFI::MemoryPointer.new(:int)
       height = FFI::MemoryPointer.new(:int)
-      uv_tty_get_winsize(handle, width, height)
+      UV.tty_get_winsize(handle, width, height)
       [width.get_int(0), height.get_int(0)]
     end
   end
