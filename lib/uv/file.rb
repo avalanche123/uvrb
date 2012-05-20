@@ -18,7 +18,7 @@ module UV
     end
 
     def read(length, offset = 0, &block)
-      raise "no block given" unless block_given?
+      raise ArgumentError, "no block given", caller unless block_given?
       @read_block = block
       @read_buffer_length = Integer(length)
       @read_buffer = FFI::MemoryPointer.new(@read_buffer_length)
@@ -49,7 +49,7 @@ module UV
     end
 
     def stat(&block)
-      raise "no block given" unless block_given?
+      raise ArgumentError, "no block given", caller unless block_given?
       @stat_block = block
       check_result! UV.fs_fstat(
         loop.to_ptr,
@@ -60,7 +60,7 @@ module UV
     end
 
     def sync(&block)
-      raise "no block given" unless block_given?
+      raise ArgumentError, "no block given", caller unless block_given?
       @sync_block = block
       check_result! UV.fs_fsync(
         loop.to_ptr,
@@ -71,7 +71,7 @@ module UV
     end
 
     def datasync(&block)
-      raise "no block given" unless block_given?
+      raise ArgumentError, "no block given", caller unless block_given?
       @datasync_block = block
       check_result! UV.fs_fdatasync(
         loop.to_ptr,
@@ -82,7 +82,7 @@ module UV
     end
 
     def truncate(offset, &block)
-      raise "no block given" unless block_given?
+      raise ArgumentError, "no block given", caller unless block_given?
       @truncate_block = block
       check_result! UV.fs_ftruncate(
         loop.to_ptr,
@@ -94,7 +94,7 @@ module UV
     end
 
     def utime(atime, mtime, &block)
-      raise "no block given" unless block_given?
+      raise ArgumentError, "no block given", caller unless block_given?
       @utime_block = block
       check_result! UV.fs_futime(
         loop.to_ptr,
@@ -107,7 +107,7 @@ module UV
     end
 
     def chmod(mode, &block)
-      raise "no block given" unless block_given?
+      raise ArgumentError, "no block given", caller unless block_given?
       @chmod_block = block
       check_result! UV.fs_fchmod(
         loop.to_ptr,
@@ -119,7 +119,7 @@ module UV
     end
 
     def chown(uid, gid, &block)
-      raise "no block given" unless block_given?
+      raise ArgumentError, "no block given", caller unless block_given?
       @chown_block = block
       check_result! UV.fs_fchown(
         loop.to_ptr,
