@@ -10,8 +10,10 @@ module UV
     end
 
     def connect(ip, port, &block)
+      raise ArgumentError, "no block given", caller unless block_given?
+      @connect_block = block
       @socket = create_socket(IPAddr.new(String(ip)), Integer(port))
-      @socket.connect &block
+      @socket.connect(callback(:on_connect))
     end
 
     def sockname
@@ -59,27 +61,25 @@ module UV
       end
     end
 
+    def on_connect(req, status)
+      UV.free(req)
+      @connect_block.call(check_result(status))
+    end
+
     module SocketMethods
       def initialize(loop, tcp, ip, port)
         @loop, @tcp, @sockaddr = loop, tcp, ip_addr(ip, port)
-        ObjectSpace.define_finalizer(self, method(:clear_callbacks))
       end
 
       def bind
         check_result! tcp_bind
       end
 
-      def connect(&block)
-        raise ArgumentError, "no block given", caller unless block_given?
-        @connect_block = block
-        check_result! tcp_connect
+      def connect(callback)
+        check_result! tcp_connect(callback)
       end
 
       private
-      def on_connect(req, status)
-        UV.free(req)
-        @connect_block.call(check_result(status))
-      end
 
       def connect_req
         UV.create_request(:uv_connect)
@@ -87,7 +87,7 @@ module UV
     end
 
     class Socket4
-      include SocketMethods, Resource, Listener
+      include SocketMethods, Resource
 
       private
       def ip_addr(ip, port)
@@ -98,18 +98,18 @@ module UV
         UV.tcp_bind(@tcp, @sockaddr)
       end
 
-      def tcp_connect
+      def tcp_connect(callback)
         UV.tcp_connect(
           connect_req,
           @tcp,
           @sockaddr,
-          callback(:on_connect)
+          callback
         )
       end
     end
 
     class Socket6
-      include SocketMethods, Resource, Listener
+      include SocketMethods, Resource
 
       private
       def ip_addr(ip, port)
@@ -120,12 +120,12 @@ module UV
         UV.tcp_bind6(@tcp, @sockaddr)
       end
 
-      def tcp_connect
+      def tcp_connect(callback)
         UV.tcp_connect6(
           connect_req,
           @tcp,
           @sockaddr,
-          callback(:on_connect)
+          callback
         )
       end
     end
