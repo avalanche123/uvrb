@@ -2,18 +2,21 @@ require 'thread'
 
 module UV
   class Loop
+    module ClassMethods
+      def default
+        create(UV.default_loop)
+      end
 
-    def self.default
-      create(UV.default_loop)
+      def new
+        create(UV.loop_new)
+      end
+
+      def create(pointer)
+        allocate.tap { |i| i.send(:initialize, FFI::AutoPointer.new(pointer, UV.method(:loop_delete))) }
+      end
     end
 
-    def self.new
-      create(UV.loop_new)
-    end
-
-    def self.create(pointer)
-      allocate.tap { |i| i.send(:initialize, FFI::AutoPointer.new(pointer, UV.method(:loop_delete))) }
-    end
+    extend ClassMethods
 
     include Resource, Assertions
 
@@ -98,7 +101,7 @@ module UV
     def check
       check_ptr = UV.create_handle(:uv_check)
 
-      check_result! UV.prepare_init(@pointer, check_ptr)
+      check_result! UV.check_init(@pointer, check_ptr)
       Check.new(self, check_ptr)
     end
 
