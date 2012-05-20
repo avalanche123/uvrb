@@ -125,6 +125,7 @@ module UV
     :uv_fs_event,
     :uv_idle,
     :uv_pipe,
+    :uv_poll,
     :uv_prepare,
     :uv_process,
     :uv_tcp,
