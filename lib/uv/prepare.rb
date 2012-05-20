@@ -3,7 +3,7 @@ module UV
     include Handle, Resource, Listener
 
     def start(&block)
-      raise "no block given" unless block_given?
+      raise ArgumentError, "no block given", caller unless block_given?
       @prepare_block = block
       check_result! UV.prepare_start(handle, callback(:on_prepare))
     end

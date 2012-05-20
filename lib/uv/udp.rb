@@ -22,7 +22,7 @@ module UV
     end
 
     def recv_start(&block)
-      raise "no block given" unless block_given?
+      raise ArgumentError, "no block given", caller unless block_given?
       @recv_block = block
       check_result! UV.udp_recv_start(handle, callback(:on_allocate), callback(:on_recv))
     end

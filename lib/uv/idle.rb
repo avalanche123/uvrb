@@ -3,7 +3,7 @@ module UV
     include Handle, Resource, Listener
 
     def start(&block)
-      raise "no block given" unless block_given?
+      raise ArgumentError, "no block given", caller unless block_given?
       @idle_block = block
       check_result! UV.idle_start(handle, callback(:on_idle))
     end

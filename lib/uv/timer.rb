@@ -3,7 +3,7 @@ module UV
     include Handle, Resource, Listener
 
     def start(timeout, repeat, &block)
-      raise "no block given" unless block_given?
+      raise ArgumentError, "no block given", caller unless block_given?
       @timer_block = block
       check_result! UV.timer_start(
         handle,
