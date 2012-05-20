@@ -2,7 +2,7 @@ require 'spec_helper'
 
 shared_examples_for 'a handle' do
   describe "#close" do
-    it "required a block" do
+    it "requires a block" do
       expect { subject.close }.to raise_error(ArgumentError)
     end
 
