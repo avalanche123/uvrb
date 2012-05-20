@@ -67,6 +67,8 @@ module UV
     end
 
     module SocketMethods
+      include Resource
+
       def initialize(loop, tcp, ip, port)
         @loop, @tcp, @sockaddr = loop, tcp, ip_addr(ip, port)
       end
@@ -87,7 +89,7 @@ module UV
     end
 
     class Socket4
-      include SocketMethods, Resource
+      include SocketMethods
 
       private
       def ip_addr(ip, port)
@@ -109,7 +111,7 @@ module UV
     end
 
     class Socket6
-      include SocketMethods, Resource
+      include SocketMethods
 
       private
       def ip_addr(ip, port)
