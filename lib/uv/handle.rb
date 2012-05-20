@@ -1,12 +1,17 @@
 module UV
   module Handle
+    include Assertions
+
     def initialize(loop, pointer)
       @loop, @pointer = loop, pointer
     end
 
     def close(&block)
-      raise ArgumentError, "no block given", caller unless block_given?
+      assert_block(block)
+      assert_arity(0, block)
+
       @close_block = block
+
       UV.close(
         @pointer,
         callback(:on_close)

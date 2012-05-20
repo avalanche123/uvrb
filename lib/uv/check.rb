@@ -3,8 +3,11 @@ module UV
     include Handle, Resource, Listener
 
     def start(&block)
-      raise ArgumentError, "no block given", caller unless block_given?
+      assert_block(block)
+      assert_arity(1, block)
+
       @check_block = block
+
       check_result! UV.check_start(handle, callback(:on_check))
     end
 

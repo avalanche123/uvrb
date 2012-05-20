@@ -16,7 +16,7 @@ describe UV::Prepare do
     it "calls UV.prepare_start" do
       UV.should_receive(:prepare_start).with(pointer, subject.method(:on_prepare))
 
-      subject.start {}
+      subject.start { |e| }
     end
   end
 

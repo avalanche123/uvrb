@@ -19,7 +19,7 @@ describe UV::Timer do
     it "calls UV.timer_start" do
       UV.should_receive(:timer_start).with(pointer, subject.method(:on_timer), timeout, repeat)
 
-      subject.start(timeout, repeat) {}
+      subject.start(timeout, repeat) { |e| }
     end
   end
 

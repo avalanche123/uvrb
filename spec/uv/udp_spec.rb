@@ -76,7 +76,7 @@ describe UV::UDP do
     it "calls UV.udp_recv_start" do
       UV.should_receive(:udp_recv_start).with(pointer, subject.method(:on_allocate), subject.method(:on_recv))
 
-      subject.start_recv {}
+      subject.start_recv { |e, data, ip, port| }
     end
   end
 
@@ -102,7 +102,7 @@ describe UV::UDP do
     end
 
     it "requires to be bound first" do
-      expect { subject.send(data) {} }.to raise_error(RuntimeError)
+      expect { subject.send(data) { |e| } }.to raise_error(RuntimeError)
     end
 
     context "ipv4" do
@@ -121,7 +121,7 @@ describe UV::UDP do
         UV.should_receive(:create_request).with(:uv_udp_send).and_return(uv_udp_send_request)
         UV.should_receive(:udp_send).with(uv_udp_send_request, pointer, buffer, 1, ip_addr, subject.method(:on_send))
 
-        subject.send(data) {}
+        subject.send(data) { |e| }
       end
     end
 
@@ -141,7 +141,7 @@ describe UV::UDP do
         UV.should_receive(:create_request).with(:uv_udp_send).and_return(uv_udp_send_request)
         UV.should_receive(:udp_send6).with(uv_udp_send_request, pointer, buffer, 1, ip_addr, subject.method(:on_send))
 
-        subject.send(data) {}
+        subject.send(data) { |e| }
       end
     end
   end

@@ -3,13 +3,18 @@ module UV
     include Handle, Resource, Listener
 
     def start(timeout, repeat, &block)
-      raise ArgumentError, "no block given", caller unless block_given?
+      assert_block(block)
+      assert_arity(1, block)
+      assert_type(Integer, timeout, "timeout must be an Integer")
+      assert_type(Integer, repeat, "repeat must be an Integer")
+
       @timer_block = block
+
       check_result! UV.timer_start(
         handle,
         callback(:on_timer),
-        Integer(timeout),
-        Integer(repeat)
+        timeout,
+        repeat
       )
     end
 
@@ -22,7 +27,9 @@ module UV
     end
 
     def repeat=(repeat)
-      check_result! UV.timer_set_repeat(handle, Integer(repeat))
+      assert_type(Integer, repeat, "repeat must be an Integer")
+
+      check_result! UV.timer_set_repeat(handle, repeat)
     end
 
     def repeat

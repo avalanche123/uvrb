@@ -45,7 +45,7 @@ describe UV::Pipe do
       UV.should_receive(:create_request).with(:uv_connect).and_return(connect_request)
       UV.should_receive(:pipe_connect).with(connect_request, pointer, name, subject.method(:on_connect))
 
-      subject.connect(name) {}
+      subject.connect(name) { |e| }
     end
   end
 

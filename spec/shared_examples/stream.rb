@@ -9,7 +9,7 @@ shared_examples_for 'a stream' do
     it "calls UV.listen" do
       backlog = 128
       UV.should_receive(:listen).once.with(pointer, backlog, subject.method(:on_listen))
-      subject.listen(backlog) {}
+      subject.listen(backlog) { |e| }
     end
   end
 
@@ -35,7 +35,7 @@ shared_examples_for 'a stream' do
 
     it "calls UV.read_start" do
       UV.should_receive(:read_start).with(pointer, subject.method(:on_allocate), subject.method(:on_read))
-      subject.start_read {}
+      subject.start_read { |e, data| }
     end
   end
 
@@ -64,7 +64,7 @@ shared_examples_for 'a stream' do
       UV.should_receive(:create_request).with(:uv_write).and_return(write_request)
       UV.should_receive(:write).with(write_request, pointer, buffer, 1, subject.method(:on_write))
 
-      subject.write(data) {}
+      subject.write(data) { |e| }
     end
   end
 
@@ -79,7 +79,7 @@ shared_examples_for 'a stream' do
       UV.should_receive(:create_request).with(:uv_shutdown).and_return(shutdown_request)
       UV.should_receive(:shutdown).with(shutdown_request, pointer, subject.method(:on_shutdown))
 
-      subject.shutdown {}
+      subject.shutdown { |e| }
     end
   end
 

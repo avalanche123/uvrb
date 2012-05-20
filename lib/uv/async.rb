@@ -3,9 +3,12 @@ module UV
     include Handle, Resource, Listener
 
     def initialize(loop, async_ptr, &block)
-      super(loop, async_ptr)
-      raise ArgumentError, "no block given", caller unless block_given?
+      assert_block(block)
+      assert_arity(1, block)
+
       @async_block = block
+
+      super(loop, async_ptr)
     end
 
     def send

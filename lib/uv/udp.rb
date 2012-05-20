@@ -3,7 +3,11 @@ module UV
     include Handle, Resource, Listener, Net
 
     def bind(ip, port, ipv6_only = false)
-      @socket = create_socket(IPAddr.new(String(ip)), Integer(port))
+      assert_type(String, ip, "ip must be a String")
+      assert_type(Integer, port, "port must be an Integer")
+      assert_boolean(ipv6_only, "ipv6_only must be a Boolean")
+
+      @socket = create_socket(IPAddr.new(ip), port)
       @socket.bind(ipv6_only)
     end
 
@@ -14,16 +18,25 @@ module UV
     end
 
     def join(multicast_address, interface_address)
-      check_result! UV.udp_set_membership(handle, String(multicast_address), String(interface_address), :uv_join_group)
+      assert_type(String, multicast_address, "multicast_address must be a String")
+      assert_type(String, interface_address, "interface_address must be a String")
+
+      check_result! UV.udp_set_membership(handle, multicast_address, interface_address, :uv_join_group)
     end
 
     def leave(multicast_address, interface_address)
-      check_result! UV.udp_set_membership(handle, String(multicast_address), String(interface_address), :uv_leave_group)
+      assert_type(String, multicast_address, "multicast_address must be a String")
+      assert_type(String, interface_address, "interface_address must be a String")
+
+      check_result! UV.udp_set_membership(handle, multicast_address, interface_address, :uv_leave_group)
     end
 
     def start_recv(&block)
-      raise ArgumentError, "no block given", caller unless block_given?
+      assert_block(block)
+      assert_arity(4, block)
+
       @recv_block = block
+
       check_result! UV.udp_recv_start(handle, callback(:on_allocate), callback(:on_recv))
     end
 
@@ -32,9 +45,13 @@ module UV
     end
 
     def send(data, &block)
-      raise ArgumentError, "no block given", caller unless block_given?
+      assert_block(block)
+      assert_arity(1, block)
+      assert_type(String, data, "data must be a String")
       raise "cannot send data over unbound socket, make sure to #bind it first" unless @socket
+
       @send_block = block
+
       @socket.send(data, callback(:on_send))
     end
 
@@ -47,7 +64,9 @@ module UV
     end
 
     def multicast_ttl=(ttl)
-      check_result! UV.udp_set_multicast_ttl(handle, Integer(ttl))
+      assert_type(Integer, ttl, "ttl must be an Integer")
+
+      check_result! UV.udp_set_multicast_ttl(handle, ttl)
     end
 
     def enable_broadcast
@@ -59,6 +78,8 @@ module UV
     end
 
     def ttl=(ttl)
+      assert_type(Integer, ttl, "ttl must be an Integer")
+
       check_result! UV.udp_set_ttl(handle, Integer(ttl))
     end
 

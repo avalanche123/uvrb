@@ -53,7 +53,7 @@ describe UV::TCP do
         UV.should_receive(:ip4_addr).with(ip, port).and_return(ip_addr)
         UV.should_receive(:tcp_connect).with(connect_request, pointer, ip_addr, subject.method(:on_connect))
 
-        subject.connect(ip, port) {}
+        subject.connect(ip, port) { |e| }
       end
     end
 
@@ -65,7 +65,7 @@ describe UV::TCP do
         UV.should_receive(:ip6_addr).with(ip, port).and_return(ip_addr)
         UV.should_receive(:tcp_connect6).with(connect_request, pointer, ip_addr, subject.method(:on_connect))
 
-        subject.connect(ip, port) {}
+        subject.connect(ip, port) { |e| }
       end
     end
   end

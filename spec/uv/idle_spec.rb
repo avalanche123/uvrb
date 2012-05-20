@@ -16,7 +16,7 @@ describe UV::Idle do
     it "calls UV.idle_start" do
       UV.should_receive(:idle_start).with(pointer, subject.method(:on_idle))
 
-      subject.start {}
+      subject.start { |e| }
     end
   end
 

@@ -1,8 +1,14 @@
 module UV
   module Stream
+    include Handle
+
     def listen(backlog, &block)
-      raise ArgumentError, "no block given", caller unless block_given?
+      assert_block(block)
+      assert_arity(1, block)
+      assert_type(Integer, backlog, "backlog must be an Integer")
+
       @listen_block = block
+
       check_result! UV.listen(
         handle,
         Integer(backlog),
@@ -12,13 +18,18 @@ module UV
 
     def accept
       client = loop.send(handle_name)
+
       check_result! UV.accept(handle, client.handle)
+
       client
     end
 
     def start_read(&block)
-      raise ArgumentError, "no block given", caller unless block_given?
+      assert_block(block)
+      assert_arity(2, block)
+
       @read_block = block
+
       check_result! UV.read_start(
         handle,
         callback(:on_allocate),
@@ -31,8 +42,12 @@ module UV
     end
 
     def write(data, &block)
-      raise ArgumentError, "no block given", caller unless block_given?
+      assert_block(block)
+      assert_arity(1, block)
+      assert_type(String, data, "data must be a String")
+
       @write_block = block
+
       check_result! UV.write(
         UV.create_request(:uv_write),
         handle,
@@ -43,8 +58,11 @@ module UV
     end
 
     def shutdown(&block)
-      raise ArgumentError, "no block given", caller unless block_given?
+      assert_block(block)
+      assert_arity(1, block)
+
       @shutdown_block = block
+
       check_result! UV.shutdown(
         UV.create_request(:uv_shutdown),
         handle,

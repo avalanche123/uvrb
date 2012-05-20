@@ -2,17 +2,26 @@ require 'ipaddr'
 
 module UV
   class TCP
-    include Stream, Handle, Resource, Listener, Net
+    include Stream, Resource, Listener, Net
 
     def bind(ip, port)
-      @socket = create_socket(IPAddr.new(String(ip)), Integer(port))
+      assert_type(String, ip, "ip must be a String")
+      assert_type(Integer, port, "port must be an Integer")
+
+      @socket = create_socket(IPAddr.new(ip), port)
+
       @socket.bind
     end
 
     def connect(ip, port, &block)
-      raise ArgumentError, "no block given", caller unless block_given?
+      assert_block(block)
+      assert_arity(1, block)
+      assert_type(String, ip, "ip must be a String")
+      assert_type(Integer, port, "port must be an Integer")
+
       @connect_block = block
-      @socket = create_socket(IPAddr.new(String(ip)), Integer(port))
+      @socket        = create_socket(IPAddr.new(ip), port)
+
       @socket.connect(callback(:on_connect))
     end
 
@@ -37,7 +46,9 @@ module UV
     end
 
     def enable_keepalive(delay)
-      check_result! UV.tcp_keepalive(handle, 1, Integer(delay))
+      assert_type(Integer, delay, "delay must be an Integer")
+
+      check_result! UV.tcp_keepalive(handle, 1, delay)
     end
 
     def disable_keepalive

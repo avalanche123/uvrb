@@ -16,7 +16,7 @@ describe UV::Check do
     it "calls UV.check_start" do
       UV.should_receive(:check_start).with(pointer, subject.method(:on_check))
 
-      subject.start {}
+      subject.start { |e| }
     end
   end
 
