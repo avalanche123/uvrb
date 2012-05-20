@@ -111,9 +111,10 @@ module UV
 
     def async(&block)
       async_ptr = UV.create_handle(:uv_async)
+      async     = Async.new(self, async_ptr, &block)
 
-      check_result! UV.async_init(@pointer, async_ptr)
-      Async.new(self, async_ptr, &block)
+      check_result! UV.async_init(@pointer, async_ptr, async.callback(:on_async))
+      async
     end
 
     def to_ptr

@@ -19,5 +19,7 @@ module UV
     def on_async(handle, status)
       @async_block.call(check_result(status))
     end
+
+    public :callback
   end
 end
