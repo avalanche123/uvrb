@@ -16,7 +16,8 @@ loop = UV::Loop.default
 # loop = UV::Loop.new
 
 timer = loop.timer
-timer.start(50000, 0) do
+timer.start(50000, 0) do |error|
+  p error if error
   puts "50 seconds passed"
   timer.close
 end
