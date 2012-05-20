@@ -5,13 +5,13 @@ module UV
     include Stream, Handle, Resource, Listener, Net
 
     def bind(ip, port)
-      @ip, @port = IPAddr.new(String(ip)), Integer(port)
-      socket.bind
+      @socket = create_socket(IPAddr.new(String(ip)), Integer(port))
+      @socket.bind
     end
 
     def connect(ip, port, &block)
-      @ip, @port = IPAddr.new(String(ip)), Integer(port)
-      socket.connect &block
+      @socket = create_socket(IPAddr.new(String(ip)), Integer(port))
+      @socket.connect &block
     end
 
     def sockname
@@ -35,7 +35,7 @@ module UV
     end
 
     def enable_keepalive(delay)
-      check_result! UV.uv_tcp_keepalive(handle, 1, Integer(delay))
+      check_result! UV.tcp_keepalive(handle, 1, Integer(delay))
     end
 
     def disable_keepalive
@@ -51,15 +51,11 @@ module UV
     end
 
     private
-    def socket
-      @socket ||= begin
-        socket = if @ip.ipv4?
-          Socket4.new(@loop, handle, @ip.to_s, @port)
-        else
-          Socket6.new(@loop, handle, @ip.to_s, @port)
-        end
-        @ip, @port = nil, nil
-        socket
+    def create_socket(ip, port)
+      if ip.ipv4?
+        Socket4.new(@loop, handle, ip.to_s, port)
+      else
+        Socket6.new(@loop, handle, ip.to_s, port)
       end
     end
 
@@ -74,7 +70,7 @@ module UV
       end
 
       def connect(&block)
-        raise "no block given" unless block_given?
+        raise ArgumentError, "no block given", caller unless block_given?
         @connect_block = block
         check_result! tcp_connect
       end
