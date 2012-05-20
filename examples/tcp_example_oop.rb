@@ -14,18 +14,18 @@ server.listen(128) do |err|
   end
   client = server.accept
 
-  client.start_read do |data, err|
+  client.start_read do |err, data|
     puts data
     if err
       p err
-      client.close
+      client.close {}
     end
     client.stop_read
     client.write("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 12\r\n\r\nhello world\n") do |err|
       if err
         p err
       end
-      client.close
+      client.close {}
     end
   end
 end
@@ -33,8 +33,8 @@ end
 stoper = loop.timer
 stoper.start(50000, 0) do
   puts "50 seconds passed"
-  server.close
-  stoper.close
+  server.close {}
+  stoper.close {}
 end
 
 loop.run

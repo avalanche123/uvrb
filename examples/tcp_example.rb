@@ -10,7 +10,7 @@ def on_read(client, nread, buf)
     puts buf[:base].read_string(nread)
   end
   UV.free(buf[:base])
-  UV.close(client, proc {|client| exit})
+  UV.close(client, proc {|client| })
 end
 
 def on_alloc(handle, suggested_size)
