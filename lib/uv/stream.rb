@@ -1,7 +1,7 @@
 module UV
   module Stream
     def listen(backlog, &block)
-      raise "no block given" unless block_given?
+      raise ArgumentError, "no block given", caller unless block_given?
       @listen_block = block
       check_result! UV.listen(
         handle,
@@ -11,13 +11,13 @@ module UV
     end
 
     def accept
-      client = loop.send(handle_name.to_sym)
+      client = loop.send(handle_name)
       check_result! UV.accept(handle, client.handle)
       client
     end
 
     def start_read(&block)
-      raise "no block given" unless block_given?
+      raise ArgumentError, "no block given", caller unless block_given?
       @read_block = block
       check_result! UV.read_start(
         handle,
@@ -31,6 +31,7 @@ module UV
     end
 
     def write(data, &block)
+      raise ArgumentError, "no block given", caller unless block_given?
       @write_block = block
       check_result! UV.write(
         UV.create_request(:uv_write),
@@ -42,6 +43,7 @@ module UV
     end
 
     def shutdown(&block)
+      raise ArgumentError, "no block given", caller unless block_given?
       @shutdown_block = block
       check_result! UV.shutdown(
         UV.create_request(:uv_shutdown),
@@ -74,18 +76,18 @@ module UV
       unless e
         data = base.read_string(nread)
       end
-      UV.free(base)
-      @read_block.call(data, e)
+      # UV.free(base)
+      @read_block.call(e, data)
     end
 
     def on_write(req, status)
       UV.free(req)
-      @write_block.call(check_result(status)) if @write_block
+      @write_block.call(check_result(status))
     end
 
     def on_shutdown(req, status)
       UV.free(req)
-      @shutdown_block.call(check_result(status)) if @shutdown_block
+      @shutdown_block.call(check_result(status))
     end
   end
 end

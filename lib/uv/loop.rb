@@ -2,19 +2,23 @@ require 'thread'
 
 module UV
   class Loop
+
     def self.default
-      new(true)
+      create(UV.default_loop)
+    end
+
+    def self.new
+      create(UV.loop_new)
+    end
+
+    def self.create(pointer)
+      allocate.tap { |i| i.send(:initialize, FFI::AutoPointer.new(pointer, UV.method(:loop_delete))) }
     end
 
     include Resource
 
-    def initialize(default = false)
-      ptr = if default
-        UV.default_loop
-      else
-        UV.loop_new
-      end
-      @pointer = FFI::AutoPointer.new(ptr, UV.method(:loop_delete))
+    def initialize(pointer)
+      @pointer = pointer
     end
 
     def run
@@ -49,35 +53,51 @@ module UV
     # factory methods
 
     def timer
-      Timer.new(self)
+      timer_ptr = UV.create_handle(:uv_timer)
+      check_result! UV.timer_init(@pointer, timer_ptr)
+      Timer.new(self, timer_ptr)
     end
 
     def tcp
-      TCP.new(self)
+      tcp_ptr = UV.create_handle(:uv_tcp)
+      check_result! UV.tcp_init(@pointer, tcp_ptr)
+      TCP.new(self, tcp_ptr)
     end
 
     def tty(io, readable = false)
-      TTY.new(self, io, readable)
+      tty_ptr = UV.create_handle(:uv_tty)
+      check_result! UV.tty_init(@pointer, tty_ptr, io.fileno, readable ? 1 : 0)
+      TTY.new(self, tty_ptr)
     end
 
     def pipe(ipc = false)
-      Pipe.new(self, ipc)
+      pipe_ptr = UV.create_handle(:uv_pipe)
+      check_result! UV.pipe_init(@pointer, pipe_ptr, ipc ? 1 : 0)
+      Pipe.new(self, pipe_ptr)
     end
 
     def prepare
-      Prepare.new(self)
+      prepare_ptr = UV.create_handle(:uv_prepare)
+      check_result! UV.prepare_init(@pointer, prepare_ptr)
+      Prepare.new(self, prepare_ptr)
     end
 
     def check
-      Check.new(self)
+      check_ptr = UV.create_handle(:uv_check)
+      check_result! UV.prepare_init(@pointer, check_ptr)
+      Check.new(self, check_ptr)
     end
 
     def idle
-      Idle.new(self)
+      idle_ptr = UV.create_handle(:uv_idle)
+      check_result! UV.idle_init(@pointer, idle_ptr)
+      Idle.new(self, idle_ptr)
     end
 
     def async(&block)
-      Async.new(self, &block)
+      async_ptr = UV.create_handle(:uv_async)
+      check_result! UV.async_init(@pointer, async_ptr)
+      Async.new(self, async_ptr, &block)
     end
 
     def to_ptr

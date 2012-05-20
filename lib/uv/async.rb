@@ -2,8 +2,9 @@ module UV
   class Async
     include Handle, Resource, Listener
 
-    def initialize(loop, &block)
-      raise "no block given" unless block_given?
+    def initialize(loop, async_ptr, &block)
+      super(loop, async_ptr)
+      raise ArgumentError, "no block given", caller unless block_given?
       @async_block = block
     end
 
