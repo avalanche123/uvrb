@@ -24,7 +24,7 @@ shared_examples_for 'a stream' do
     it "makes another stream and calls UV.accept with current and other pointers" do
       loop.should_receive(handle_name).once.and_return(client)
       UV.should_receive(:accept).with(pointer, client_pointer)
-      subject.accept
+      subject.accept.should == client
     end
   end
 
