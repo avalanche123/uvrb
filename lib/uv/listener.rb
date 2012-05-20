@@ -2,16 +2,6 @@ require 'set'
 
 module UV
   module Listener
-    module ClassMethods
-      def const_unset(name)
-        remove_const(name)
-      end
-    end
-
-    def self.included(base)
-      base.extend(ClassMethods)
-    end
-
     private
     def callbacks
       @callbacks ||= Set.new
@@ -28,7 +18,7 @@ module UV
 
     def clear_callbacks
       callbacks.each do |name|
-        self.class.const_unset("#{name.upcase}_#{object_id}")
+        self.class.send(:remove_const, "#{name.upcase}_#{object_id}")
       end
       callbacks.clear
     end
