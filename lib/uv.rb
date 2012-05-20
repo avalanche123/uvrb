@@ -373,8 +373,8 @@ module UV
 
   autoload :Resource, 'uv/resource'
   autoload :Listener, 'uv/listener'
-  autoload :Handle, 'uv/handle'
   autoload :Net, 'uv/net'
+  autoload :Handle, 'uv/handle'
   autoload :Stream, 'uv/stream'
   autoload :Loop, 'uv/loop'
   autoload :Error, 'uv/error'
@@ -389,4 +389,5 @@ module UV
   autoload :Async, 'uv/async'
   autoload :Filesystem, 'uv/filesystem'
   autoload :File, 'uv/file'
+  autoload :Assertions, 'uv/assertions'
 end
