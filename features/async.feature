@@ -19,7 +19,7 @@ Feature: wake up another event loop
 
       callback = loop.async do |e|
         stopper = loop.timer
-        stopper.start(900, 0) do |e|
+        stopper.start(800, 0) do |e|
           timer.close {}
           callback.close {}
           stopper.close {}
