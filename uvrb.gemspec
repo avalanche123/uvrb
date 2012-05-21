@@ -5,7 +5,7 @@ Gem::Specification.new do |gem|
   gem.version       = UV::VERSION
   gem.authors       = ["Bulat Shakirzyanov"]
   gem.email         = ["mallluhuct@gmail.com"]
-  gem.homepage      = ["http://avalanche123.github.com/uvrb"]
+  gem.homepage      = "http://avalanche123.github.com/uvrb"
   gem.summary       = "libuv bindings for Ruby"
   gem.description   = "UV is Ruby OOP bindings for libuv"
 
