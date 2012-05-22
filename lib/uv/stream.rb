@@ -94,7 +94,7 @@ module UV
       unless e
         data = base.read_string(nread)
       end
-      # UV.free(base)
+      UV.free(base)
       @read_block.call(e, data)
     end
 
