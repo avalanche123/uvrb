@@ -11,15 +11,11 @@ describe UV::Pipe do
 
   describe "#open" do
     let(:fileno) { 6555 }
-    let(:io) { double() }
-    before(:each) do
-      io.stub(:fileno) { fileno }
-    end
 
     it "calls UV.pipe_open" do
       UV.should_receive(:pipe_open).with(pointer, fileno)
 
-      subject.open(io)
+      subject.open(fileno)
     end
   end
 

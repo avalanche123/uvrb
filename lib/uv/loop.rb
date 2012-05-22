@@ -70,9 +70,7 @@ module UV
       TCP.new(self, tcp_ptr)
     end
 
-    def tty(io, readable = false)
-      fileno = io.fileno
-
+    def tty(fileno, readable = false)
       assert_type(Integer, fileno, "io#fileno must return an integer file descriptor, #{fileno.inspect} given")
       assert_boolean(readable)
 

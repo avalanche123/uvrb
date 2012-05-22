@@ -116,11 +116,9 @@ describe UV::Loop do
   describe "#tty" do
     let(:tty_pointer) { double() }
     let(:tty) { double() }
-    let(:io) { double() }
     let(:fileno) { 6555 }
 
     before(:each) do
-      io.stub(:fileno) { fileno }
       UV.should_receive(:create_handle).with(:uv_tty).and_return(tty_pointer)
       UV::TTY.should_receive(:new).with(subject, tty_pointer).and_return(tty)
     end
@@ -129,7 +127,7 @@ describe UV::Loop do
       it "calls UV.tty_init" do
         UV.should_receive(:tty_init).with(loop_pointer, tty_pointer, fileno, 1)
 
-        subject.tty(io, true).should == tty
+        subject.tty(fileno, true).should == tty
       end
     end
 
@@ -137,7 +135,7 @@ describe UV::Loop do
       it "calls UV.tty_init" do
         UV.should_receive(:tty_init).with(loop_pointer, tty_pointer, fileno, 0)
 
-        subject.tty(io, false).should == tty
+        subject.tty(fileno, false).should == tty
       end
     end
   end
