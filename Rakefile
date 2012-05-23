@@ -5,6 +5,8 @@ require 'rspec/core/rake_task'
 require 'cucumber'
 require 'cucumber/rake/task'
 require 'rdoc/task'
+require 'ffi'
+require 'rake/clean'
 
 RSpec::Core::RakeTask.new
 
@@ -18,3 +20,17 @@ RDoc::Task.new(:rdoc => "rdoc", :clobber_rdoc => "rdoc:clean", :rerdoc => "rdoc:
 end
 
 task :default => [:spec, :features]
+
+file 'ext/libuv/uv.a' do
+  Dir.chdir("ext/libuv") { |path| system "make" }
+end
+
+file "ext/libuv/uv.#{FFI::Platform::LIBSUFFIX}" => 'ext/libuv/uv.a' do
+  Dir.chdir("ext/libuv") { |path| system 'libtool', '-dynamic', '-framework', 'CoreServices', '-o', "uv.#{FFI::Platform::LIBSUFFIX}", 'uv.a', '-lc' }
+end
+
+CLOBBER << 'ext/libuv/uv.a'
+CLOBBER << "ext/libuv/uv.#{FFI::Platform::LIBSUFFIX}"
+
+desc "Compile libuv from submodule"
+task :libuv => ['ext/libuv/uv.a', "ext/libuv/uv.#{FFI::Platform::LIBSUFFIX}"]
