@@ -33,16 +33,8 @@ Feature: unix domain sockets
 
           client.close {}
           client_timeout.close {}
+          server.close {}
         end
-      end
-
-      stopper = loop.timer
-
-      stopper.start(3000, 0) do |e|
-        raise e if e
-
-        server.close {}
-        stopper.close {}
       end
 
       begin
