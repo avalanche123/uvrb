@@ -242,18 +242,22 @@ module UV
 
     # Public: Get a new Pipe instance
     # 
-    # ipc   - boolean if pipe is going to be used for inter-process communication
-    # 
     # Returns UV::Pipe
-    # 
-    # Raises ArgumentError if ipc is not a boolean
-    def pipe(ipc = false)
-      assert_boolean(ipc, "ipc must be a Boolean")
-
+    def pipe
       pipe_ptr = UV.create_handle(:uv_pipe)
 
-      check_result! UV.pipe_init(@pointer, pipe_ptr, ipc ? 1 : 0)
+      check_result! UV.pipe_init(@pointer, pipe_ptr, 0)
       Pipe.new(self, pipe_ptr)
+    end
+
+    # Public: Get a new IPC instance
+    # 
+    # Returns UV::IPC
+    def ipc
+      pipe_ptr = UV.create_handle(:uv_pipe)
+
+      check_result! UV.pipe_init(@pointer, pipe_ptr, 1)
+      IPC.new(self, pipe_ptr)
     end
 
     # Public: Get a new Prepare handle

@@ -148,20 +148,26 @@ describe UV::Loop do
       UV::Pipe.should_receive(:new).with(subject, pipe_pointer).and_return(pipe)
     end
 
-    context "ipc" do
-      it "calls UV.pipe_init" do
-        UV.should_receive(:pipe_init).with(loop_pointer, pipe_pointer, 1)
+    it "calls UV.pipe_init" do
+      UV.should_receive(:pipe_init).with(loop_pointer, pipe_pointer, 0)
 
-        subject.pipe(true).should == pipe
-      end
+      subject.pipe.should == pipe
+    end
+  end
+
+  describe "#ipc" do
+    let(:ipc_pointer) { double() }
+    let(:ipc) { double() }
+
+    before(:each) do
+      UV.should_receive(:create_handle).with(:uv_pipe).and_return(ipc_pointer)
+      UV::IPC.should_receive(:new).with(subject, ipc_pointer).and_return(ipc)
     end
 
-    context "not ipc" do
-      it "calls UV.pipe_init" do
-        UV.should_receive(:pipe_init).with(loop_pointer, pipe_pointer, 0)
+    it "calls UV.pipe_init" do
+      UV.should_receive(:pipe_init).with(loop_pointer, ipc_pointer, 1)
 
-        subject.pipe(false).should == pipe
-      end
+      subject.ipc.should == ipc
     end
   end
 

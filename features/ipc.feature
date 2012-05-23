@@ -1,17 +1,18 @@
-Feature: named pipes
+Feature: unix domain sockets
 
-  Named pipes are a special type of file used in inter process communication on UNIX
-  systems
+  Unix domain sockets are useful for inter-process communication. Their main difference
+  with named pipes, which are also used for ipc is that they support bidirectional
+  communication.
 
   Scenario: inter process communication
-    Given a file named "pipe_server_example.rb" with:
+    Given a file named "ipc_server_example.rb" with:
       """
       require 'uvrb'
 
       pong = "pong"
       loop = UV::Loop.default
 
-      server  = loop.pipe(true)
+      server  = loop.ipc
 
       server.bind("/tmp/pipe-example.ipc")
       server.listen(128) do |e|
@@ -50,14 +51,14 @@ Feature: named pipes
         abort e.message
       end
       """
-    And a file named "pipe_client_example.rb" with:
+    And a file named "ipc_client_example.rb" with:
       """
       require 'uvrb'
 
       ping = "ping"
       loop = UV::Loop.default
 
-      client = loop.pipe(true)
+      client = loop.ipc
 
       client.connect("/tmp/pipe-example.ipc") do |e|
         raise e if e
@@ -89,6 +90,6 @@ Feature: named pipes
         abort e.message
       end
       """
-    When I run `ruby pipe_server_example.rb` interactively
-    And I run `ruby pipe_client_example.rb`
+    When I run `ruby ipc_server_example.rb` interactively
+    And I run `ruby ipc_client_example.rb`
     Then the output should contain ping pong exchange

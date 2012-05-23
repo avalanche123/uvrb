@@ -383,6 +383,7 @@ module UV
   autoload :UDP, 'uv/udp'
   autoload :TTY, 'uv/tty'
   autoload :Pipe, 'uv/pipe'
+  autoload :IPC, 'uv/ipc'
   autoload :Prepare, 'uv/prepare'
   autoload :Check, 'uv/check'
   autoload :Idle, 'uv/idle'
