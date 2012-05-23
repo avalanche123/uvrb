@@ -43,6 +43,11 @@ by running:
 
   brew install Formula/libuv.rb --HEAD --with-dylib
 
+or, to compile from a local submodule version:
+
+  git submodule update --init
+  rake libuv
+
 == What's supported
 
 * TCP
