@@ -7,7 +7,7 @@ module UV
   begin
     # bias the library discovery to a path inside the gem first, then
     # to the usual system paths
-    inside_gem = File.join(File.dirname(__FILE__), '..', 'ext')
+    inside_gem = File.join(File.dirname(__FILE__), '..', 'ext', 'libuv')
     LIBUV_PATHS = [
       inside_gem, '/usr/local/lib', '/opt/local/lib', '/usr/lib64'
     ].map{|path| "#{path}/uv.#{FFI::Platform::LIBSUFFIX}"}
@@ -119,7 +119,6 @@ module UV
   typedef :pointer, :uv_shutdown_t
   enum :uv_handle_type, [
     :uv_unknown_handle, 0,
-    :uv_ares_task,
     :uv_async,
     :uv_check,
     :uv_fs_event,
@@ -132,8 +131,8 @@ module UV
     :uv_timer,
     :uv_tty,
     :uv_udp,
+    :uv_ares_task,
     :uv_file,
-    :uv_handle_type_private,
     :uv_handle_type_max
   ]
   enum :uv_req_type, [
