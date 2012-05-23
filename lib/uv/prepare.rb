@@ -2,7 +2,7 @@ module UV
   class Prepare
     include Handle
 
-    def start(&block) # :yields: error
+    def start(&block)
       assert_block(block)
       assert_arity(1, block)
 

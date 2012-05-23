@@ -14,7 +14,7 @@ module UV
       check_result! UV.pipe_bind(handle, name)
     end
 
-    def connect(name, &block) # :yields: error
+    def connect(name, &block)
       assert_block(block)
       assert_arity(1, block)
       assert_type(String, name, "name must be a String")

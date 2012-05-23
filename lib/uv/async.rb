@@ -2,8 +2,7 @@ module UV
   class Async
     include Handle
 
-    # :stopdoc:
-    def initialize(loop, async_ptr, &block) # :yields: error
+    def initialize(loop, async_ptr, &block)
       assert_block(block)
       assert_arity(1, block)
 
@@ -11,7 +10,6 @@ module UV
 
       super(loop, async_ptr)
     end
-    # :startdoc:
 
     def call
       check_result UV.async_send(handle)

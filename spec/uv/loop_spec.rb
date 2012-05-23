@@ -76,14 +76,13 @@ describe UV::Loop do
 
   describe "#last_error" do
     let(:error) { double() }
-    let(:error_name) { "OK" }
 
     it "calls UV.last_error" do
       UV.should_receive(:last_error).with(loop_pointer).and_return(error)
-      UV.should_receive(:err_name).with(error).and_return(error_name)
-      UV.should_receive(:strerror).with(error).and_return("OK")
+      UV.should_receive(:err_name).with(error).and_return("EINVAL")
+      UV.should_receive(:strerror).with(error).and_return("invalid argument")
 
-      subject.last_error.should == UV::Error::OK.new("OK")
+      subject.last_error.should == UV::Error::EINVAL.new("invalid argument")
     end
   end
 

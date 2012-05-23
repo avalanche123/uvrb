@@ -2,7 +2,7 @@ module UV
   module Stream
     include Handle
 
-    def listen(backlog, &block) # :yields: error
+    def listen(backlog, &block)
       assert_block(block)
       assert_arity(1, block)
       assert_type(Integer, backlog, "backlog must be an Integer")
@@ -24,7 +24,7 @@ module UV
       client
     end
 
-    def start_read(&block) # :yields: error, data
+    def start_read(&block)
       assert_block(block)
       assert_arity(2, block)
 
@@ -41,7 +41,7 @@ module UV
       check_result! UV.read_stop(handle)
     end
 
-    def write(data, &block) # :yields: error
+    def write(data, &block)
       assert_block(block)
       assert_arity(1, block)
       assert_type(String, data, "data must be a String")
@@ -57,7 +57,7 @@ module UV
       )
     end
 
-    def shutdown(&block) # :yields: error
+    def shutdown(&block)
       assert_block(block)
       assert_arity(1, block)
 
