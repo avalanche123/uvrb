@@ -101,18 +101,11 @@ describe UV::UDP do
       expect { subject.send(data) }.to raise_error(ArgumentError)
     end
 
-    it "requires to be bound first" do
-      expect { subject.send(data) { |e| } }.to raise_error(RuntimeError)
-    end
-
     context "ipv4" do
       let(:ip) { "0.0.0.0" }
 
       before(:each) do
         UV.should_receive(:ip4_addr).with(ip, port).and_return(ip_addr)
-        UV.should_receive(:udp_bind).with(pointer, ip_addr, 0)
-
-        subject.bind(ip, port)
       end
 
       it "calls UV.udp_send" do
@@ -121,7 +114,7 @@ describe UV::UDP do
         UV.should_receive(:create_request).with(:uv_udp_send).and_return(uv_udp_send_request)
         UV.should_receive(:udp_send).with(uv_udp_send_request, pointer, buffer, 1, ip_addr, subject.method(:on_send))
 
-        subject.send(data) { |e| }
+        subject.send(ip, port, data) { |e| }
       end
     end
 
@@ -130,9 +123,6 @@ describe UV::UDP do
 
       before(:each) do
         UV.should_receive(:ip6_addr).with(ip, port).and_return(ip_addr)
-        UV.should_receive(:udp_bind6).with(pointer, ip_addr, 0)
-
-        subject.bind(ip, port)
       end
 
       it "calls UV.udp_send6" do
@@ -141,7 +131,7 @@ describe UV::UDP do
         UV.should_receive(:create_request).with(:uv_udp_send).and_return(uv_udp_send_request)
         UV.should_receive(:udp_send6).with(uv_udp_send_request, pointer, buffer, 1, ip_addr, subject.method(:on_send))
 
-        subject.send(data) { |e| }
+        subject.send(ip, port, data) { |e| }
       end
     end
   end

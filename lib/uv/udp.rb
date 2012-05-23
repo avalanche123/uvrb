@@ -44,14 +44,16 @@ module UV
       check_result! UV.udp_recv_stop(handle)
     end
 
-    def send(data, &block)
+    def send(ip, port, data, &block)
       assert_block(block)
       assert_arity(1, block)
+      assert_type(String, ip, "ip must be a String")
+      assert_type(Integer, port, "port must be an Integer")
       assert_type(String, data, "data must be a String")
-      raise "cannot send data over unbound socket, make sure to #bind it first" unless @socket
 
       @send_block = block
 
+      @socket = create_socket(IPAddr.new(ip), port)
       @socket.send(data, callback(:on_send))
     end
 
