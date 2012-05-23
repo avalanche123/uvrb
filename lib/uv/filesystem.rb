@@ -2,11 +2,13 @@ module UV
   class Filesystem
     include Resource, Listener, Assertions
 
+    # :stopdoc:
     def initialize(loop)
       @loop = loop
     end
+    # :startdoc:
 
-    def open(path, mode = 0, perm = 0, &block)
+    def open(path, mode = 0, perm = 0, &block) # :yields: error, file
       assert_block(block)
       assert_arity(2, block)
       assert_type(String, path, "path must be a String")
@@ -18,7 +20,7 @@ module UV
       UV.fs_open(loop.to_ptr, UV.create_request(:uv_fs), mode, perm, callback(:on_open))
     end
 
-    def unlink(path, &block)
+    def unlink(path, &block) # :yields: error
       assert_block(block)
       assert_arity(1, block)
       assert_type(String, path, "path must be a String")
@@ -28,7 +30,7 @@ module UV
       UV.fs_unlink(loop.to_ptr, UV.create_request(:uv_fs), path, callback(:on_unlink))
     end
 
-    def mkdir(path, perm = 0777, &block)
+    def mkdir(path, perm = 0777, &block) # :yields: error
       assert_block(block)
       assert_arity(1, block)
       assert_type(String, path, "path must be a String")
@@ -39,7 +41,7 @@ module UV
       UV.fs_mkdir(loop.to_ptr, UV.create_request(:uv_fs), path, perm, callback(:on_mkdir))
     end
 
-    def rmdir(path, &block)
+    def rmdir(path, &block) # :yields: error
       assert_block(block)
       assert_arity(1, block)
       assert_type(String, path, "path must be a String")

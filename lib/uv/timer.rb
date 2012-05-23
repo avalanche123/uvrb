@@ -2,7 +2,7 @@ module UV
   class Timer
     include Handle
 
-    def start(timeout, repeat, &block)
+    def start(timeout, repeat, &block) # :yields: error
       assert_block(block)
       assert_arity(1, block)
       assert_type(Integer, timeout, "timeout must be an Integer")

@@ -11,18 +11,22 @@ module UV
         create(UV.loop_new)
       end
 
+      # :stopdoc:
       def create(pointer)
         allocate.tap { |i| i.send(:initialize, FFI::AutoPointer.new(pointer, UV.method(:loop_delete))) }
       end
+      # :startdoc:
     end
 
     extend ClassMethods
 
     include Resource, Assertions
 
-    def initialize(pointer)
+    # :stopdoc:
+    def initialize(pointer) # :notnew:
       @pointer = pointer
     end
+    # :startdoc:
 
     def run
       check_result! UV.run(@pointer)
@@ -110,7 +114,7 @@ module UV
       Idle.new(self, idle_ptr)
     end
 
-    def async(&block)
+    def async(&block) # :yields: error
       async_ptr = UV.create_handle(:uv_async)
       async     = Async.new(self, async_ptr, &block)
 

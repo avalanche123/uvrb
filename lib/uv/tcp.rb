@@ -13,7 +13,7 @@ module UV
       @socket.bind
     end
 
-    def connect(ip, port, &block)
+    def connect(ip, port, &block) # :yields: error
       assert_block(block)
       assert_arity(1, block)
       assert_type(String, ip, "ip must be a String")
@@ -80,9 +80,11 @@ module UV
     module SocketMethods
       include Resource
 
+      # :stopdoc:
       def initialize(loop, tcp, ip, port)
         @loop, @tcp, @sockaddr = loop, tcp, ip_addr(ip, port)
       end
+      # :startdoc:
 
       def bind
         check_result! tcp_bind

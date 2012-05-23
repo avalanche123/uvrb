@@ -20,6 +20,7 @@ module UV
     exit 255
   end
 
+  # :stopdoc:
   def self.union
     Class.new(FFI::Union) do
       layout *yield
@@ -31,6 +32,7 @@ module UV
       layout *yield
     end
   end
+  # :startdoc:
 
   if FFI::Platform.windows?
     # win32 has a different uv_buf_t layout to everything else.

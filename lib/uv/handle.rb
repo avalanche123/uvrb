@@ -2,11 +2,13 @@ module UV
   module Handle
     include Assertions, Resource, Listener
 
+    # :stopdoc:
     def initialize(loop, pointer)
       @loop, @pointer = loop, pointer
     end
+    # :startdoc:
 
-    def close(&block)
+    def close(&block) # :yields:
       assert_block(block)
       assert_arity(0, block)
 

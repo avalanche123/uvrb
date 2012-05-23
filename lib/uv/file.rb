@@ -2,12 +2,14 @@ module UV
   class File
     include Resource, Listener
 
+    # :stopdoc:
     def initialize(loop, fd)
       @loop = loop
       @fd = Integer(fd)
     end
+    # :startdoc:
 
-    def close(&block)
+    def close(&block) # :yields: error
       @close_block = block
       check_result! UV.fs_close(
         loop.to_ptr,
@@ -17,7 +19,7 @@ module UV
       )
     end
 
-    def read(length, offset = 0, &block)
+    def read(length, offset = 0, &block) # :yields: error, data
       raise ArgumentError, "no block given", caller unless block_given?
       @read_block = block
       @read_buffer_length = Integer(length)
@@ -33,7 +35,7 @@ module UV
       )
     end
 
-    def write(data, offset = 0, &block)
+    def write(data, offset = 0, &block) # :yields: error
       @write_block = block
       @write_buffer_length = data.respond_to?(:bytesize) ? data.bytesize : data.size
       @write_buffer = FFI::MemoryPointer.from_string(data)
@@ -48,7 +50,7 @@ module UV
       )
     end
 
-    def stat(&block)
+    def stat(&block) # :yields: error, stat
       raise ArgumentError, "no block given", caller unless block_given?
       @stat_block = block
       check_result! UV.fs_fstat(
@@ -59,7 +61,7 @@ module UV
       )
     end
 
-    def sync(&block)
+    def sync(&block) # :yields: error
       raise ArgumentError, "no block given", caller unless block_given?
       @sync_block = block
       check_result! UV.fs_fsync(
@@ -70,7 +72,7 @@ module UV
       )
     end
 
-    def datasync(&block)
+    def datasync(&block) # :yields: error
       raise ArgumentError, "no block given", caller unless block_given?
       @datasync_block = block
       check_result! UV.fs_fdatasync(
@@ -81,7 +83,7 @@ module UV
       )
     end
 
-    def truncate(offset, &block)
+    def truncate(offset, &block) # :yields: error
       raise ArgumentError, "no block given", caller unless block_given?
       @truncate_block = block
       check_result! UV.fs_ftruncate(
@@ -93,7 +95,7 @@ module UV
       )
     end
 
-    def utime(atime, mtime, &block)
+    def utime(atime, mtime, &block) # :yields: error
       raise ArgumentError, "no block given", caller unless block_given?
       @utime_block = block
       check_result! UV.fs_futime(
@@ -106,7 +108,7 @@ module UV
       )
     end
 
-    def chmod(mode, &block)
+    def chmod(mode, &block) # :yields: error
       raise ArgumentError, "no block given", caller unless block_given?
       @chmod_block = block
       check_result! UV.fs_fchmod(
@@ -118,7 +120,7 @@ module UV
       )
     end
 
-    def chown(uid, gid, &block)
+    def chown(uid, gid, &block) # :yields: error
       raise ArgumentError, "no block given", caller unless block_given?
       @chown_block = block
       check_result! UV.fs_fchown(

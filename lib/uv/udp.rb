@@ -31,7 +31,7 @@ module UV
       check_result! UV.udp_set_membership(handle, multicast_address, interface_address, :uv_leave_group)
     end
 
-    def start_recv(&block)
+    def start_recv(&block) # :yields: error, data, ip, port
       assert_block(block)
       assert_arity(4, block)
 
@@ -44,7 +44,7 @@ module UV
       check_result! UV.udp_recv_stop(handle)
     end
 
-    def send(ip, port, data, &block)
+    def send(ip, port, data, &block) # :yields: error
       assert_block(block)
       assert_arity(1, block)
       assert_type(String, ip, "ip must be a String")
@@ -118,9 +118,11 @@ module UV
     module SocketMethods
       include Resource
 
+      # :stopdoc:
       def initialize(loop, udp, ip, port)
         @loop, @udp, @sockaddr = loop, udp, ip_addr(ip.to_s, port)
       end
+      # :startdoc:
 
       def bind(ipv6_only = false)
         check_result! udp_bind(ipv6_only)
