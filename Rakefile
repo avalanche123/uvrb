@@ -14,6 +14,7 @@ RDoc::Task.new(:rdoc => "rdoc", :clobber_rdoc => "rdoc:clean", :rerdoc => "rdoc:
   rd.main = "README.rdoc"
   rd.rdoc_files.include("README.rdoc", "lib/**/*.rb")
   rd.options << "--title=UV.rb - libuv bindings for Ruby"
+  rd.options << "--markup=tomdoc"
 end
 
 task :default => [:spec, :features]
