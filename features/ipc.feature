@@ -4,7 +4,7 @@ Feature: unix domain sockets
   with named pipes, which are also used for ipc is that they support bidirectional
   communication.
 
-  Scenario: inter process communication
+  Scenario: bidirectional inter process communication
     Given a file named "ipc_server_example.rb" with:
       """
       require 'uvrb'
@@ -14,7 +14,7 @@ Feature: unix domain sockets
 
       server  = loop.ipc
 
-      server.bind("/tmp/pipe-example.ipc")
+      server.bind("/tmp/ipc-example.ipc")
       server.listen(128) do |e|
         raise e if e
 
@@ -52,7 +52,7 @@ Feature: unix domain sockets
 
       client = loop.ipc
 
-      client.connect("/tmp/pipe-example.ipc") do |e|
+      client.connect("/tmp/ipc-example.ipc") do |e|
         raise e if e
 
         pinger = loop.timer
