@@ -41,7 +41,7 @@ lib path.
 To compile libuv with .dylib, you can install provided Homebrew formula
 by running:
 
-  brew install Formula/libuv.rb --HEAD --with-dylib
+  brew install Formula/libuv.rb --HEAD
 
 or, to compile from a local submodule version:
 
