@@ -21,16 +21,41 @@ end
 
 task :default => [:spec, :features]
 
-file 'ext/libuv/uv.a' do
-  Dir.chdir("ext/libuv") { |path| system "make" }
+file 'ext/libuv/build/gyp' do
+  Dir.chdir("ext/libuv") { |path| system "svn", "co", "http://gyp.googlecode.com/svn/trunk", "build/gyp" }
 end
 
-file "ext/libuv/uv.#{FFI::Platform::LIBSUFFIX}" => 'ext/libuv/uv.a' do
-  Dir.chdir("ext/libuv") { |path| system 'libtool', '-dynamic', '-framework', 'CoreServices', '-o', "uv.#{FFI::Platform::LIBSUFFIX}", 'uv.a', '-lc' }
+task 'gyp_install' => 'ext/libuv/build/gyp' do
+  Dir.chdir("ext/libuv") do |path|
+    if FFI::Platform.windows?
+      system 'vcbuild.bat'
+    elsif FFI::Platform.mac?
+      system './gyp_uv -f xcode'
+      system 'xcodebuild', '-project', 'uv.xcodeproj', '-configuration', 'Release', '-target', 'All'
+    else # UNIX
+      system './gyp_uv -f make'
+      system 'make'
+    end
+  end
 end
 
-CLOBBER << 'ext/libuv/uv.a'
-CLOBBER << "ext/libuv/uv.#{FFI::Platform::LIBSUFFIX}"
+file 'ext/libuv/build/Release/libuv.a' => 'gyp_install'
+file "ext/libuv/build/Release/libuv.#{FFI::Platform::LIBSUFFIX}" => 'gyp_install'
+
+file 'ext/libuv/libuv.a' => 'ext/libuv/build/Release/libuv.a' do
+  File.symlink("ext/libuv/build/Release/libuv.a", "ext/libuv/libuv.a")
+end
+
+file "ext/libuv/libuv.#{FFI::Platform::LIBSUFFIX}" => "ext/libuv/build/Release/libuv.#{FFI::Platform::LIBSUFFIX}" do
+  File.symlink("ext/libuv/build/Release/libuv.#{FFI::Platform::LIBSUFFIX}", "ext/libuv/libuv.#{FFI::Platform::LIBSUFFIX}")
+end
+
+CLOBBER << 'ext/libuv/libuv.a'
+CLOBBER << "ext/libuv/libuv.#{FFI::Platform::LIBSUFFIX}"
+CLOBBER << 'ext/libuv/build/Release'
+CLOBBER << 'ext/libuv/build/uv.build'
+CLOBBER << 'ext/libuv/build/gyp'
+
 
 desc "Compile libuv from submodule"
-task :libuv => ['ext/libuv/uv.a', "ext/libuv/uv.#{FFI::Platform::LIBSUFFIX}"]
+task :libuv => ['ext/libuv/libuv.a', "ext/libuv/libuv.#{FFI::Platform::LIBSUFFIX}"]

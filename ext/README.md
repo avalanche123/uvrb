@@ -1,2 +1,7 @@
-Put libuv sources here if you want to use a local version, useful for
-using specific version of libuv
+This directory contains libuv submodule the bindings are written for since there are no
+versioning tags for the libuv itself yet. To use this local copy of libuv, got to root directory of the uvrb project and run:
+
+```shell
+git submodule update --init
+rake libuv
+```
