@@ -10,7 +10,7 @@ module UV
     inside_gem = File.join(File.dirname(__FILE__), '..', 'ext', 'libuv')
     LIBUV_PATHS = [
       inside_gem, '/usr/local/lib', '/opt/local/lib', '/usr/lib64'
-    ].map{|path| "#{path}/uv.#{FFI::Platform::LIBSUFFIX}"}
+    ].map{|path| "#{path}/libuv.#{FFI::Platform::LIBSUFFIX}"}
     libuv = ffi_lib(LIBUV_PATHS + %w{libuv}).first
   rescue LoadError
     STDERR.puts "Unable to load this gem. The libuv library (or DLL) could not be found."
