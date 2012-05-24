@@ -30,7 +30,7 @@ task 'gyp_install' => 'ext/libuv/build/gyp' do
     if FFI::Platform.windows?
       system 'vcbuild.bat'
     elsif FFI::Platform.mac?
-      system './gyp_uv -f xcode'
+      system './gyp_uv -f xcode -Dtarget_arch=ia64'
       system 'xcodebuild', '-project', 'uv.xcodeproj', '-configuration', 'Release', '-target', 'All'
     else # UNIX
       system './gyp_uv -f make'
@@ -43,18 +43,19 @@ file 'ext/libuv/build/Release/libuv.a' => 'gyp_install'
 file "ext/libuv/build/Release/libuv.#{FFI::Platform::LIBSUFFIX}" => 'gyp_install'
 
 file 'ext/libuv/libuv.a' => 'ext/libuv/build/Release/libuv.a' do
-  File.symlink("ext/libuv/build/Release/libuv.a", "ext/libuv/libuv.a")
+  File.symlink("build/Release/libuv.a", "ext/libuv/libuv.a")
 end
 
 file "ext/libuv/libuv.#{FFI::Platform::LIBSUFFIX}" => "ext/libuv/build/Release/libuv.#{FFI::Platform::LIBSUFFIX}" do
-  File.symlink("ext/libuv/build/Release/libuv.#{FFI::Platform::LIBSUFFIX}", "ext/libuv/libuv.#{FFI::Platform::LIBSUFFIX}")
+  File.symlink("build/Release/libuv.#{FFI::Platform::LIBSUFFIX}", "ext/libuv/libuv.#{FFI::Platform::LIBSUFFIX}")
 end
 
 CLOBBER << 'ext/libuv/libuv.a'
 CLOBBER << "ext/libuv/libuv.#{FFI::Platform::LIBSUFFIX}"
 CLOBBER << 'ext/libuv/build/Release'
 CLOBBER << 'ext/libuv/build/uv.build'
-CLOBBER << 'ext/libuv/build/gyp'
+CLOBBER << 'ext/libuv/uv.xcodeproj'
+# CLOBBER << 'ext/libuv/build/gyp'
 
 
 desc "Compile libuv from submodule"
