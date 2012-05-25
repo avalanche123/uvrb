@@ -8,6 +8,16 @@ require 'rdoc/task'
 require 'ffi'
 require 'rake/clean'
 
+module FFI::Platform
+  def self.ia32?
+    ARCH == "i386"
+  end
+
+  def self.x64?
+    ARCH == "x86_64"
+  end
+end
+
 RSpec::Core::RakeTask.new
 
 Cucumber::Rake::Task.new(:features)
@@ -26,14 +36,22 @@ file 'ext/libuv/build/gyp' do
 end
 
 task 'gyp_install' => 'ext/libuv/build/gyp' do
+  if FFI::Platform.ia32?
+    target_arch = 'ia32'
+  elsif FFI::Platform.x64?
+    target_arch = 'x64'
+  else
+    abort "cannot build on #{FFI::Platform::ARCH} architecture"
+  end
+
   Dir.chdir("ext/libuv") do |path|
     if FFI::Platform.windows?
       system 'vcbuild.bat'
     elsif FFI::Platform.mac?
-      system './gyp_uv -f xcode -Dtarget_arch=ia64'
+      system "./gyp_uv -f xcode -Dtarget_arch=#{target_arch}"
       system 'xcodebuild', '-project', 'uv.xcodeproj', '-configuration', 'Release', '-target', 'All'
     else # UNIX
-      system './gyp_uv -f make'
+      system "./gyp_uv -f make -Dtarget_arch=#{target_arch}"
       system 'make'
     end
   end
