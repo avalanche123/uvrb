@@ -11,3 +11,4 @@ before_install:
   - git submodule update --init --recursive
 before_script:
   - rake libuv
+  - ls -laR
