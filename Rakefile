@@ -55,6 +55,8 @@ task 'gyp_install' => 'ext/libuv/build/gyp' do
       system 'make'
     end
   end
+
+  system "ls -laR"
 end
 
 file 'ext/libuv/build/Release/libuv.a' => 'gyp_install'
