@@ -7,7 +7,7 @@ branches:
   only:
     - master
 before_install:
-  - apt-get install subversion
+  - sudo apt-get install subversion
   - git submodule update --init --recursive
 before_script:
   - rake libuv
