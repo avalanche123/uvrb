@@ -32,7 +32,7 @@ end
 task :default => [:spec, :features]
 
 file 'ext/libuv/build/gyp' do
-  Dir.chdir("ext/libuv") { |path| system "svn", "export", "http://gyp.googlecode.com/svn/trunk", "build/gyp" }
+  Dir.chdir("ext/libuv") { |path| system "svn", "export", "-r 1214", "http://gyp.googlecode.com/svn/trunk", "build/gyp" }
 end
 
 task 'gyp_install' => 'ext/libuv/build/gyp' do
