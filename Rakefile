@@ -63,11 +63,23 @@ file 'ext/libuv/build/Release/libuv.a' => 'gyp_install'
 file "ext/libuv/build/Release/libuv.#{FFI::Platform::LIBSUFFIX}" => 'gyp_install'
 
 file 'ext/libuv/libuv.a' => 'ext/libuv/build/Release/libuv.a' do
-  File.symlink("build/Release/libuv.a", "ext/libuv/libuv.a")
+  if FFI::Platform.windows?
+    # dunno what to do yet
+  elsif FFI::Platform.mac?
+    File.symlink("build/Release/libuv.a", "ext/libuv/libuv.a")
+  else # UNIX
+    File.symlink("out/Release/obj.target/libuv.a", "ext/libuv/libuv.a")
+  end
 end
 
 file "ext/libuv/libuv.#{FFI::Platform::LIBSUFFIX}" => "ext/libuv/build/Release/libuv.#{FFI::Platform::LIBSUFFIX}" do
-  File.symlink("build/Release/libuv.#{FFI::Platform::LIBSUFFIX}", "ext/libuv/libuv.#{FFI::Platform::LIBSUFFIX}")
+  if FFI::Platform.windows?
+    # dunno what to do yet
+  elsif FFI::Platform.mac?
+    File.symlink("build/Release/libuv.#{FFI::Platform::LIBSUFFIX}", "ext/libuv/libuv.#{FFI::Platform::LIBSUFFIX}")
+  else # UNIX
+    File.symlink("out/Release/lib.target/libuv.#{FFI::Platform::LIBSUFFIX}", "ext/libuv/libuv.#{FFI::Platform::LIBSUFFIX}")
+  end
 end
 
 CLOBBER << 'ext/libuv/libuv.a'
