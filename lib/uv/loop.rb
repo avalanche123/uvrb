@@ -242,22 +242,17 @@ module UV
 
     # Public: Get a new Pipe instance
     # 
-    # Returns UV::Pipe
-    def pipe
-      pipe_ptr = UV.create_handle(:uv_pipe)
-
-      check_result! UV.pipe_init(@pointer, pipe_ptr, 0)
-      Pipe.new(self, pipe_ptr)
-    end
-
-    # Public: Get a new IPC instance
+    # ipc - Boolean wether handle will be used for ipc, useful for sharing tcp socket
+    #       between processes
     # 
-    # Returns UV::IPC
-    def ipc
+    # Returns UV::Pipe
+    def pipe(ipc = false)
+      assert_boolean(ipc)
+
       pipe_ptr = UV.create_handle(:uv_pipe)
 
-      check_result! UV.pipe_init(@pointer, pipe_ptr, 1)
-      IPC.new(self, pipe_ptr)
+      check_result! UV.pipe_init(@pointer, pipe_ptr, ipc ? 1 : 0)
+      Pipe.new(self, pipe_ptr)
     end
 
     # Public: Get a new Prepare handle
