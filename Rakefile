@@ -52,7 +52,7 @@ task 'gyp_install' => 'ext/libuv/build/gyp' do
       system 'xcodebuild', '-project', 'uv.xcodeproj', '-configuration', 'Release', '-target', 'All'
     else # UNIX
       system "./gyp_uv -f make -Dtarget_arch=#{target_arch}"
-      system 'make'
+      system 'make -C out BUILDTYPE=Release'
     end
   end
 
