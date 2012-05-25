@@ -10,5 +10,5 @@ before_install:
   - sudo apt-get install subversion
   - git submodule update --init --recursive
 before_script:
-  - rake libuv
   - ls -laR
+  - rake libuv
