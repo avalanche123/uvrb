@@ -34,7 +34,7 @@ Feature: Named pipes
         clients.each do |client|
           client.close {}
         end
-        server.close { File.unlink("/tmp/ipc-example.ipc") }
+        server.close {}
         server_stopper.close {}
       end
 
@@ -42,6 +42,8 @@ Feature: Named pipes
         loop.run
       rescue Exception => e
         abort e.message
+      ensure
+        File.unlink("/tmp/ipc-example.ipc") if File.exists?("/tmp/ipc-example.ipc")
       end
       """
     And a file named "ipc_client_example.rb" with:
@@ -89,6 +91,8 @@ Feature: Named pipes
         exit 0
       rescue Exception => e
         abort e.message
+      ensure
+        File.unlink("/tmp/ipc-example.ipc") if File.exists?("/tmp/ipc-example.ipc")
       end
       """
     When I run `ruby ipc_server_example.rb` interactively
