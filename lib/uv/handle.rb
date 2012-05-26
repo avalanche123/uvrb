@@ -6,6 +6,22 @@ module UV
       @loop, @pointer = loop, pointer
     end
 
+    # Public: Increment internal ref counter for the handle on the loop. Useful for
+    # extending the loop with custom watchers that need to make loop not stop
+    # 
+    # Returns nothing
+    def ref
+      UV.ref(@pointer)
+    end
+
+    # Public: Decrement internal ref counter for the handle on the loop, useful to stop
+    # loop even when there are outstanding open handles
+    # 
+    # Returns nothing
+    def unref
+      UV.unref(@pointer)
+    end
+
     def close(&block)
       assert_block(block)
       assert_arity(0, block)

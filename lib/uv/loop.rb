@@ -158,22 +158,6 @@ module UV
       check_result! UV.run_once(@pointer)
     end
 
-    # Public: Increment internal ref counter on the loop. Useful for extending the loop
-    # with custom watchers that need to make loop not stop
-    # 
-    # Returns nothing
-    def ref
-      UV.ref(@pointer)
-    end
-
-    # Public: Decrement internal ref counter on the loop, useful to stop loop even when
-    # there are outstanding open handles
-    # 
-    # Returns nothing
-    def unref
-      UV.unref(@pointer)
-    end
-
     # Public: forces loop time update, useful for getting more granular times
     # 
     # Returns nothing

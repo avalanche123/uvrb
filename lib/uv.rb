@@ -29,8 +29,8 @@ module UV
   attach_function :default_loop, :uv_default_loop, [], :uv_loop_t
   attach_function :run, :uv_run, [:uv_loop_t], :int
   attach_function :run_once, :uv_run_once, [:uv_loop_t], :int
-  attach_function :ref, :uv_ref, [:uv_loop_t], :void
-  attach_function :unref, :uv_unref, [:uv_loop_t], :void
+  attach_function :ref, :uv_ref, [:uv_handle_t], :void
+  attach_function :unref, :uv_unref, [:uv_handle_t], :void
   attach_function :update_time, :uv_update_time, [:uv_loop_t], :void
   attach_function :now, :uv_now, [:uv_loop_t], :int64
   attach_function :last_error, :uv_last_error, [:uv_loop_t], :uv_err_t

@@ -1,6 +1,22 @@
 require 'spec_helper'
 
 shared_examples_for 'a handle' do
+  describe "#ref" do
+    it "calls UV.ref" do
+      UV.should_receive(:ref).with(pointer)
+
+      subject.ref
+    end
+  end
+
+  describe "#unref" do
+    it "calls UV.unref" do
+      UV.should_receive(:unref).with(pointer)
+
+      subject.unref
+    end
+  end
+
   describe "#close" do
     it "requires a block" do
       expect { subject.close }.to raise_error(ArgumentError)

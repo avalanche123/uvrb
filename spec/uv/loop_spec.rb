@@ -40,22 +40,6 @@ describe UV::Loop do
     end
   end
 
-  describe "#ref" do
-    it "calls UV.ref" do
-      UV.should_receive(:ref).with(loop_pointer)
-
-      subject.ref
-    end
-  end
-
-  describe "#unref" do
-    it "calls UV.unref" do
-      UV.should_receive(:unref).with(loop_pointer)
-
-      subject.unref
-    end
-  end
-
   describe "#update_time" do
     it "calls UV.update_time" do
       UV.should_receive(:update_time).with(loop_pointer)
