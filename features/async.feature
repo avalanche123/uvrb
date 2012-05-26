@@ -14,12 +14,12 @@ Feature: wake up another event loop
       timer = loop.timer
       timer.start(0, 100) do |e|
         count += 1
-        Thread.pass
+        sleep(0.2)
       end
 
       callback = loop.async do |e|
         stopper = loop.timer
-        stopper.start(800, 0) do |e|
+        stopper.start(1000, 0) do |e|
           timer.close {}
           callback.close {}
           stopper.close {}
