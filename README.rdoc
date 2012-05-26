@@ -1,4 +1,5 @@
 = uv.rb - libuv FFI bindings for Ruby
+{<img src="https://secure.travis-ci.org/avalanche123/uvrb.png?branch=master" alt="Build Status" />}[http://travis-ci.org/avalanche123/uvrb]
 
 {Libuv}[https://github.com/joyent/libuv] is a cross platform asynchronous IO implementation that powers NodeJS. It supports sockets, both UDP and TCP, filesystem operations, TTY, Pipes and other asynchronous primitives like timer, check, prepare and idle.
 
