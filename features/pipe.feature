@@ -34,7 +34,7 @@ Feature: Named pipes
         clients.each do |client|
           client.close {}
         end
-        server.close {}
+        server.close { File.unlink("/tmp/ipc-example.ipc") }
         server_stopper.close {}
       end
 
