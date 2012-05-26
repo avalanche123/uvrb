@@ -55,8 +55,6 @@ task 'gyp_install' => 'ext/libuv/build/gyp' do
       system 'make -C out BUILDTYPE=Release'
     end
   end
-
-  system "ls -laR"
 end
 
 file 'ext/libuv/build/Release/libuv.a' => 'gyp_install'
