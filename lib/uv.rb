@@ -38,9 +38,10 @@ module UV
     end
   end
 
-  # blksize_t is not yet part of types.conf on linux
+  # blksize_t, in_addr_t is not yet part of types.conf on linux
   if FFI::Platform.linux?
     typedef :long, :blksize_t
+    typedef :uint32, :in_addr_t
   end
 
   if FFI::Platform.windows?
