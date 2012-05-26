@@ -42,6 +42,7 @@ module UV
   if FFI::Platform.linux?
     typedef :long, :blksize_t
     typedef :uint32, :in_addr_t
+    typedef :ushort, :in_port_t
   end
 
   if FFI::Platform.windows?
