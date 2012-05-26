@@ -29,19 +29,23 @@ module UV
   attach_function :default_loop, :uv_default_loop, [], :uv_loop_t
   attach_function :run, :uv_run, [:uv_loop_t], :int
   attach_function :run_once, :uv_run_once, [:uv_loop_t], :int
-  attach_function :ref, :uv_ref, [:uv_handle_t], :void
-  attach_function :unref, :uv_unref, [:uv_handle_t], :void
   attach_function :update_time, :uv_update_time, [:uv_loop_t], :void
   attach_function :now, :uv_now, [:uv_loop_t], :int64
+
   attach_function :last_error, :uv_last_error, [:uv_loop_t], :uv_err_t
   attach_function :strerror, :uv_strerror, [:uv_err_t], :string
   attach_function :err_name, :uv_err_name, [:uv_err_t], :string
-  attach_function :shutdown, :uv_shutdown, [:uv_shutdown_t, :uv_stream_t, :uv_shutdown_cb], :int
+
+  attach_function :ref, :uv_ref, [:uv_handle_t], :void
+  attach_function :unref, :uv_unref, [:uv_handle_t], :void
   attach_function :is_active, :uv_is_active, [:uv_handle_t], :int
   attach_function :close, :uv_close, [:uv_handle_t, :uv_close_cb], :void
+  attach_function :is_closing, :uv_is_closing, [:uv_handle_t], :int
+
   attach_function :buf_init, :uv_buf_init, [:pointer, :size_t], :uv_buf_t
   attach_function :strlcpy, :uv_strlcpy, [:string, :string, :size_t], :size_t
   attach_function :strlcat, :uv_strlcat, [:string, :string, :size_t], :size_t
+
   attach_function :listen, :uv_listen, [:uv_stream_t, :int, :uv_connection_cb], :int
   attach_function :accept, :uv_accept, [:uv_stream_t, :uv_stream_t], :int
   attach_function :read_start, :uv_read_start, [:uv_stream_t, :uv_alloc_cb, :uv_read_cb], :int
@@ -51,7 +55,8 @@ module UV
   attach_function :write2, :uv_write2, [:uv_write_t, :uv_stream_t, :pointer, :int, :uv_write_cb], :int
   attach_function :is_readable, :uv_is_readable, [:uv_stream_t], :int
   attach_function :is_writable, :uv_is_writable, [:uv_stream_t], :int
-  attach_function :is_closing, :uv_is_closing, [:uv_handle_t], :int
+  attach_function :shutdown, :uv_shutdown, [:uv_shutdown_t, :uv_stream_t, :uv_shutdown_cb], :int
+
   attach_function :tcp_init, :uv_tcp_init, [:uv_loop_t, :uv_tcp_t], :int
   attach_function :tcp_nodelay, :uv_tcp_nodelay, [:uv_tcp_t, :int], :int
   attach_function :tcp_keepalive, :uv_tcp_keepalive, [:uv_tcp_t, :int, :uint], :int
@@ -62,6 +67,7 @@ module UV
   attach_function :tcp_getpeername, :uv_tcp_getpeername, [:uv_tcp_t, :pointer, :pointer], :int
   attach_function :tcp_connect, :uv_tcp_connect, [:uv_connect_t, :uv_tcp_t, SockaddrIn.by_value, :uv_connect_cb], :int
   attach_function :tcp_connect6, :uv_tcp_connect6, [:uv_connect_t, :uv_tcp_t, SockaddrIn6.by_value, :uv_connect_cb], :int
+
   attach_function :udp_init, :uv_udp_init, [:uv_loop_t, :uv_udp_t], :int
   attach_function :udp_bind, :uv_udp_bind, [:uv_udp_t, SockaddrIn.by_value, :uint], :int
   attach_function :udp_bind6, :uv_udp_bind6, [:uv_udp_t, SockaddrIn6.by_value, :uint], :int
@@ -75,37 +81,48 @@ module UV
   attach_function :udp_send6, :uv_udp_send6, [:uv_udp_send_t, :uv_udp_t, :uv_buf_t, :int, SockaddrIn6.by_value, :uv_udp_send_cb], :int
   attach_function :udp_recv_start, :uv_udp_recv_start, [:uv_udp_t, :uv_alloc_cb, :uv_udp_recv_cb], :int
   attach_function :udp_recv_stop, :uv_udp_recv_stop, [:uv_udp_t], :int
+
   attach_function :tty_init, :uv_tty_init, [:uv_loop_t, :uv_tty_t, :uv_file, :int], :int
   attach_function :tty_set_mode, :uv_tty_set_mode, [:uv_tty_t, :int], :int
   attach_function :tty_reset_mode, :uv_tty_reset_mode, [], :void
   attach_function :tty_get_winsize, :uv_tty_get_winsize, [:uv_tty_t, :pointer, :pointer], :int
+
   attach_function :guess_handle, :uv_guess_handle, [:uv_file], :uv_handle_type
+
   attach_function :pipe_init, :uv_pipe_init, [:uv_loop_t, :uv_pipe_t, :int], :int
   attach_function :pipe_open, :uv_pipe_open, [:uv_pipe_t, :uv_file], :void
   attach_function :pipe_bind, :uv_pipe_bind, [:uv_pipe_t, :string], :int
   attach_function :pipe_connect, :uv_pipe_connect, [:uv_connect_t, :uv_pipe_t, :string, :uv_connect_cb], :void
   attach_function :pipe_pending_instances, :uv_pipe_pending_instances, [:uv_pipe_t, :int], :void
+
   attach_function :prepare_init, :uv_prepare_init, [:uv_loop_t, :uv_prepare_t], :int
   attach_function :prepare_start, :uv_prepare_start, [:uv_prepare_t, :uv_prepare_cb], :int
   attach_function :prepare_stop, :uv_prepare_stop, [:uv_prepare_t], :int
+
   attach_function :check_init, :uv_check_init, [:uv_loop_t, :uv_check_t], :int
   attach_function :check_start, :uv_check_start, [:uv_check_t, :uv_check_cb], :int
   attach_function :check_stop, :uv_check_stop, [:uv_check_t], :int
+
   attach_function :idle_init, :uv_idle_init, [:uv_loop_t, :uv_idle_t], :int
   attach_function :idle_start, :uv_idle_start, [:uv_idle_t, :uv_idle_cb], :int
   attach_function :idle_stop, :uv_idle_stop, [:uv_idle_t], :int
+
   attach_function :async_init, :uv_async_init, [:uv_loop_t, :uv_async_t, :uv_async_cb], :int
   attach_function :async_send, :uv_async_send, [:uv_async_t], :int
+
   attach_function :timer_init, :uv_timer_init, [:uv_loop_t, :uv_timer_t], :int
   attach_function :timer_start, :uv_timer_start, [:uv_timer_t, :uv_timer_cb, :int64_t, :int64_t], :int
   attach_function :timer_stop, :uv_timer_stop, [:uv_timer_t], :int
   attach_function :timer_again, :uv_timer_again, [:uv_timer_t], :int
   attach_function :timer_set_repeat, :uv_timer_set_repeat, [:uv_timer_t, :int64_t], :void
   attach_function :timer_get_repeat, :uv_timer_get_repeat, [:uv_timer_t], :int64_t
+
   attach_function :ares_init_options, :uv_ares_init_options, [:uv_loop_t, :ares_channel, :ares_options, :int], :int
   attach_function :ares_destroy, :uv_ares_destroy, [:uv_loop_t, :ares_channel], :void
+
   attach_function :getaddrinfo, :uv_getaddrinfo, [:uv_loop_t, :uv_getaddrinfo_t, :uv_getaddrinfo_cb, :string, :string, :addrinfo], :int
   attach_function :freeaddrinfo, :uv_freeaddrinfo, [:addrinfo], :void
+
   attach_function :spawn, :uv_spawn, [:uv_loop_t, :uv_process_t, :uv_options_t], :int
   attach_function :process_kill, :uv_process_kill, [:uv_process_t, :int], :int
   attach_function :kill, :uv_kill, [:int, :int], :uv_err_t
@@ -114,8 +131,10 @@ module UV
   attach_function :get_process_title, :uv_get_process_title, [:pointer, :size_t], :uv_err_t
   attach_function :set_process_title, :uv_set_process_title, [:string], :uv_err_t
   attach_function :resident_set_memory, :uv_resident_set_memory, [:size_t], :uv_err_t
+
   attach_function :uptime, :uv_uptime, [:pointer], :uv_err_t
   attach_function :cpu_info, :uv_cpu_info, [:uv_cpu_info_t, :pointer], :uv_err_t
+  attach_function :loadavg, :uv_loadavg, [:pointer], :void
   attach_function :free_cpu_info, :uv_free_cpu_info, [:uv_cpu_info_t, :int], :void
   attach_function :interface_addresses, :uv_interface_addresses, [:uv_interface_address_t, :pointer], :uv_err_t
   attach_function :free_interface_addresses, :uv_free_interface_addresses, [:uv_interface_address_t, :int], :void
@@ -149,12 +168,14 @@ module UV
   attach_function :fs_fchmod, :uv_fs_fchmod, [:uv_loop_t, :uv_fs_t, :uv_file, :int, :uv_fs_cb], :int
   attach_function :fs_chown, :uv_fs_chown, [:uv_loop_t, :uv_fs_t, :string, :int, :int, :uv_fs_cb], :int
   attach_function :fs_fchown, :uv_fs_fchown, [:uv_loop_t, :uv_fs_t, :uv_file, :int, :int, :uv_fs_cb], :int
-  attach_function :loadavg, :uv_loadavg, [:pointer], :void
+
   attach_function :fs_event_init, :uv_fs_event_init, [:uv_loop_t, :uv_fs_event_t, :string, :uv_fs_event_cb, :int], :int
+
   attach_function :ip4_addr, :uv_ip4_addr, [:string, :int], SockaddrIn.by_value
   attach_function :ip6_addr, :uv_ip6_addr, [:string, :int], SockaddrIn6.by_value
   attach_function :ip4_name, :uv_ip4_name, [SockaddrIn.by_ref, :pointer, :size_t], :int
   attach_function :ip6_name, :uv_ip6_name, [SockaddrIn6.by_ref, :pointer, :size_t], :int
+
   attach_function :exepath, :uv_exepath, [:pointer, :size_t], :int
   attach_function :cwd, :uv_cwd, [:pointer, :size_t], :uv_err_t
   attach_function :chdir, :uv_chdir, [:string], :uv_err_t
