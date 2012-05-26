@@ -12,12 +12,12 @@ module UV
       inside_gem, '/usr/local/lib', '/opt/local/lib', '/usr/lib64'
     ].map{|path| "#{path}/libuv.#{FFI::Platform::LIBSUFFIX}"}
     libuv = ffi_lib(LIBUV_PATHS + %w{libuv}).first
-  # rescue LoadError
-  #   STDERR.puts "Unable to load this gem. The libuv library (or DLL) could not be found."
-  #   STDERR.puts "If this is a Windows platform, make sure libuv.dll is on the PATH."
-  #   STDERR.puts "For non-Windows platforms, make sure libuv is located in this search path:"
-  #   STDERR.puts LIBUV_PATHS.inspect
-  #   exit 255
+  rescue LoadError
+    STDERR.puts "Unable to load this gem. The libuv library (or DLL) could not be found."
+    STDERR.puts "If this is a Windows platform, make sure libuv.dll is on the PATH."
+    STDERR.puts "For non-Windows platforms, make sure libuv is located in this search path:"
+    STDERR.puts LIBUV_PATHS.inspect
+    exit 255
   end
 
   def self.union
