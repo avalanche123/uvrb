@@ -35,7 +35,7 @@ file 'ext/libuv/build/gyp' do
   Dir.chdir("ext/libuv") { |path| system "svn", "export", "-r1214", "http://gyp.googlecode.com/svn/trunk", "build/gyp" }
 end
 
-task 'gyp_install' => 'ext/libuv/build/gyp' do
+task 'gyp_install' => ['ext/libuv/build/gyp', 'clobber'] do
   if FFI::Platform.ia32?
     target_arch = 'ia32'
   elsif FFI::Platform.x64?
