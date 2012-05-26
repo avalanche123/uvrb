@@ -20,6 +20,12 @@ module UV
     exit 255
   end
 
+  module FFI::Platform
+    def self.linux?
+      IS_LINUX
+    end
+  end
+
   def self.union
     Class.new(FFI::Union) do
       layout *yield
@@ -30,6 +36,11 @@ module UV
     Class.new(FFI::Struct) do
       layout *yield
     end
+  end
+
+  # blksize_t is not yet part of types.conf on linux
+  if FFI::Platform.linux?
+    typedef :long, :blksize_t
   end
 
   if FFI::Platform.windows?
@@ -44,7 +55,7 @@ module UV
       :st_ino, :ino_t, :st_mode, :mode_t, :st_mtime, :time_t, :st_nlink, :nlink_t,
       :st_rdev, :dev_t, :st_size, :off_t, :st_uid, :uid_t
     end
-  else 
+  else
     class UvBuf < FFI::Struct
       layout :base, :pointer, :len, :size_t
     end
