@@ -131,6 +131,8 @@ module UV
            :sin_zero, [:char, 8]
   end
 
+  typedef SockaddrIn.by_value, :sockaddr_in
+
   class U6Addr < FFI::Union
     layout :__u6_addr8, [:uint8, 16],
            :__u6_addr16, [:uint16, 8]
@@ -148,6 +150,8 @@ module UV
            :sin6_addr, In6Addr,
            :sin6_scope_id, :uint32
   end
+
+  typedef SockaddrIn6.by_value, :sockaddr_in6
 
   typedef :pointer, :uv_handle_t
   typedef :pointer, :uv_fs_event_t
