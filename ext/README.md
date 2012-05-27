@@ -1,5 +1,4 @@
-This directory contains libuv submodule the bindings are written for since there are no
-versioning tags for the libuv itself yet. To use this local copy of libuv, got to root directory of the uvrb project and run:
+Put a libuv.(so|dll|dylib) in this directory to hint uvrb to use it. To use submoduled libuv, go to root directory of uvrb project and run:
 
 ```shell
 git submodule update --init

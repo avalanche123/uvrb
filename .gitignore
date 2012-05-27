@@ -14,3 +14,4 @@ Gemfile.lock
 .yardoc
 bin
 Gemfile-custom
+ext/*

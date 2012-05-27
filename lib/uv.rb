@@ -7,7 +7,7 @@ module UV
   begin
     # bias the library discovery to a path inside the gem first, then
     # to the usual system paths
-    path_to_internal_libuv = File.dirname(__FILE__) + '/../ext/libuv'
+    path_to_internal_libuv = File.dirname(__FILE__) + '/../ext'
     LIBUV_PATHS = [
       path_to_internal_libuv, '/usr/local/lib', '/opt/local/lib', '/usr/lib64'
     ].map{|path| "#{path}/libuv.#{FFI::Platform::LIBSUFFIX}"}
