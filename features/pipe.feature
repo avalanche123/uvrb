@@ -48,22 +48,28 @@ Feature: Named pipes
       client.connect("/tmp/ipc-example.ipc") do |e|
         raise e if e
 
+        client.start_read do |e, pong|
+          raise e if e
+
+          puts "received #{pong} from server"
+        end
+
         client.write(ping) do |e|
           raise e if e
 
           puts "sent #{ping} to server"
         end
+      end
 
-        client.start_read do |e, pong|
+      stopper = loop.timer
+      stopper.start(2000, 0) do |e|
+        raise e if e
+
+        client.write("quit") do |e|
           raise e if e
 
-          puts "received #{pong} from server"
-
-          client.write("quit") do |e|
-            raise e if e
-
-            client.close {}
-          end
+          client.close {}
+          stopper.close {}
         end
       end
 
