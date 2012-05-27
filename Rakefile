@@ -7,16 +7,7 @@ require 'cucumber/rake/task'
 require 'rdoc/task'
 require 'ffi'
 require 'rake/clean'
-
-module FFI::Platform
-  def self.ia32?
-    ARCH == "i386"
-  end
-
-  def self.x64?
-    ARCH == "x86_64"
-  end
-end
+require 'uv/tasks'
 
 RSpec::Core::RakeTask.new
 
@@ -31,62 +22,7 @@ end
 
 task :default => [:spec, :features]
 
-file 'ext/libuv/build/gyp' do
-  Dir.chdir("ext/libuv") { |path| system "svn", "export", "-r1214", "http://gyp.googlecode.com/svn/trunk", "build/gyp" }
-end
-
-task 'gyp_install' => ['ext/libuv/build/gyp', 'clobber'] do
-  if FFI::Platform.ia32?
-    target_arch = 'ia32'
-  elsif FFI::Platform.x64?
-    target_arch = 'x64'
-  else
-    abort "cannot build on #{FFI::Platform::ARCH} architecture"
-  end
-
-  Dir.chdir("ext/libuv") do |path|
-    if FFI::Platform.windows?
-      system 'vcbuild.bat'
-    elsif FFI::Platform.mac?
-      system "./gyp_uv -f xcode -Dtarget_arch=#{target_arch}"
-      system 'xcodebuild', '-project', 'uv.xcodeproj', '-configuration', 'Release', '-target', 'All'
-    else # UNIX
-      system "./gyp_uv -f make -Dtarget_arch=#{target_arch}"
-      system 'make -C out BUILDTYPE=Release'
-    end
-  end
-end
-
-file 'ext/libuv/build/Release/libuv.a' => 'gyp_install'
-file "ext/libuv/build/Release/libuv.#{FFI::Platform::LIBSUFFIX}" => 'gyp_install'
-
-file 'ext/libuv.a' => 'ext/libuv/build/Release/libuv.a' do
-  if FFI::Platform.windows?
-    # dunno what to do yet
-  elsif FFI::Platform.mac?
-    File.symlink("libuv/build/Release/libuv.a", "ext/libuv.a")
-  else # UNIX
-    File.symlink("libuv/out/Release/obj.target/libuv.a", "ext/libuv.a")
-  end
-end
-
-file "ext/libuv.#{FFI::Platform::LIBSUFFIX}" => "ext/libuv/build/Release/libuv.#{FFI::Platform::LIBSUFFIX}" do
-  if FFI::Platform.windows?
-    # dunno what to do yet
-  elsif FFI::Platform.mac?
-    File.symlink("libuv/build/Release/libuv.#{FFI::Platform::LIBSUFFIX}", "ext/libuv.#{FFI::Platform::LIBSUFFIX}")
-  else # UNIX
-    File.symlink("libuv/out/Release/lib.target/libuv.#{FFI::Platform::LIBSUFFIX}", "ext/libuv.#{FFI::Platform::LIBSUFFIX}")
-  end
-end
-
-CLOBBER << 'ext/libuv.a'
-CLOBBER << "ext/libuv.#{FFI::Platform::LIBSUFFIX}"
-CLOBBER << 'ext/libuv/build/Release'
-CLOBBER << 'ext/libuv/build/uv.build'
-CLOBBER << 'ext/libuv/uv.xcodeproj'
-# CLOBBER << 'ext/libuv/build/gyp'
-
-
 desc "Compile libuv from submodule"
-task :libuv => ['ext/libuv.a', "ext/libuv.#{FFI::Platform::LIBSUFFIX}"]
+task :libuv => ["ext/libuv.#{FFI::Platform::LIBSUFFIX}"]
+
+CLOBBER.include("ext/libuv.#{FFI::Platform::LIBSUFFIX}")
