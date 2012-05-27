@@ -52,7 +52,7 @@ module UV
   attach_function :read_stop, :uv_read_stop, [:uv_stream_t], :int
   attach_function :read2_start, :uv_read2_start, [:uv_stream_t, :uv_alloc_cb, :uv_read2_cb], :int
   attach_function :write, :uv_write, [:uv_write_t, :uv_stream_t, :pointer, :int, :uv_write_cb], :int
-  attach_function :write2, :uv_write2, [:uv_write_t, :uv_stream_t, :pointer, :int, :uv_write_cb], :int
+  attach_function :write2, :uv_write2, [:uv_write_t, :uv_stream_t, :pointer, :int, :uv_stream_t, :uv_write_cb], :int
   attach_function :is_readable, :uv_is_readable, [:uv_stream_t], :int
   attach_function :is_writable, :uv_is_writable, [:uv_stream_t], :int
   attach_function :shutdown, :uv_shutdown, [:uv_shutdown_t, :uv_stream_t, :uv_shutdown_cb], :int
