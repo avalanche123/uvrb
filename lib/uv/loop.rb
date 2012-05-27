@@ -275,6 +275,9 @@ module UV
     # 
     # Raises ArgumentError if block is not given and is not expecting one argument exactly
     def async(&block)
+      assert_block(block)
+      assert_arity(1, block)
+
       async_ptr = UV.create_handle(:uv_async)
       async     = Async.new(self, async_ptr, &block)
 

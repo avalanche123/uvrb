@@ -3,9 +3,6 @@ module UV
     include Handle
 
     def initialize(loop, async_ptr, &block)
-      assert_block(block)
-      assert_arity(1, block)
-
       @async_block = block
 
       super(loop, async_ptr)

@@ -193,14 +193,15 @@ describe UV::Loop do
     let(:async_callback) { double() }
     let(:async) { double() }
 
-    before(:each) do
-      async.should_receive(:callback).once.with(:on_async).and_return(async_callback)
+    it "requires a block" do
+      expect { subject.async }.to raise_error(ArgumentError)
     end
 
     it "calls UV.async_init" do
       UV.should_receive(:create_handle).with(:uv_async).and_return(async_pointer)
       UV.should_receive(:async_init).with(loop_pointer, async_pointer, async_callback)
       UV::Async.should_receive(:new).with(subject, async_pointer).and_return(async)
+      async.should_receive(:callback).once.with(:on_async).and_return(async_callback)
 
       handle = subject.async { |e| }
       handle.should == async
