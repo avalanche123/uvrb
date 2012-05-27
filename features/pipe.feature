@@ -25,7 +25,7 @@ Feature: Named pipes
             client.close {}
             server.close {}
           else
-            client.write(pong) { |e| raise e if e }
+            client.write(pong) { |e| raise e if e } unless client.closing?
           end
         end
       end
