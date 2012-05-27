@@ -1,5 +1,6 @@
 language: ruby
 rvm:
+  - 1.9.2
   - 1.9.3
 branches:
   only:
@@ -7,6 +8,6 @@ branches:
 before_install:
   - sudo apt-get install subversion
   - git submodule update --init --recursive
-  - gem uninstall ffi
+  - echo "yes" | gem uninstall ffi -a
 before_script:
   - rake libuv
