@@ -9,6 +9,8 @@ module UV
 
       @socket = create_socket(IPAddr.new(ip), port)
       @socket.bind(ipv6_only)
+
+      self
     end
 
     def sockname
@@ -22,6 +24,8 @@ module UV
       assert_type(String, interface_address, "interface_address must be a String")
 
       check_result! UV.udp_set_membership(handle, multicast_address, interface_address, :uv_join_group)
+
+      self
     end
 
     def leave(multicast_address, interface_address)
@@ -29,6 +33,8 @@ module UV
       assert_type(String, interface_address, "interface_address must be a String")
 
       check_result! UV.udp_set_membership(handle, multicast_address, interface_address, :uv_leave_group)
+
+      self
     end
 
     def start_recv(&block)
@@ -38,6 +44,8 @@ module UV
       @recv_block = block
 
       check_result! UV.udp_recv_start(handle, callback(:on_allocate), callback(:on_recv))
+
+      self
     end
 
     def stop_recv
@@ -55,34 +63,48 @@ module UV
 
       @socket = create_socket(IPAddr.new(ip), port)
       @socket.send(data, callback(:on_send))
+
+      self
     end
 
     def enable_multicast_loop
       check_result! UV.udp_set_multicast_loop(handle, 1)
+
+      self
     end
 
     def disable_multicast_loop
       check_result! UV.udp_set_multicast_loop(handle, 0)
+
+      self
     end
 
     def multicast_ttl=(ttl)
       assert_type(Integer, ttl, "ttl must be an Integer")
 
       check_result! UV.udp_set_multicast_ttl(handle, ttl)
+
+      self
     end
 
     def enable_broadcast
       check_result! UV.udp_set_broadcast(handle, 1)
+
+      self
     end
 
     def disable_broadcast
       check_result! UV.udp_set_broadcast(handle, 0)
+
+      self
     end
 
     def ttl=(ttl)
       assert_type(Integer, ttl, "ttl must be an Integer")
 
       check_result! UV.udp_set_ttl(handle, Integer(ttl))
+
+      self
     end
 
     private

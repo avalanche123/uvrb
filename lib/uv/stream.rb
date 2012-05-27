@@ -9,11 +9,9 @@ module UV
 
       @listen_block = block
 
-      check_result! UV.listen(
-        handle,
-        Integer(backlog),
-        callback(:on_listen)
-      )
+      check_result! UV.listen(handle, Integer(backlog), callback(:on_listen))
+
+      self
     end
 
     def accept
@@ -30,15 +28,15 @@ module UV
 
       @read_block = block
 
-      check_result! UV.read_start(
-        handle,
-        callback(:on_allocate),
-        callback(:on_read)
-      )
+      check_result! UV.read_start(handle, callback(:on_allocate), callback(:on_read))
+
+      self
     end
 
     def stop_read
       check_result! UV.read_stop(handle)
+
+      self
     end
 
     def write(data, &block)
@@ -47,14 +45,12 @@ module UV
       assert_type(String, data, "data must be a String")
 
       @write_block = block
+      size         = data.respond_to?(:bytesize) ? data.bytesize : data.size
+      buffer       = UV.buf_init(FFI::MemoryPointer.from_string(data), size)
 
-      check_result! UV.write(
-        UV.create_request(:uv_write),
-        handle,
-        UV.buf_init(FFI::MemoryPointer.from_string(data), data.respond_to?(:bytesize) ? data.bytesize : data.size),
-        1,
-        callback(:on_write)
-      )
+      check_result! UV.write(UV.create_request(:uv_write), handle, buffer, 1, callback(:on_write))
+
+      self
     end
 
     def shutdown(&block)
@@ -63,11 +59,9 @@ module UV
 
       @shutdown_block = block
 
-      check_result! UV.shutdown(
-        UV.create_request(:uv_shutdown),
-        handle,
-        callback(:on_shutdown)
-      )
+      check_result! UV.shutdown(UV.create_request(:uv_shutdown), handle, callback(:on_shutdown))
+
+      self
     end
 
     def readable?

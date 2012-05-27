@@ -9,10 +9,14 @@ module UV
       @prepare_block = block
 
       check_result! UV.prepare_start(handle, callback(:on_prepare))
+
+      self
     end
 
     def stop
       check_result! UV.prepare_stop(handle)
+
+      self
     end
 
     private

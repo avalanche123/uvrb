@@ -9,10 +9,14 @@ module UV
       @idle_block = block
 
       check_result! UV.idle_start(handle, callback(:on_idle))
+
+      self
     end
 
     def stop
       check_result! UV.idle_stop(handle)
+
+      self
     end
 
     private

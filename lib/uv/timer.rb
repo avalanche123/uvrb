@@ -10,26 +10,29 @@ module UV
 
       @timer_block = block
 
-      check_result! UV.timer_start(
-        handle,
-        callback(:on_timer),
-        timeout,
-        repeat
-      )
+      check_result! UV.timer_start(handle, callback(:on_timer), timeout, repeat)
+
+      self
     end
 
     def stop
       check_result! UV.timer_stop(handle)
+
+      self
     end
 
     def again
       check_result! UV.timer_again(handle)
+
+      self
     end
 
     def repeat=(repeat)
       assert_type(Integer, repeat, "repeat must be an Integer")
 
       check_result! UV.timer_set_repeat(handle, repeat)
+
+      self
     end
 
     def repeat

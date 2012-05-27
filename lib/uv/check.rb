@@ -9,10 +9,14 @@ module UV
       @check_block = block
 
       check_result! UV.check_start(handle, callback(:on_check))
+
+      self
     end
 
     def stop
       check_result! UV.check_stop(handle)
+
+      self
     end
 
     private

@@ -6,12 +6,16 @@ module UV
       assert_type(Integer, fileno, "io#fileno must return an integer file descriptor")
 
       check_result! UV.pipe_open(handle, fileno)
+
+      self
     end
 
     def bind(name)
       assert_type(String, name, "name must be a String")
 
       check_result! UV.pipe_bind(handle, name)
+
+      self
     end
 
     def connect(name, &block)
@@ -22,12 +26,16 @@ module UV
       @connect_block = block
 
       UV.pipe_connect(UV.create_request(:uv_connect), handle, name, callback(:on_connect))
+
+      self
     end
 
     def pending_instances=(count)
       assert_type(Integer, count, "count must be an Integer")
 
       UV.pipe_pending_instances(handle, count)
+
+      self
     end
 
     private

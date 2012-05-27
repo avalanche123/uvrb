@@ -9,17 +9,21 @@ module UV
     # Public: Increment internal ref counter for the handle on the loop. Useful for
     # extending the loop with custom watchers that need to make loop not stop
     # 
-    # Returns nothing
+    # Returns self
     def ref
       UV.ref(@pointer)
+
+      self
     end
 
     # Public: Decrement internal ref counter for the handle on the loop, useful to stop
     # loop even when there are outstanding open handles
     # 
-    # Returns nothing
+    # Returns self
     def unref
       UV.unref(@pointer)
+
+      self
     end
 
     def close(&block)
@@ -28,10 +32,9 @@ module UV
 
       @close_block = block
 
-      UV.close(
-        @pointer,
-        callback(:on_close)
-      )
+      UV.close(@pointer, callback(:on_close))
+
+      self
     end
 
     def active?

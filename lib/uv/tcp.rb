@@ -11,6 +11,8 @@ module UV
       @socket = create_socket(IPAddr.new(ip), port)
 
       @socket.bind
+
+      self
     end
 
     def connect(ip, port, &block)
@@ -23,6 +25,8 @@ module UV
       @socket        = create_socket(IPAddr.new(ip), port)
 
       @socket.connect(callback(:on_connect))
+
+      self
     end
 
     def sockname
@@ -39,28 +43,40 @@ module UV
 
     def enable_nodelay
       check_result! UV.tcp_nodelay(handle, 1)
+
+      self
     end
 
     def disable_nodelay
       check_result! UV.tcp_nodelay(handle, 0)
+
+      self
     end
 
     def enable_keepalive(delay)
       assert_type(Integer, delay, "delay must be an Integer")
 
       check_result! UV.tcp_keepalive(handle, 1, delay)
+
+      self
     end
 
     def disable_keepalive
       check_result! UV.tcp_keepalive(handle, 0, 0)
+
+      self
     end
 
     def enable_simultaneous_accepts
       check_result! UV.tcp_simultaneous_accepts(handle, 1)
+
+      self
     end
 
     def disable_simultaneous_accepts
       check_result! UV.tcp_simultaneous_accepts(handle, 0)
+
+      self
     end
 
     private

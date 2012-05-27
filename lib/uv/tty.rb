@@ -4,14 +4,20 @@ module UV
 
     def enable_raw_mode
       check_result! UV.tty_set_mode(handle, 1)
+
+      self
     end
 
     def disable_raw_mode
       check_result! UV.tty_set_mode(handle, 0)
+
+      self
     end
 
     def reset_mode
       UV.tty_reset_mode
+
+      self
     end
 
     def winsize

@@ -10,6 +10,8 @@ module UV
 
     def call
       check_result UV.async_send(handle)
+
+      self
     end
 
     private
