@@ -285,6 +285,13 @@ module UV
       async
     end
 
+    # Public: Get a new Filesystem instance
+    # 
+    # Returns UV::Filesystem
+    def fs
+      Filesystem.new(self)
+    end
+
     # Internal: Get a hold of internal loop pointer instance
     # 
     # Returns FFI::Pointer

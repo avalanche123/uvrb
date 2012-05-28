@@ -207,4 +207,14 @@ describe UV::Loop do
       handle.should == async
     end
   end
+
+  describe "#fs" do
+    let(:filesystem) { double() }
+
+    it "instantiates UV::Filesystem" do
+      UV::Filesystem.should_receive(:new).once.with(subject).and_return(filesystem)
+
+      subject.fs.should == filesystem
+    end
+  end
 end
