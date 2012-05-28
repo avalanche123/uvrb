@@ -102,6 +102,35 @@ module UV
     :EROFS, 56,
     :UV_MAX_ERRORS
   ]
+  enum :uv_fs_type, [
+    :UV_FS_UNKNOWN, -1,
+    :UV_FS_CUSTOM,
+    :UV_FS_OPEN,
+    :UV_FS_CLOSE,
+    :UV_FS_READ,
+    :UV_FS_WRITE,
+    :UV_FS_SENDFILE,
+    :UV_FS_STAT,
+    :UV_FS_LSTAT,
+    :UV_FS_FSTAT,
+    :UV_FS_FTRUNCATE,
+    :UV_FS_UTIME,
+    :UV_FS_FUTIME,
+    :UV_FS_CHMOD,
+    :UV_FS_FCHMOD,
+    :UV_FS_FSYNC,
+    :UV_FS_FDATASYNC,
+    :UV_FS_UNLINK,
+    :UV_FS_RMDIR,
+    :UV_FS_MKDIR,
+    :UV_FS_RENAME,
+    :UV_FS_READDIR,
+    :UV_FS_LINK,
+    :UV_FS_SYMLINK,
+    :UV_FS_READLINK,
+    :UV_FS_CHOWN,
+    :UV_FS_FCHOWN
+  ]
 
   typedef UvBuf.by_value, :uv_buf_t
   typedef UvFSStat.by_value, :uv_fs_stat_t
