@@ -36,18 +36,16 @@ or
   cd ...
   bundle install
 
-Make sure you have libuv compiled and a .dylib file available in your
-lib path.
+Make sure you have libuv compiled and a shared library (`.dylib`|`.so`|`.dll`) file available in your lib path.
 
-To compile libuv with .dylib, you can install provided Homebrew formula
-by running:
-
-  brew install Formula/libuv.rb --HEAD
-
-or, to compile from a local submodule version:
+To compile libuv from a local submodule version:
 
   git submodule update --init
   rake libuv
+
+Or to compile libuv on mac, you can install provided Homebrew formula by running:
+
+  brew install Formula/libuv.rb --HEAD
 
 == What's supported
 
@@ -60,10 +58,13 @@ or, to compile from a local submodule version:
 * Check
 * Idle
 * Async
+* Filesystem
+* File
+* FSEvent
 * Errors
 
 == TODO
 
-* Port rest of libuv - ares, getaddrinfo, process, work queue, fs with events, mutexes and locks
+* Port rest of libuv - ares, getaddrinfo, process, work queue, mutexes and locks
 * Tests tests tests
 * Docs docs docs
