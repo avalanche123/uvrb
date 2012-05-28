@@ -141,6 +141,7 @@ module UV
 
   attach_function :fs_req_result, :uv_fs_req_result, [:uv_fs_t], :ssize_t
   attach_function :fs_req_stat, :uv_fs_req_stat, [:uv_fs_t], :uv_fs_stat_t
+  attach_function :fs_req_pointer, :uv_fs_req_pointer, [:uv_fs_t], :pointer
 
   attach_function :fs_req_cleanup, :uv_fs_req_cleanup, [:uv_fs_t], :void
   attach_function :fs_close, :uv_fs_close, [:uv_loop_t, :uv_fs_t, :uv_file, :uv_fs_cb], :int
