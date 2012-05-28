@@ -1,6 +1,6 @@
 module UV
   class File
-    include Resource, Listener
+    include Assertions, Resource, Listener
 
     def initialize(loop, fd)
       @loop = loop
@@ -8,32 +8,37 @@ module UV
     end
 
     def close(&block)
+      assert_block(block)
+      assert_arity(1, block)
+
       @close_block = block
-      check_result! UV.fs_close(
-        loop.to_ptr,
-        UV.create_request(:uv_fs),
-        @fd,
-        callback(:on_close)
-      )
+
+      check_result! UV.fs_close(loop.to_ptr, UV.create_request(:uv_fs), @fd, callback(:on_close))
+
+      self
     end
 
     def read(length, offset = 0, &block)
-      raise ArgumentError, "no block given", caller unless block_given?
-      @read_block = block
-      @read_buffer_length = Integer(length)
-      @read_buffer = FFI::MemoryPointer.new(@read_buffer_length)
-      check_result! UV.fs_read(
-        loop.to_ptr,
-        UV.create_request(:uv_fs),
-        @fd,
-        @read_buffer,
-        @read_buffer_length,
-        Integer(offset),
-        callback(:on_read)
-      )
+      assert_block(block)
+      assert_arity(2, block)
+      assert_type(Integer, length, "length must be an Integer")
+      assert_type(Integer, offset, "offset must be an Integer")
+
+      @read_block         = block
+      @read_buffer_length = length
+      @read_buffer        = FFI::MemoryPointer.new(@read_buffer_length)
+
+      check_result! UV.fs_read(loop.to_ptr, UV.create_request(:uv_fs), @fd, @read_buffer, @read_buffer_length, offset, callback(:on_read))
+
+      self
     end
 
     def write(data, offset = 0, &block)
+      assert_block(block)
+      assert_arity(1, block)
+      assert_type(String, data, "data must be a String")
+      assert_type(Integer, offset, "offset must be an Integer")
+
       @write_block = block
       @write_buffer_length = data.respond_to?(:bytesize) ? data.bytesize : data.size
       @write_buffer = FFI::MemoryPointer.from_string(data)
@@ -43,7 +48,7 @@ module UV
         @fd,
         @write_buffer,
         @write_buffer_length,
-        Integer(offset),
+        offset,
         callback(:on_write)
       )
     end
