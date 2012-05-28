@@ -42,98 +42,93 @@ module UV
       @write_block = block
       @write_buffer_length = data.respond_to?(:bytesize) ? data.bytesize : data.size
       @write_buffer = FFI::MemoryPointer.from_string(data)
-      check_result! UV.fs_write(
-        loop.to_ptr,
-        UV.create_request(:uv_fs),
-        @fd,
-        @write_buffer,
-        @write_buffer_length,
-        offset,
-        callback(:on_write)
-      )
+
+      check_result! UV.fs_write(loop.to_ptr, UV.create_request(:uv_fs), @fd, @write_buffer, @write_buffer_length, offset, callback(:on_write))
+
+      self
     end
 
     def stat(&block)
-      raise ArgumentError, "no block given", caller unless block_given?
+      assert_block(block)
+      assert_arity(2, block)
+
       @stat_block = block
-      check_result! UV.fs_fstat(
-        loop.to_ptr,
-        UV.create_request(:uv_fs),
-        @fd,
-        callback(:on_stat)
-      )
+
+      check_result! UV.fs_fstat(loop.to_ptr, UV.create_request(:uv_fs), @fd, callback(:on_stat))
+
+      self
     end
 
     def sync(&block)
-      raise ArgumentError, "no block given", caller unless block_given?
+      assert_block(block)
+      assert_arity(1, block)
+
       @sync_block = block
-      check_result! UV.fs_fsync(
-        loop.to_ptr,
-        UV.create_request(:uv_fs),
-        @fd,
-        callback(:on_sync)
-      )
+
+      check_result! UV.fs_fsync(loop.to_ptr, UV.create_request(:uv_fs), @fd, callback(:on_sync))
+
+      self
     end
 
     def datasync(&block)
-      raise ArgumentError, "no block given", caller unless block_given?
+      assert_block(block)
+      assert_arity(1, block)
+
       @datasync_block = block
-      check_result! UV.fs_fdatasync(
-        loop.to_ptr,
-        UV.create_request(:uv_fs),
-        @fd,
-        callback(:on_datasync)
-      )
+
+      check_result! UV.fs_fdatasync(loop.to_ptr, UV.create_request(:uv_fs), @fd, callback(:on_datasync))
+
+      self
     end
 
     def truncate(offset, &block)
-      raise ArgumentError, "no block given", caller unless block_given?
+      assert_block(block)
+      assert_arity(1, block)
+      assert_type(Integer, offset, "offset must be an Integer")
+
       @truncate_block = block
-      check_result! UV.fs_ftruncate(
-        loop.to_ptr,
-        UV.create_request(:uv_fs),
-        @fd,
-        Integer(offset),
-        callback(:on_truncate)
-      )
+
+      check_result! UV.fs_ftruncate(loop.to_ptr, UV.create_request(:uv_fs), @fd, offset, callback(:on_truncate))
+
+      self
     end
 
     def utime(atime, mtime, &block)
-      raise ArgumentError, "no block given", caller unless block_given?
+      assert_block(block)
+      assert_arity(1, block)
+      assert_type(Integer, atime, "atime must be an Integer")
+      assert_type(Integer, mtime, "mtime must be an Integer")
+
       @utime_block = block
-      check_result! UV.fs_futime(
-        loop.to_ptr,
-        UV.create_request(:uv_fs),
-        @fd,
-        Integer(atime),
-        Integer(mtime),
-        callback(:on_utime)
-      )
+
+      check_result! UV.fs_futime(loop.to_ptr, UV.create_request(:uv_fs), @fd, atime, mtime, callback(:on_utime))
+
+      self
     end
 
     def chmod(mode, &block)
-      raise ArgumentError, "no block given", caller unless block_given?
+      assert_block(block)
+      assert_arity(1, block)
+      assert_type(Integer, mode, "mode must be an Integer")
+
       @chmod_block = block
-      check_result! UV.fs_fchmod(
-        loop.to_ptr,
-        UV.create_request(:uv_fs),
-        @fd,
-        Integer(mode),
-        callback(:on_chmod)
-      )
+
+      check_result! UV.fs_fchmod(loop.to_ptr, UV.create_request(:uv_fs), @fd, mode, callback(:on_chmod))
+
+      self
     end
 
     def chown(uid, gid, &block)
-      raise ArgumentError, "no block given", caller unless block_given?
+      assert_block(block)
+      assert_arity(1, block)
+      assert_type(Integer, uid, "uid must be an Integer")
+      assert_type(Integer, gid, "gid must be an Integer")
+
       @chown_block = block
-      check_result! UV.fs_fchown(
-        loop.to_ptr,
-        UV.create_request(:uv_fs),
-        @fd,
-        Integer(uid),
-        Integer(gid),
-        callback(:on_chown)
-      )
+
+      check_result! UV.fs_fchown(loop.to_ptr, UV.create_request(:uv_fs), @fd, uid, gid, callback(:on_chown))
+
+      self
     end
 
     private
@@ -176,9 +171,9 @@ module UV
 
         stat = Stat.new(*values)
       end
-      @stat_block.call(e, stat)
       UV.fs_req_cleanup(req)
       UV.free(req)
+      @stat_block.call(e, stat)
     end
 
     def on_sync(req)
