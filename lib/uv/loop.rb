@@ -292,6 +292,20 @@ module UV
       Filesystem.new(self)
     end
 
+    # Public: Get a new FSEvent instance
+    # 
+    # Returns UV::FSEvent
+    def fs_event(path, &block)
+      assert_block(block)
+      assert_arity(3, block)
+
+      fs_event_ptr = UV.create_handle(:uv_fs_event)
+      fs_event     = FSEvent.new(self, fs_event_ptr, &block)
+
+      check_result! UV.fs_event_init(@pointer, fs_event_ptr, path, fs_event.callback(:on_fs_event), 0)
+      fs_event
+    end
+
     # Internal: Get a hold of internal loop pointer instance
     # 
     # Returns FFI::Pointer

@@ -217,4 +217,25 @@ describe UV::Loop do
       subject.fs.should == filesystem
     end
   end
+
+  describe "#fs_event" do
+    let(:filename) { '/path/to/watch' }
+    let(:fs_event_pointer) { double() }
+    let(:fs_event_callback) { double() }
+    let(:fs_event) { double() }
+
+    it "requires a block" do
+      expect { subject.fs_event(filename) }.to raise_error(ArgumentError)
+    end
+
+    it "calls UV.fs_event_init" do
+      UV.should_receive(:create_handle).with(:uv_fs_event).and_return(fs_event_pointer)
+      UV.should_receive(:fs_event_init).with(loop_pointer, fs_event_pointer, filename, fs_event_callback, 0)
+      UV::FSEvent.should_receive(:new).with(subject, fs_event_pointer).and_return(fs_event)
+      fs_event.should_receive(:callback).once.with(:on_fs_event).and_return(fs_event_callback)
+
+      handle = subject.fs_event(filename) { |e, filename, type| }
+      handle.should == fs_event
+    end
+  end
 end

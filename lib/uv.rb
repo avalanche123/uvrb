@@ -242,5 +242,6 @@ module UV
   autoload :Async, 'uv/async'
   autoload :Filesystem, 'uv/filesystem'
   autoload :File, 'uv/file'
+  autoload :FSEvent, 'uv/fs_event'
   autoload :Assertions, 'uv/assertions'
 end

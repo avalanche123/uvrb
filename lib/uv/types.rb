@@ -131,6 +131,10 @@ module UV
     :UV_FS_CHOWN,
     :UV_FS_FCHOWN
   ]
+  enum :uv_fs_event, [
+    :UV_RENAME, 1,
+    :UV_CHANGE, 2
+  ]
 
   typedef UvBuf.by_value, :uv_buf_t
   typedef UvFSStat.by_value, :uv_fs_stat_t

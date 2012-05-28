@@ -243,7 +243,4 @@ describe UV::Filesystem do
       subject.chown(path, uid, gid) { |e| }
     end
   end
-
-  describe "#watch" do
-  end
 end

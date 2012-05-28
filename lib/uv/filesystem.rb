@@ -185,10 +185,6 @@ module UV
       self
     end
 
-    # Watcher for a path
-    def watch(path)
-    end
-
     private
     def on_open(req)
       fd   = UV.fs_req_result(req)
