@@ -21,11 +21,11 @@ Feature: Named pipes
         client.start_read do |e, data|
           raise e if e
 
-          if "quit" == data
+          client.write(pong) do |e|
+            raise e if e
+
             client.close {}
             server.close {}
-          else
-            client.write(pong) { |e| raise e if e } unless client.closing?
           end
         end
       end
@@ -52,24 +52,14 @@ Feature: Named pipes
           raise e if e
 
           puts "received #{pong} from server"
+
+          client.close {}
         end
 
         client.write(ping) do |e|
           raise e if e
 
           puts "sent #{ping} to server"
-        end
-      end
-
-      stopper = loop.timer
-      stopper.start(2000, 0) do |e|
-        raise e if e
-
-        client.write("quit") do |e|
-          raise e if e
-
-          client.close {}
-          stopper.close {}
         end
       end
 
