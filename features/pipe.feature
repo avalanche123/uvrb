@@ -32,8 +32,6 @@ Feature: Named pipes
 
       begin
         loop.run
-      rescue Exception => e
-        abort e.message
       end
       """
     And a file named "ipc_client_example.rb" with:
@@ -67,8 +65,6 @@ Feature: Named pipes
         loop.run
       rescue UV::Error::EOF, UV::Error::EBADF => e
         exit 0
-      rescue Exception => e
-        abort e.message
       end
       """
     When I run `ruby ipc_server_example.rb` interactively
@@ -108,8 +104,6 @@ Feature: Named pipes
   
       begin
         loop.run
-      rescue Exception => e
-        abort e.message
       end
       """
     And a file named "pipe_consumer_example.rb" with:
@@ -140,8 +134,6 @@ Feature: Named pipes
   
       begin
         loop.run
-      rescue Exception => e
-        abort e.message
       end
       """
     When I run `ruby pipe_producer_example.rb` interactively
