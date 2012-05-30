@@ -20,7 +20,8 @@ RDoc::Task.new(:rdoc => "rdoc", :clobber_rdoc => "rdoc:clean", :rerdoc => "rdoc:
   rd.options << "--markup=tomdoc"
 end
 
-task :default => [:spec, :features]
+task :test => [:spec, :features]
+task :default => :test
 
 desc "Compile libuv from submodule"
 task :libuv => ["ext/libuv.#{FFI::Platform::LIBSUFFIX}"]
