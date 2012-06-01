@@ -30,6 +30,15 @@ Feature: Named pipes
         end
       end
 
+      stopper = loop.timer
+  
+      stopper.start(2800, 0) do |e|
+        raise e if e
+  
+        server.close {}
+        stopper.close {}
+      end
+
       begin
         loop.run
       end
