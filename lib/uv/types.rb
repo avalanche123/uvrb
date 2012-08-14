@@ -7,6 +7,7 @@ end
 module UV
   require 'uv/types/linux.rb' if FFI::Platform.linux?
   require 'uv/types/unix.rb' if FFI::Platform.unix?
+  require 'uv/types/darwin_x64.rb' if FFI::Platform.mac? and FFI::Platform::ARCH == 'x86_64'
   require 'uv/types/windows.rb' if FFI::Platform.windows?
 
   enum :uv_handle_type, [

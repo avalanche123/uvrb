@@ -242,12 +242,7 @@ module UV
       e = check_result(UV.fs_req_result(req))
 
       unless e
-        uv_stat    = UV.fs_req_stat(req)
-        uv_members = uv_stat.members
-
-        values = Stat.members.map { |k| uv_members.include?(k) ? uv_stat[k] : nil }
-
-        stat = Stat.new(*values)
+        stat = UV.fs_req_stat(req)
       end
 
       UV.fs_req_cleanup(req)
@@ -287,12 +282,7 @@ module UV
       e = check_result(UV.fs_req_result(req))
 
       unless e
-        uv_stat    = UV.fs_req_stat(req)
-        uv_members = uv_stat.members
-
-        values = Stat.members.map { |k| uv_members.include?(k) ? uv_stat[k] : nil }
-
-        stat = Stat.new(*values)
+        stat = UV.fs_req_stat(req)
       end
 
       UV.fs_req_cleanup(req)
