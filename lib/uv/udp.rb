@@ -120,7 +120,9 @@ module UV
         data = base.read_string(nread)
       end
       UV.free(base)
-      ip, port = get_ip_and_port(sockaddr)
+      unless sockaddr.null?
+        ip, port = get_ip_and_port(UV::Sockaddr.new(sockaddr))
+      end
       @recv_block.call(e, data, ip, port)
     end
 

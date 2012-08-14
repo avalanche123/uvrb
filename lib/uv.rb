@@ -78,8 +78,8 @@ module UV
   attach_function :udp_set_multicast_ttl, :uv_udp_set_multicast_ttl, [:uv_udp_t, :int], :int
   attach_function :udp_set_broadcast, :uv_udp_set_broadcast, [:uv_udp_t, :int], :int
   attach_function :udp_set_ttl, :uv_udp_set_ttl, [:uv_udp_t, :int], :int
-  attach_function :udp_send, :uv_udp_send, [:uv_udp_send_t, :uv_udp_t, :uv_buf_t, :int, :sockaddr_in, :uv_udp_send_cb], :int
-  attach_function :udp_send6, :uv_udp_send6, [:uv_udp_send_t, :uv_udp_t, :uv_buf_t, :int, :sockaddr_in6, :uv_udp_send_cb], :int
+  attach_function :udp_send, :uv_udp_send, [:uv_udp_send_t, :uv_udp_t, :pointer, :int, :sockaddr_in, :uv_udp_send_cb], :int
+  attach_function :udp_send6, :uv_udp_send6, [:uv_udp_send_t, :uv_udp_t, :pointer, :int, :sockaddr_in6, :uv_udp_send_cb], :int
   attach_function :udp_recv_start, :uv_udp_recv_start, [:uv_udp_t, :uv_alloc_cb, :uv_udp_recv_cb], :int
   attach_function :udp_recv_stop, :uv_udp_recv_stop, [:uv_udp_t], :int
 
