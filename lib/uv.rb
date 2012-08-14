@@ -27,6 +27,7 @@ module UV
   attach_function :loop_new, :uv_loop_new, [], :uv_loop_t
   attach_function :loop_delete, :uv_loop_delete, [:uv_loop_t], :void
   attach_function :default_loop, :uv_default_loop, [], :uv_loop_t
+  @blocking = true
   attach_function :run, :uv_run, [:uv_loop_t], :int
   attach_function :run_once, :uv_run_once, [:uv_loop_t], :int
   attach_function :update_time, :uv_update_time, [:uv_loop_t], :void
