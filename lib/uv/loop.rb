@@ -205,6 +205,16 @@ module UV
       TCP.new(self, tcp_ptr)
     end
 
+    # Public: Get a new UDP instance
+    #
+    # Returns UV::UDP instance
+    def udp
+      udp_ptr = UV.create_handle(:uv_udp)
+
+      check_result! UV.udp_init(@pointer, udp_ptr)
+      UV::UDP.new(self, udp_ptr)
+    end
+
     # Public: Get a new TTY instance
     # 
     # fileno   - Integer file descriptor of a tty device.
