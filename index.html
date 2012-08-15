@@ -1,0 +1,135 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Uvrb by avalanche123</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/avalanche123/uvrb">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/avalanche123/uvrb/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/avalanche123/uvrb/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Uvrb</h1>
+          <p>Ruby bindings for libuv</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/avalanche123">avalanche123</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>uv.rb - libuv FFI bindings for Ruby</h1>
+
+<p><a href="http://travis-ci.org/avalanche123/uvrb"><img src="https://secure.travis-ci.org/avalanche123/uvrb.png?branch=master" alt="Build Status"></a></p>
+
+<p><a href="https://github.com/joyent/libuv">Libuv</a> is a cross platform asynchronous IO implementation that powers NodeJS. It supports sockets, both UDP and TCP, filesystem operations, TTY, Pipes and other asynchronous primitives like timer, check, prepare and idle.</p>
+
+<p>UV.rb is FFI Ruby bindings for libuv.</p>
+
+<h2>Usage</h2>
+
+<p>Create a uv loop or use a default one</p>
+
+<div class="highlight"><pre><span class="nb">require</span> <span class="s1">'uv'</span>
+
+<span class="kp">loop</span> <span class="o">=</span> <span class="no">UV</span><span class="o">::</span><span class="no">Loop</span><span class="o">.</span><span class="n">default</span>
+<span class="c1"># or</span>
+<span class="c1"># loop = UV::Loop.new</span>
+
+<span class="n">timer</span> <span class="o">=</span> <span class="kp">loop</span><span class="o">.</span><span class="n">timer</span>
+<span class="n">timer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">50000</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">error</span><span class="o">|</span>
+  <span class="nb">p</span> <span class="n">error</span> <span class="k">if</span> <span class="n">error</span>
+  <span class="nb">puts</span> <span class="s2">"50 seconds passed"</span>
+  <span class="n">timer</span><span class="o">.</span><span class="n">close</span>
+<span class="k">end</span>
+
+<span class="kp">loop</span><span class="o">.</span><span class="n">run</span>
+</pre></div>
+
+<p>Find more examples in examples directory</p>
+
+<h2>Installation</h2>
+
+<div class="highlight"><pre>gem install uvrb
+</pre></div>
+
+<p>or</p>
+
+<div class="highlight"><pre>git clone ...
+<span class="nb">cd</span> ...
+bundle install
+</pre></div>
+
+<p>Make sure you have libuv compiled and a shared library (<code>.dylib</code>|<code>.so</code>|<code>.dll</code>) file available in your lib path.</p>
+
+<p>To compile libuv from a local submodule version:</p>
+
+<div class="highlight"><pre>git submodule update --init
+rake libuv
+</pre></div>
+
+<p>Or to compile libuv on mac, you can install provided Homebrew formula by running:</p>
+
+<div class="highlight"><pre>brew install Formula/libuv.rb --HEAD
+</pre></div>
+
+<h2>What's supported</h2>
+
+<ul>
+<li>TCP</li>
+<li>UDP</li>
+<li>TTY</li>
+<li>Pipe</li>
+<li>Timer</li>
+<li>Prepare</li>
+<li>Check</li>
+<li>Idle</li>
+<li>Async</li>
+<li>Filesystem</li>
+<li>File</li>
+<li>FSEvent</li>
+<li>Errors</li>
+</ul><h2>TODO</h2>
+
+<ul>
+<li>Port rest of libuv - ares, getaddrinfo, process, work queue, mutexes and locks</li>
+<li>Tests tests tests</li>
+<li>Docs docs docs</li>
+</ul>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-18882040-2");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
