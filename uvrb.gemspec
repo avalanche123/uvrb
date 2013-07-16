@@ -19,10 +19,10 @@ Gem::Specification.new do |gem|
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   gem.require_paths = ["lib"]
 
-  gem.add_runtime_dependency     'ffi', '~> 1.0'
-  gem.add_development_dependency 'rspec', '~> 2.6'
-  gem.add_development_dependency 'cucumber', '~> 1.2'
-  gem.add_development_dependency 'aruba', '~> 0.4'
-  gem.add_development_dependency 'rake', '~> 0.9'
-  gem.add_development_dependency 'rdoc', '~> 3.1'
+  gem.add_runtime_dependency     'ffi'
+  gem.add_development_dependency 'rspec'
+  gem.add_development_dependency 'cucumber'
+  gem.add_development_dependency 'aruba'
+  gem.add_development_dependency 'rake'
+  gem.add_development_dependency 'rdoc'
 end
