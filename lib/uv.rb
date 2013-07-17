@@ -1,9 +1,23 @@
+require 'forwardable'
 require 'ffi'
 
 module UV
+  extend Forwardable
   extend FFI::Library
   FFI::DEBUG = 10
-  ffi_lib(FFI::Library::LIBC).first
+
+  # In windows the attach functions have to be done before loading the next library
+  module LIBC
+    extend FFI::Library
+    ffi_lib(FFI::Library::LIBC).first
+
+    attach_function :malloc, [:size_t], :pointer
+    attach_function :free, [:pointer], :void
+  end
+
+  def_delegators :LIBC, :malloc, :free
+  module_function :malloc, :free
+
   begin
     # bias the library discovery to a path inside the gem first, then
     # to the usual system paths
@@ -24,21 +38,28 @@ module UV
 
   require 'uv/types'
 
+  attach_function :version_number, :uv_version, [], :uint
+  attach_function :version, :uv_version_string, [], :string
+
   attach_function :loop_new, :uv_loop_new, [], :uv_loop_t
   attach_function :loop_delete, :uv_loop_delete, [:uv_loop_t], :void
   attach_function :default_loop, :uv_default_loop, [], :uv_loop_t
   @blocking = true
   attach_function :run, :uv_run, [:uv_loop_t], :int
-  attach_function :run_once, :uv_run_once, [:uv_loop_t], :int
+  attach_function :stop, :uv_stop, [:uv_loop_t], :void
+  #attach_function :run_once, :uv_run_once, [:uv_loop_t], :int
   attach_function :update_time, :uv_update_time, [:uv_loop_t], :void
   attach_function :now, :uv_now, [:uv_loop_t], :int64
 
-  attach_function :last_error, :uv_last_error, [:uv_loop_t], :uv_err_t
+  attach_function :backend_timeout, :uv_backend_timeout, [:uv_loop_t], :int
+
+  #attach_function :last_error, :uv_last_error, [:uv_loop_t], :uv_err_t
   attach_function :strerror, :uv_strerror, [:uv_err_t], :string
   attach_function :err_name, :uv_err_name, [:uv_err_t], :string
 
   attach_function :ref, :uv_ref, [:uv_handle_t], :void
   attach_function :unref, :uv_unref, [:uv_handle_t], :void
+  attach_function :has_ref, :uv_has_ref, [:uv_handle_t], :int
   attach_function :is_active, :uv_is_active, [:uv_handle_t], :int
   attach_function :close, :uv_close, [:uv_handle_t, :uv_close_cb], :void
   attach_function :is_closing, :uv_is_closing, [:uv_handle_t], :int
@@ -59,6 +80,7 @@ module UV
   attach_function :shutdown, :uv_shutdown, [:uv_shutdown_t, :uv_stream_t, :uv_shutdown_cb], :int
 
   attach_function :tcp_init, :uv_tcp_init, [:uv_loop_t, :uv_tcp_t], :int
+  #attach_function :tcp_open, :uv_tcp_open, [:uv_tcp_t, :uv_os_sock_t], :int
   attach_function :tcp_nodelay, :uv_tcp_nodelay, [:uv_tcp_t, :int], :int
   attach_function :tcp_keepalive, :uv_tcp_keepalive, [:uv_tcp_t, :int, :uint], :int
   attach_function :tcp_simultaneous_accepts, :uv_tcp_simultaneous_accepts, [:uv_tcp_t, :int], :int
@@ -118,8 +140,8 @@ module UV
   attach_function :timer_set_repeat, :uv_timer_set_repeat, [:uv_timer_t, :int64_t], :void
   attach_function :timer_get_repeat, :uv_timer_get_repeat, [:uv_timer_t], :int64_t
 
-  attach_function :ares_init_options, :uv_ares_init_options, [:uv_loop_t, :ares_channel, :ares_options, :int], :int
-  attach_function :ares_destroy, :uv_ares_destroy, [:uv_loop_t, :ares_channel], :void
+  #attach_function :ares_init_options, :uv_ares_init_options, [:uv_loop_t, :ares_channel, :ares_options, :int], :int
+  #attach_function :ares_destroy, :uv_ares_destroy, [:uv_loop_t, :ares_channel], :void
 
   attach_function :getaddrinfo, :uv_getaddrinfo, [:uv_loop_t, :uv_getaddrinfo_t, :uv_getaddrinfo_cb, :string, :string, :addrinfo], :int
   attach_function :freeaddrinfo, :uv_freeaddrinfo, [:addrinfo], :void
@@ -140,9 +162,9 @@ module UV
   attach_function :interface_addresses, :uv_interface_addresses, [:uv_interface_address_t, :pointer], :uv_err_t
   attach_function :free_interface_addresses, :uv_free_interface_addresses, [:uv_interface_address_t, :int], :void
 
-  attach_function :fs_req_result, :uv_fs_req_result, [:uv_fs_t], :ssize_t
-  attach_function :fs_req_stat, :uv_fs_req_stat, [:uv_fs_t], :uv_fs_stat_t
-  attach_function :fs_req_pointer, :uv_fs_req_pointer, [:uv_fs_t], :pointer
+  #attach_function :fs_req_result, :uv_fs_req_result, [:uv_fs_t], :ssize_t
+  #attach_function :fs_req_stat, :uv_fs_req_stat, [:uv_fs_t], :uv_fs_stat_t
+  #attach_function :fs_req_pointer, :uv_fs_req_pointer, [:uv_fs_t], :pointer
 
   attach_function :fs_req_cleanup, :uv_fs_req_cleanup, [:uv_fs_t], :void
   attach_function :fs_close, :uv_fs_close, [:uv_loop_t, :uv_fs_t, :uv_file, :uv_fs_cb], :int
@@ -210,19 +232,17 @@ module UV
   attach_function :thread_join, :uv_thread_join, [:uv_thread_t], :int
 
   # memory management
-  attach_function :malloc, [:size_t], :pointer
-  attach_function :free, [:pointer], :void
-  attach_function :ntohs, [:ushort], :ushort
+  attach_function :ntohs, [:ushort], :ushort unless FFI::Platform.windows?
 
   attach_function :handle_size, :uv_handle_size, [:uv_handle_type], :size_t
   attach_function :req_size, :uv_req_size, [:uv_req_type], :size_t
 
   def self.create_handle(type)
-    UV.malloc(UV.handle_size(type))
+    LIBC.malloc(UV.handle_size(type))
   end
 
   def self.create_request(type)
-    UV.malloc(UV.req_size(type))
+    LIBC.malloc(UV.req_size(type))
   end
 
   autoload :Resource, 'uv/resource'
