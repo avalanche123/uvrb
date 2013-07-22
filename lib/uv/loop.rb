@@ -34,6 +34,7 @@ module UV
     # Returns nothing
     def initialize(pointer) # :notnew:
       @pointer = pointer
+      @loop = self
     end
 
     # Public: Run the actual event loop. This method will block for the duration of event loop
@@ -94,68 +95,7 @@ module UV
     # Raises UV::Error::ENOTEMPTY
     # Raises UV::Error::ENOSPC
     def run
-      check_result! UV.run(@pointer)
-    end
-
-    # Public: Runs outstanding events once, yields control back
-    # 
-    # Returns nothing.
-    #
-    # Raises UV::Error::UNKNOWN
-    # Raises UV::Error::EOF
-    # Raises UV::Error::EADDRINFO
-    # Raises UV::Error::EACCES
-    # Raises UV::Error::EAGAIN
-    # Raises UV::Error::EADDRINUSE
-    # Raises UV::Error::EADDRNOTAVAIL
-    # Raises UV::Error::EAFNOSUPPORT
-    # Raises UV::Error::EALREADY
-    # Raises UV::Error::EBADF
-    # Raises UV::Error::EBUSY
-    # Raises UV::Error::ECONNABORTED
-    # Raises UV::Error::ECONNREFUSED
-    # Raises UV::Error::ECONNRESET
-    # Raises UV::Error::EDESTADDRREQ
-    # Raises UV::Error::EFAULT
-    # Raises UV::Error::EHOSTUNREACH
-    # Raises UV::Error::EINTR
-    # Raises UV::Error::EINVAL
-    # Raises UV::Error::EISCONN
-    # Raises UV::Error::EMFILE
-    # Raises UV::Error::EMSGSIZE
-    # Raises UV::Error::ENETDOWN
-    # Raises UV::Error::ENETUNREACH
-    # Raises UV::Error::ENFILE
-    # Raises UV::Error::ENOBUFS
-    # Raises UV::Error::ENOMEM
-    # Raises UV::Error::ENOTDIR
-    # Raises UV::Error::EISDIR
-    # Raises UV::Error::ENONET
-    # Raises UV::Error::ENOTCONN
-    # Raises UV::Error::ENOTSOCK
-    # Raises UV::Error::ENOTSUP
-    # Raises UV::Error::ENOENT
-    # Raises UV::Error::ENOSYS
-    # Raises UV::Error::EPIPE
-    # Raises UV::Error::EPROTO
-    # Raises UV::Error::EPROTONOSUPPORT
-    # Raises UV::Error::EPROTOTYPE
-    # Raises UV::Error::ETIMEDOUT
-    # Raises UV::Error::ECHARSE
-    # Raises UV::Error::EAIFAMNOSUPPORT
-    # Raises UV::Error::EAISERVICE
-    # Raises UV::Error::EAISOCKTYPE
-    # Raises UV::Error::ESHUTDOWN
-    # Raises UV::Error::EEXIST
-    # Raises UV::Error::ESRCH
-    # Raises UV::Error::ENAMETOOLONG
-    # Raises UV::Error::EPERM
-    # Raises UV::Error::ELOOP
-    # Raises UV::Error::EXDEV
-    # Raises UV::Error::ENOTEMPTY
-    # Raises UV::Error::ENOSPC
-    def run_once
-      check_result! UV.run_once(@pointer)
+      check_result! UV.run(@pointer, :UV_RUN_DEFAULT)
     end
 
     # Public: forces loop time update, useful for getting more granular times
@@ -175,10 +115,10 @@ module UV
     # Internal: Get last error from the loop
     # 
     # Returns one of UV::Error or nil
-    def last_error
-      err  = UV.last_error(@pointer)
-      name = UV.err_name(err)
-      msg  = UV.strerror(err)
+    def lookup_error(err = 0)
+      #err  = UV.last_error(@pointer)
+      name = UV.err_name(err || 0)
+      msg  = UV.strerror(err || 0)
 
       return nil if name == "OK"
 

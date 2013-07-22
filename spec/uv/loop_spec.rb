@@ -26,17 +26,9 @@ describe UV::Loop do
 
   describe "#run" do
     it "calls UV.run" do
-      UV.should_receive(:run).with(loop_pointer)
+      UV.should_receive(:run).with(loop_pointer, :UV_RUN_DEFAULT)
 
       subject.run
-    end
-  end
-
-  describe "#run_once" do
-    it "calls UV.run_once" do
-      UV.should_receive(:run_once).with(loop_pointer)
-
-      subject.run_once
     end
   end
 
@@ -62,11 +54,10 @@ describe UV::Loop do
     let(:error) { double() }
 
     it "calls UV.last_error" do
-      UV.should_receive(:last_error).with(loop_pointer).and_return(error)
       UV.should_receive(:err_name).with(error).and_return("EINVAL")
       UV.should_receive(:strerror).with(error).and_return("invalid argument")
 
-      subject.last_error.should == UV::Error::EINVAL.new("invalid argument")
+      subject.lookup_error(error).should == UV::Error::EINVAL.new("invalid argument")
     end
   end
 

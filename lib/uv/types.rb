@@ -12,96 +12,41 @@ module UV
 
   enum :uv_handle_type, [
     :uv_unknown_handle, 0,
-    :uv_async,
+    :uv_async, # start UV_HANDLE_TYPE_MAP
     :uv_check,
     :uv_fs_event,
+    :uv_fs_poll,
+    :uv_handle,
     :uv_idle,
     :uv_pipe,
     :uv_poll,
     :uv_prepare,
     :uv_process,
+    :uv_stream,
     :uv_tcp,
     :uv_timer,
     :uv_tty,
     :uv_udp,
-    :uv_ares_task,
+    :uv_signal, # end UV_HANDLE_TYPE_MAP
     :uv_file,
     :uv_handle_type_max
   ]
   enum :uv_req_type, [
     :uv_unknown_req, 0,
+    :uv_req,         # start UV_REQ_TYPE_MAP
     :uv_connect,
     :uv_write,
     :uv_shutdown,
     :uv_udp_send,
     :uv_fs,
     :uv_work,
-    :uv_getaddrinfo,
+    :uv_getaddrinfo, # end UV_REQ_TYPE_MAP
     :uv_req_type_private,
     :uv_req_type_max
   ]
   enum :uv_membership, [
     :uv_leave_group, 0,
     :uv_join_group
-  ]
-  enum :uv_err_code, [
-    :UNKNOWN, -1,
-    :OK, 0,
-    :EOF, 1,
-    :EADDRINFO, 2,
-    :EACCES, 3,
-    :EAGAIN, 4,
-    :EADDRINUSE, 5,
-    :EADDRNOTAVAIL, 6,
-    :EAFNOSUPPORT, 7,
-    :EALREADY, 8,
-    :EBADF, 9,
-    :EBUSY, 10,
-    :ECONNABORTED, 11,
-    :ECONNREFUSED, 12,
-    :ECONNRESET, 13,
-    :EDESTADDRREQ, 14,
-    :EFAULT, 15,
-    :EHOSTUNREACH, 16,
-    :EINTR, 17,
-    :EINVAL, 18,
-    :EISCONN, 19,
-    :EMFILE, 20,
-    :EMSGSIZE, 21,
-    :ENETDOWN, 22,
-    :ENETUNREACH, 23,
-    :ENFILE, 24,
-    :ENOBUFS, 25,
-    :ENOMEM, 26,
-    :ENOTDIR, 27,
-    :EISDIR, 28,
-    :ENONET, 29,
-    :ENOTCONN, 31,
-    :ENOTSOCK, 32,
-    :ENOTSUP, 33,
-    :ENOENT, 34,
-    :ENOSYS, 35,
-    :EPIPE, 36,
-    :EPROTO, 37,
-    :EPROTONOSUPPORT, 38,
-    :EPROTOTYPE, 39,
-    :ETIMEDOUT, 40,
-    :ECHARSET, 41,
-    :EAIFAMNOSUPPORT, 42,
-    :EAISERVICE, 44,
-    :EAISOCKTYPE, 45,
-    :ESHUTDOWN, 46,
-    :EEXIST, 47,
-    :ESRCH, 48,
-    :ENAMETOOLONG, 49,
-    :EPERM, 50,
-    :ELOOP, 51,
-    :EXDEV, 52,
-    :ENOTEMPTY, 53,
-    :ENOSPC, 54,
-    :EIO, 55,
-    :EROFS, 56,
-    :UV_MAX_ERRORS
   ]
   enum :uv_fs_type, [
     :UV_FS_UNKNOWN, -1,
@@ -136,16 +81,15 @@ module UV
     :UV_RENAME, 1,
     :UV_CHANGE, 2
   ]
+  enum :uv_run_mode, [
+    :UV_RUN_DEFAULT, 0,
+    :UV_RUN_ONCE,
+    :UV_RUN_NOWAIT
+  ]
 
   typedef UvBuf.by_value, :uv_buf_t
   typedef UvFSStat.by_value, :uv_fs_stat_t
 
-  class UvErr < FFI::Struct
-    layout :code, :uv_err_code,
-           :sys_errno_, :int
-  end
-
-  typedef UvErr.by_value, :uv_err_t
 
   class Sockaddr < FFI::Struct
     layout :sa_len, :uint8,
@@ -187,8 +131,36 @@ module UV
 
   typedef SockaddrIn6.by_value, :sockaddr_in6
 
+
+  class UvTimespec < FFI::Struct
+    layout  :tv_sec,  :long,
+            :tv_nsec, :long
+  end
+
+  class UvStat < FFI::Struct
+    layout  :st_dev,      :uint64,
+            :st_mode,     :uint64,
+            :st_nlink,    :uint64,
+            :st_uid,      :uint64,
+            :st_gid,      :uint64,
+            :st_rdev,     :uint64,
+            :st_ino,      :uint64,
+            :st_size,     :uint64,
+            :st_blksize,  :uint64,
+            :st_blocks,   :uint64,
+            :st_flags,    :uint64,
+            :st_gen,      :uint64,
+            :st_atim,     UvTimespec,
+            :st_mtim,     UvTimespec,
+            :st_ctim,     UvTimespec,
+            :st_birthtim, UvTimespec
+  end
+
+  typedef UvStat.by_value, :uv_stat_t
+
   typedef :pointer, :uv_handle_t
   typedef :pointer, :uv_fs_event_t
+  typedef :pointer, :uv_fs_poll_t
   typedef :pointer, :uv_stream_t
   typedef :pointer, :uv_tcp_t
   typedef :pointer, :uv_udp_t
@@ -222,7 +194,10 @@ module UV
   typedef :pointer, :uv_rwlock_t
   typedef :pointer, :uv_once_t
   typedef :pointer, :uv_thread_t
+  typedef :pointer, :uv_poll_t
+  typedef :pointer, :uv_stat_t
   typedef :int,     :status
+  typedef :int,     :events
 
   callback :uv_alloc_cb,       [:uv_handle_t, :size_t],                            :uv_buf_t
   callback :uv_read_cb,        [:uv_stream_t, :ssize_t, :uv_buf_t],                :void
@@ -232,6 +207,7 @@ module UV
   callback :uv_shutdown_cb,    [:uv_shutdown_t, :status],                          :void
   callback :uv_connection_cb,  [:uv_stream_t, :status],                            :void
   callback :uv_close_cb,       [:uv_handle_t],                                     :void
+  callback :uv_poll_cb,        [:uv_poll_t, :status, :events],                     :void
   callback :uv_timer_cb,       [:uv_timer_t, :status],                             :void
   callback :uv_async_cb,       [:uv_async_t, :status],                             :void
   callback :uv_prepare_cb,     [:uv_prepare_t, :status],                           :void
@@ -239,10 +215,13 @@ module UV
   callback :uv_idle_cb,        [:uv_idle_t, :status],                              :void
   callback :uv_getaddrinfo_cb, [:uv_getaddrinfo_t, :status, :addrinfo],            :void
   callback :uv_exit_cb,        [:uv_process_t, :int, :int],                        :void
+  callback :uv_walk_cb,        [:uv_handle_t, :pointer],                           :void
   callback :uv_fs_cb,          [:uv_fs_t],                                         :void
   callback :uv_work_cb,        [:uv_work_t],                                       :void
   callback :uv_after_work_cb,  [:uv_work_t],                                       :void
   callback :uv_fs_event_cb,    [:uv_fs_event_t, :string, :int, :int],              :void
+  callback :uv_fs_poll_cb,     [:uv_fs_poll_t, :status, :uv_stat_t, :uv_stat_t],   :void
+  #callback :uv_signal_cb,      []
   callback :uv_udp_send_cb,    [:uv_udp_send_t, :int],                             :void
   callback :uv_udp_recv_cb,    [:uv_udp_t, :ssize_t, :uv_buf_t, :pointer, :uint],  :void
   callback :uv_cb,             [],                                                 :void
