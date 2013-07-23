@@ -12,7 +12,7 @@ Feature: Named pipes
 
       server  = loop.pipe
 
-      server.bind("/tmp/ipc-example.ipc")
+      server.bind("/tmp/ipc-example6.ipc")
       server.listen(128) do |e|
         raise e if e
 
@@ -52,7 +52,7 @@ Feature: Named pipes
 
       client = loop.pipe
 
-      client.connect("/tmp/ipc-example.ipc") do |e|
+      client.connect("/tmp/ipc-example6.ipc") do |e|
         raise e if e
 
         client.start_read do |e, pong|
@@ -77,6 +77,7 @@ Feature: Named pipes
       end
       """
     When I run `ruby ipc_server_example.rb` interactively
+    And I wait for 1 seconds
     And I run `ruby ipc_client_example.rb`
     Then the output should contain ping pong exchange
 

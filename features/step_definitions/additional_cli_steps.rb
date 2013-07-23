@@ -18,3 +18,7 @@ Given /^a named pipe "(.*?)"$/ do |path|
   end
   at_exit { File.unlink(path) }
 end
+
+Given /^I wait for (\d+) seconds?$/ do |n|
+  sleep(n.to_i)
+end
