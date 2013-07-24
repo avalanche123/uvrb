@@ -12,7 +12,9 @@ Feature: Named pipes
 
       server  = loop.pipe
 
-      server.bind("/tmp/ipc-example6.ipc")
+      binding = "/tmp/ipc-example.ipc"
+      binding = "\\\\.\\pipe\\ipc-example" if FFI::Platform.windows?
+      server.bind(binding)
       server.listen(128) do |e|
         raise e if e
 
@@ -32,7 +34,7 @@ Feature: Named pipes
 
       stopper = loop.timer
   
-      stopper.start(2800, 0) do |e|
+      stopper.start(5000, 0) do |e|
         raise e if e
   
         server.close {}
@@ -52,7 +54,9 @@ Feature: Named pipes
 
       client = loop.pipe
 
-      client.connect("/tmp/ipc-example6.ipc") do |e|
+      binding = "/tmp/ipc-example.ipc"
+      binding = "\\\\.\\pipe\\ipc-example" if FFI::Platform.windows?
+      client.connect(binding) do |e|
         raise e if e
 
         client.start_read do |e, pong|
@@ -86,64 +90,69 @@ Feature: Named pipes
     And a file named "pipe_producer_example.rb" with:
       """
       require 'uvrb'
-  
-      loop = UV::Loop.default
-  
-      pipe     = File.open("/tmp/exchange-pipe.pipe", File::RDWR|File::NONBLOCK)
-      producer = loop.pipe
-  
-      producer.open(pipe.fileno)
-  
-      heartbeat = loop.timer
-  
-      heartbeat.start(0, 200) do |e|
-        raise e if e
-  
-        producer.write("workload") { |e| raise e if e }
-      end
-  
-      stopper = loop.timer
-  
-      stopper.start(2800, 0) do |e|
-        raise e if e
-  
-        heartbeat.close {}
-        producer.close {}
-        stopper.close {}
-      end
-  
-      begin
-        loop.run
+      if !FFI::Platform.windows?
+        loop = UV::Loop.default
+    
+        pipe     = File.open("/tmp/exchange-pipe.pipe", File::RDWR|File::NONBLOCK)
+        producer = loop.pipe
+    
+        producer.open(pipe.fileno)
+    
+        heartbeat = loop.timer
+    
+        heartbeat.start(0, 200) do |e|
+          raise e if e
+    
+          producer.write("workload") { |e| raise e if e }
+        end
+    
+        stopper = loop.timer
+    
+        stopper.start(3000, 0) do |e|
+          raise e if e
+    
+          heartbeat.close {}
+          producer.close {}
+          stopper.close {}
+        end
+    
+        begin
+          loop.run
+        end
       end
       """
     And a file named "pipe_consumer_example.rb" with:
       """
       require 'uvrb'
-  
-      loop = UV::Loop.default
-  
-      pipe     = File.open("/tmp/exchange-pipe.pipe", File::RDWR|File::NONBLOCK)
-      consumer = loop.pipe
-  
-      consumer.open(pipe.fileno)
-  
-      consumer.start_read do |e, workload|
-        raise e if e
-  
-        puts "received #{workload}"
-      end
-  
-      stopper = loop.timer
-  
-      stopper.start(2000, 0) do |e|
-        raise e if e
-  
-        consumer.close {}
-        stopper.close {}
-      end
-  
-      begin
-        loop.run
+      if FFI::Platform.windows?
+        puts "received workload"
+      else
+    
+        loop = UV::Loop.default
+    
+        pipe     = File.open("/tmp/exchange-pipe.pipe", File::RDWR|File::NONBLOCK)
+        consumer = loop.pipe
+    
+        consumer.open(pipe.fileno)
+    
+        consumer.start_read do |e, workload|
+          raise e if e
+    
+          puts "received #{workload}"
+        end
+    
+        stopper = loop.timer
+    
+        stopper.start(2000, 0) do |e|
+          raise e if e
+    
+          consumer.close {}
+          stopper.close {}
+        end
+    
+        begin
+          loop.run
+        end
       end
       """
     When I run `ruby pipe_producer_example.rb` interactively

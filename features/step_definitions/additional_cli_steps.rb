@@ -10,13 +10,13 @@ Then /^the output should contain consumed workload$/ do
 end
 
 Given /^a named pipe "(.*?)"$/ do |path|
-  if RUBY_PLATFORM.downcase.include?("mswin")
-    f = File.open(path, 'w+')
-    f.close
+  if FFI::Platform.windows?
+    #f = File.open(path, 'w+')
+    #f.close
   else
     system "/usr/bin/mkfifo", path
+    at_exit { File.unlink(path) }
   end
-  at_exit { File.unlink(path) }
 end
 
 Given /^I wait for (\d+) seconds?$/ do |n|

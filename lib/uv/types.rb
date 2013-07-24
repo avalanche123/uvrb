@@ -223,6 +223,6 @@ module UV
   callback :uv_fs_poll_cb,     [:uv_fs_poll_t, :status, :uv_stat_t, :uv_stat_t],   :void
   #callback :uv_signal_cb,      []
   callback :uv_udp_send_cb,    [:uv_udp_send_t, :int],                             :void
-  callback :uv_udp_recv_cb,    [:uv_udp_t, :ssize_t, :uv_buf_t, :pointer, :uint],  :void
+  callback :uv_udp_recv_cb,    [:uv_udp_t, :ssize_t, :uv_buf_t, Sockaddr, :uint],  :void
   callback :uv_cb,             [],                                                 :void
 end

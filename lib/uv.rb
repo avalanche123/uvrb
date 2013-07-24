@@ -151,7 +151,7 @@ module UV
     attach_function :process_kill, :uv_process_kill, [:uv_process_t, :int], :int, :blocking => true
     attach_function :kill, :uv_kill, [:int, :int], :int, :blocking => true
     attach_function :queue_work, :uv_queue_work, [:uv_loop_t, :uv_work_t, :uv_work_cb, :uv_after_work_cb], :int, :blocking => true
-    attach_function :setup_args, :uv_setup_args, [:int, :varargs], :varargs, :blocking => true
+    attach_function :setup_args, :uv_setup_args, [:int, :varargs], :varargs, :blocking => true unless defined?(JRUBY_VERSION)   # Avoids FFI issue
     attach_function :get_process_title, :uv_get_process_title, [:pointer, :size_t], :int, :blocking => true
     attach_function :set_process_title, :uv_set_process_title, [:string], :int, :blocking => true
     attach_function :resident_set_memory, :uv_resident_set_memory, [:size_t], :int, :blocking => true
