@@ -10,6 +10,7 @@ Then /^the output should contain consumed workload$/ do
 end
 
 Given /^a named pipe "(.*?)"$/ do |path|
+  require 'ffi'
   if FFI::Platform.windows?
     #f = File.open(path, 'w+')
     #f.close
