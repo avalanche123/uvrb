@@ -94,8 +94,15 @@ module UV
     # Raises UV::Error::EXDEV
     # Raises UV::Error::ENOTEMPTY
     # Raises UV::Error::ENOSPC
-    def run
-      check_result! UV.run(@pointer, :UV_RUN_DEFAULT)
+    def run(run_type = :UV_RUN_DEFAULT)
+      check_result! UV.run(@pointer, run_type)
+    end
+
+    # Public: (Deprecated - use loop.run with a run_type specified) Runs outstanding events once, yields control back
+    # 
+    # Returns nothing
+    def run_once
+      run(:UV_RUN_ONCE)
     end
 
     # Public: forces loop time update, useful for getting more granular times
@@ -115,10 +122,9 @@ module UV
     # Internal: Get last error from the loop
     # 
     # Returns one of UV::Error or nil
-    def lookup_error(err = 0)
-      #err  = UV.last_error(@pointer)
-      name = UV.err_name(err || 0)
-      msg  = UV.strerror(err || 0)
+    def lookup_error(err)
+      name = UV.err_name(err)
+      msg  = UV.strerror(err)
 
       return nil if name == "OK"
 
@@ -233,6 +239,24 @@ module UV
 
       check_result! UV.async_init(@pointer, async_ptr, async.callback(:on_async))
       async
+    end
+
+    # Public: Do some work in the libuv thread pool
+    #
+    # Returns UV::Work
+    #
+    # Raises ArgumentError if block is not given and if the block or optional callback are expecting any arguments
+    def work(callback = nil, op = nil, &block)
+      block = block || op
+      assert_block(block)
+      assert_arity(0, block)
+
+      if not callback.nil?
+        assert_block(callback)
+        assert_arity(0, callback)
+      end
+
+      work = Work.new(self, block, callback)
     end
 
     # Public: Get a new Filesystem instance

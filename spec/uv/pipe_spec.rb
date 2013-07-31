@@ -20,7 +20,11 @@ describe UV::Pipe do
   end
 
   describe "#bind" do
-    let(:name) { "/tmp/filename.ipc" }
+    let(:name) {
+      name = "/tmp/filename.ipc"
+      name = subject.send :windows_path, name if FFI::Platform.windows?
+      name
+    }
 
     it "calls UV.pipe_bind" do
       UV.should_receive(:pipe_bind).with(pointer, name)
@@ -30,7 +34,11 @@ describe UV::Pipe do
   end
 
   describe "#connect" do
-    let(:name) { "/tmp/filename.ipc" }
+    let(:name) {
+      name = "/tmp/filename.ipc"
+      name = subject.send :windows_path, name if FFI::Platform.windows?
+      name
+    }
     let(:connect_request) { double() }
 
     it "requires a block" do

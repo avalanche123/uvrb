@@ -27,10 +27,12 @@ module UV
     end
 
     def close(&block)
-      assert_block(block)
-      assert_arity(0, block)
+      if not block.nil?
+        assert_block(block)
+        assert_arity(0, block)
 
-      @close_block = block
+        @close_block = block
+      end
 
       UV.close(@pointer, callback(:on_close))
 
@@ -59,7 +61,8 @@ module UV
     def on_close(pointer)
       UV.free(pointer)
       clear_callbacks
-      @close_block.call
+      
+      @close_block.call unless @close_block.nil?
     end
   end
 end

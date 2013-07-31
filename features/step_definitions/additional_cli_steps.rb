@@ -11,10 +11,7 @@ end
 
 Given /^a named pipe "(.*?)"$/ do |path|
   require 'ffi'
-  if FFI::Platform.windows?
-    #f = File.open(path, 'w+')
-    #f.close
-  else
+  if not FFI::Platform.windows?
     system "/usr/bin/mkfifo", path
     at_exit { File.unlink(path) }
   end

@@ -12,9 +12,7 @@ Feature: Named pipes
 
       server  = loop.pipe
 
-      binding = "/tmp/ipc-example.ipc"
-      binding = "\\\\.\\pipe\\ipc-example" if FFI::Platform.windows?
-      server.bind(binding)
+      server.bind("/tmp/ipc-example.ipc")
       server.listen(128) do |e|
         raise e if e
 
@@ -54,9 +52,7 @@ Feature: Named pipes
 
       client = loop.pipe
 
-      binding = "/tmp/ipc-example.ipc"
-      binding = "\\\\.\\pipe\\ipc-example" if FFI::Platform.windows?
-      client.connect(binding) do |e|
+      client.connect("/tmp/ipc-example.ipc") do |e|
         raise e if e
 
         client.start_read do |e, pong|
