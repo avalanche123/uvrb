@@ -28,6 +28,13 @@ Gem::Specification.new do |gem|
 
   relative_path = File.expand_path("../", __FILE__) + '/'
   `git submodule --quiet foreach pwd`.split($\).each do |submodule_path|
+
+    if (ENV['OS'] == 'Windows_NT') && submodule_path[0] == '/'
+      # Detect if cygwin path is being used by git
+      submodule_path = submodule_path[1..-1]
+      submodule_path.insert(1, ':')
+    end
+
     # for each submodule, change working directory to that submodule
     Dir.chdir(submodule_path) do
       # Make the submodule path relative
