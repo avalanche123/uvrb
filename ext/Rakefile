@@ -1,11 +1,14 @@
 require 'rubygems'
 require 'ffi'
 require 'rake/clean'
-require 'uv/tasks'
+require '../lib/uv/tasks'
+
+Dir.chdir File.expand_path("../", __FILE__)
+Dir.chdir '..'
 
 task :default => :libuv
 
 desc "Compile libuv from submodule"
-task :libuv do
-  system 'cd .. && rake compile'
-end
+task :libuv => ["ext/libuv.#{FFI::Platform::LIBSUFFIX}"]
+
+CLOBBER.include("ext/libuv.#{FFI::Platform::LIBSUFFIX}")

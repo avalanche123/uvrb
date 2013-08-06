@@ -14,10 +14,6 @@ Gem::Specification.new do |gem|
   gem.extensions << "ext/Rakefile"
 
   gem.required_ruby_version = '>= 1.9.2'
-
-  gem.files         = `git ls-files`.split("\n")
-  gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   gem.require_paths = ["lib"]
 
   gem.add_runtime_dependency     'ffi', '~> 1.9'
@@ -26,4 +22,27 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'aruba', '~> 0.5'
   gem.add_development_dependency 'rake', '~> 10.1'
   gem.add_development_dependency 'rdoc', '~> 4.0'
+
+  gem.files         = `git ls-files`.split("\n")
+  gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
+
+  relative_path = File.expand_path("../", __FILE__) + '/'
+  `git submodule --quiet foreach pwd`.split($\).each do |submodule_path|
+    # for each submodule, change working directory to that submodule
+    Dir.chdir(submodule_path) do
+      # Make the submodule path relative
+      submodule_path = submodule_path.gsub(/#{relative_path}/i, '')
+ 
+      # issue git ls-files in submodule's directory
+      submodule_files = `git ls-files`.split($\)
+ 
+      # prepend the submodule path to create relative file paths
+      submodule_files_paths = submodule_files.map do |filename|
+        File.join(submodule_path, filename)
+      end
+ 
+      # add relative paths to gem.files
+      gem.files += submodule_files_paths
+    end
+  end
 end
