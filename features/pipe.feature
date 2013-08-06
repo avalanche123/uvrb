@@ -120,35 +120,30 @@ Feature: Named pipes
     And a file named "pipe_consumer_example.rb" with:
       """
       require 'uvrb'
-      if FFI::Platform.windows?
-        puts "received workload"
-      else
-    
-        loop = UV::Loop.default
-    
-        pipe     = File.open("/tmp/exchange-pipe.pipe", File::RDWR|File::NONBLOCK)
-        consumer = loop.pipe
-    
-        consumer.open(pipe.fileno)
-    
-        consumer.start_read do |e, workload|
-          raise e if e
-    
-          puts "received #{workload}"
-        end
-    
-        stopper = loop.timer
-    
-        stopper.start(2000, 0) do |e|
-          raise e if e
-    
-          consumer.close {}
-          stopper.close {}
-        end
-    
-        begin
-          loop.run
-        end
+      loop = UV::Loop.default
+  
+      pipe     = File.open("/tmp/exchange-pipe.pipe", File::RDWR|File::NONBLOCK)
+      consumer = loop.pipe
+  
+      consumer.open(pipe.fileno)
+  
+      consumer.start_read do |e, workload|
+        raise e if e
+  
+        puts "received #{workload}"
+      end
+  
+      stopper = loop.timer
+  
+      stopper.start(2000, 0) do |e|
+        raise e if e
+  
+        consumer.close {}
+        stopper.close {}
+      end
+  
+      begin
+        loop.run
       end
       """
     When I run `ruby pipe_producer_example.rb` interactively
