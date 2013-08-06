@@ -11,6 +11,7 @@ Gem::Specification.new do |gem|
   gem.description   = "UV is Ruby OOP bindings for libuv"
 
   gem.requirements << 'libuv'
+  gem.extensions << "ext/Rakefile"
 
   gem.required_ruby_version = '>= 1.9.2'
 
@@ -19,10 +20,10 @@ Gem::Specification.new do |gem|
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   gem.require_paths = ["lib"]
 
-  gem.add_runtime_dependency     'ffi'
-  gem.add_development_dependency 'rspec'
-  gem.add_development_dependency 'cucumber'
-  gem.add_development_dependency 'aruba'
-  gem.add_development_dependency 'rake'
-  gem.add_development_dependency 'rdoc'
+  gem.add_runtime_dependency     'ffi', '~> 1.9'
+  gem.add_development_dependency 'rspec', '~> 2.14'
+  gem.add_development_dependency 'cucumber', '~> 1.3'
+  gem.add_development_dependency 'aruba', '~> 0.5'
+  gem.add_development_dependency 'rake', '~> 10.1'
+  gem.add_development_dependency 'rdoc', '~> 4.0'
 end

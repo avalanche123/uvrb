@@ -9,8 +9,9 @@ require 'ffi'
 require 'rake/clean'
 require 'uv/tasks'
 
-RSpec::Core::RakeTask.new
+task :default => :test
 
+RSpec::Core::RakeTask.new(:spec)
 Cucumber::Rake::Task.new(:features)
 
 RDoc::Task.new(:rdoc => "rdoc", :clobber_rdoc => "rdoc:clean", :rerdoc => "rdoc:force") do |rd|
@@ -21,9 +22,6 @@ RDoc::Task.new(:rdoc => "rdoc", :clobber_rdoc => "rdoc:clean", :rerdoc => "rdoc:
 end
 
 task :test => [:spec, :features]
-task :default => :test
-
-desc "Compile libuv from submodule"
-task :libuv => ["ext/libuv.#{FFI::Platform::LIBSUFFIX}"]
-
-CLOBBER.include("ext/libuv.#{FFI::Platform::LIBSUFFIX}")
+task :compile do
+    system 'cd ext && rake'
+end

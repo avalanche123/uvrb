@@ -1,0 +1,11 @@
+require 'rubygems'
+require 'ffi'
+require 'rake/clean'
+require 'uv/tasks'
+
+task :default => :libuv
+
+desc "Compile libuv from submodule"
+task :libuv => ["ext/libuv.#{FFI::Platform::LIBSUFFIX}"]
+
+CLOBBER.include("ext/libuv.#{FFI::Platform::LIBSUFFIX}")
