@@ -22,6 +22,8 @@ RDoc::Task.new(:rdoc => "rdoc", :clobber_rdoc => "rdoc:clean", :rerdoc => "rdoc:
 end
 
 task :test => [:spec, :features]
-task :compile do
-    system 'cd ext && rake'
-end
+
+desc "Compile libuv from submodule"
+task :compile => ["ext/libuv.#{FFI::Platform::LIBSUFFIX}"]
+
+CLOBBER.include("ext/libuv.#{FFI::Platform::LIBSUFFIX}")
