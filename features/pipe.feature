@@ -86,35 +86,33 @@ Feature: Named pipes
     And a file named "pipe_producer_example.rb" with:
       """
       require 'uvrb'
-      if !FFI::Platform.windows?
-        loop = UV::Loop.default
-    
-        pipe     = File.open("/tmp/exchange-pipe.pipe", File::RDWR|File::NONBLOCK)
-        producer = loop.pipe
-    
-        producer.open(pipe.fileno)
-    
-        heartbeat = loop.timer
-    
-        heartbeat.start(0, 200) do |e|
-          raise e if e
-    
-          producer.write("workload") { |e| raise e if e }
-        end
-    
-        stopper = loop.timer
-    
-        stopper.start(3000, 0) do |e|
-          raise e if e
-    
-          heartbeat.close {}
-          producer.close {}
-          stopper.close {}
-        end
-    
-        begin
-          loop.run
-        end
+      loop = UV::Loop.default
+  
+      pipe     = File.open("/tmp/exchange-pipe.pipe", File::RDWR|File::NONBLOCK)
+      producer = loop.pipe
+  
+      producer.open(pipe.fileno)
+  
+      heartbeat = loop.timer
+  
+      heartbeat.start(0, 200) do |e|
+        raise e if e
+  
+        producer.write("workload") { |e| raise e if e }
+      end
+  
+      stopper = loop.timer
+  
+      stopper.start(3000, 0) do |e|
+        raise e if e
+  
+        heartbeat.close {}
+        producer.close {}
+        stopper.close {}
+      end
+  
+      begin
+        loop.run
       end
       """
     And a file named "pipe_consumer_example.rb" with:
