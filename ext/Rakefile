@@ -1,0 +1,18 @@
+if ENV['UVRB_USE_GLOBAL'].nil?
+
+	require 'rubygems'
+	require 'ffi'
+	require 'rake/clean'
+	require '../lib/uv/tasks'
+
+	Dir.chdir File.expand_path("../", __FILE__)
+	Dir.chdir '..'
+
+	task :default => :libuv
+
+	desc "Compile libuv from submodule"
+	task :libuv => ["ext/libuv.#{FFI::Platform::LIBSUFFIX}"]
+
+	CLOBBER.include("ext/libuv.#{FFI::Platform::LIBSUFFIX}")
+
+end

@@ -19,9 +19,9 @@ end
 CLEAN.include('ext/libuv/build/gyp')
 
 if FFI::Platform.windows?
-  require 'uv/tasks/win'
+  require File.join File.expand_path("../", __FILE__), 'tasks/win'
 elsif FFI::Platform.mac?
-  require 'uv/tasks/mac'
+  require File.join File.expand_path("../", __FILE__), 'tasks/mac'
 else # UNIX
-  require 'uv/tasks/unix'
+  require File.join File.expand_path("../", __FILE__), 'tasks/unix'
 end

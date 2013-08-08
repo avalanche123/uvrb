@@ -32,7 +32,7 @@ Feature: Named pipes
 
       stopper = loop.timer
   
-      stopper.start(2800, 0) do |e|
+      stopper.start(5000, 0) do |e|
         raise e if e
   
         server.close {}
@@ -77,6 +77,7 @@ Feature: Named pipes
       end
       """
     When I run `ruby ipc_server_example.rb` interactively
+    And I wait for 1 seconds
     And I run `ruby ipc_client_example.rb`
     Then the output should contain ping pong exchange
 
@@ -85,7 +86,6 @@ Feature: Named pipes
     And a file named "pipe_producer_example.rb" with:
       """
       require 'uvrb'
-  
       loop = UV::Loop.default
   
       pipe     = File.open("/tmp/exchange-pipe.pipe", File::RDWR|File::NONBLOCK)
@@ -103,7 +103,7 @@ Feature: Named pipes
   
       stopper = loop.timer
   
-      stopper.start(2800, 0) do |e|
+      stopper.start(3000, 0) do |e|
         raise e if e
   
         heartbeat.close {}
@@ -118,7 +118,6 @@ Feature: Named pipes
     And a file named "pipe_consumer_example.rb" with:
       """
       require 'uvrb'
-  
       loop = UV::Loop.default
   
       pipe     = File.open("/tmp/exchange-pipe.pipe", File::RDWR|File::NONBLOCK)

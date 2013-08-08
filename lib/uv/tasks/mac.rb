@@ -5,13 +5,13 @@ file 'ext/libuv/uv.xcodeproj' => 'ext/libuv/build/gyp' do
   abort "Don't know how to build on #{FFI::Platform::ARCH} (yet)" unless target_arch
 
   Dir.chdir("ext/libuv") do |path|
-    system "./gyp_uv -f xcode -Dtarget_arch=#{target_arch}"
+    system "./gyp_uv -f xcode -Dtarget_arch=#{target_arch} -Dlibrary=shared_library -Dcomponent=shared_library"
   end
 end
 
 file "ext/libuv/build/Release/libuv.#{FFI::Platform::LIBSUFFIX}" => 'ext/libuv/uv.xcodeproj' do
   Dir.chdir("ext/libuv") do |path|
-    system 'xcodebuild -project uv.xcodeproj -configuration Release -target All'
+    system 'xcodebuild -project uv.xcodeproj -configuration Release -target libuv'
   end
 end
 
