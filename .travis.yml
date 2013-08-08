@@ -1,7 +1,10 @@
 language: ruby
 rvm:
-  - 1.9.2
-  - 1.9.3
+  - "1.9.3"
+  - "2.0.0"
+  - rbx-19mode
+#  - jruby-19mode # jruby loads too slowly to run the cucumber tests properly.
+#  - jruby-20mode #  so I am ignoring jruby builds on travis
 branches:
   only:
     - master
@@ -10,4 +13,4 @@ before_install:
   - git submodule update --init --recursive
   - echo "yes" | gem uninstall ffi -a
 before_script:
-  - rake libuv
+  - rake compile

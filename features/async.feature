@@ -26,8 +26,8 @@ Feature: wake up another event loop
         end
       end
 
-      Thread.new(callback) do |proc|
-        proc.call
+      loop.work do
+        callback.call
       end
 
       loop.run

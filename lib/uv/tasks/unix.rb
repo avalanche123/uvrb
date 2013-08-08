@@ -5,7 +5,7 @@ file 'ext/libuv/out' => 'ext/libuv/build/gyp' do
   abort "Don't know how to build on #{FFI::Platform::ARCH} (yet)" unless target_arch
 
   Dir.chdir("ext/libuv") do |path|
-    system "./gyp_uv -f make -Dtarget_arch=#{target_arch}"
+    system "./gyp_uv -f make -Dtarget_arch=#{target_arch} -Dlibrary=shared_library -Dcomponent=shared_library"
   end
 end
 

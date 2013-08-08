@@ -1,4 +1,16 @@
 module UV
+  typedef :uint32_t, :in_addr_t
+  typedef :uint16, :in_port_t
+  typedef :int, :mode_t
+
+  module WS2
+    extend FFI::Library
+    ffi_lib('Ws2_32.dll').first  # this is for ntohs
+    attach_function :ntohs, [:ushort], :ushort, :blocking => true
+  end
+  def_delegators :WS2, :ntohs
+  module_function :ntohs
+
   # win32 has a different uv_buf_t layout to everything else.
   class UvBuf < FFI::Struct
     layout :len, :ulong, :base, :pointer

@@ -36,16 +36,10 @@ or
   cd ...
   bundle install
 
-Make sure you have libuv compiled and a shared library (`.dylib`|`.so`|`.dll`) file available in your lib path.
+=== Prerequisites
 
-To compile libuv from a local submodule version:
-
-  git submodule update --init
-  rake libuv
-
-Or to compile libuv on mac, you can install provided Homebrew formula by running:
-
-  brew install Formula/libuv.rb --HEAD
+* The installation requires subversion to be installed on your system and available on the PATH
+* Windows users will require a copy of Visual Studio 2010 or later installed. {Express}[http://www.microsoft.com/visualstudio/eng/products/visual-studio-express-products] works fine.
 
 == What's supported
 
@@ -62,9 +56,10 @@ Or to compile libuv on mac, you can install provided Homebrew formula by running
 * File
 * FSEvent
 * Errors
+* work queue
 
 == TODO
 
-* Port rest of libuv - ares, getaddrinfo, process, work queue, mutexes and locks
+* Port rest of libuv - ares, getaddrinfo, process, mutexes and locks
 * Tests tests tests
 * Docs docs docs
