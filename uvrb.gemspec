@@ -11,7 +11,6 @@ Gem::Specification.new do |gem|
   gem.description   = "UV is Ruby OOP bindings for libuv"
 
   gem.requirements << 'libuv'
-  gem.extensions << "ext/Rakefile"
 
   gem.required_ruby_version = '>= 1.9.2'
   gem.require_paths = ["lib"]
