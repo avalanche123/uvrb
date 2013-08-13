@@ -59,7 +59,7 @@ module UV
 
   attach_function :ref, :uv_ref, [:uv_handle_t], :void, :blocking => true
   attach_function :unref, :uv_unref, [:uv_handle_t], :void, :blocking => true
-  attach_function :has_ref, :uv_has_ref, [:uv_handle_t], :int, :blocking => true
+  # attach_function :has_ref, :uv_has_ref, [:uv_handle_t], :int, :blocking => true
   attach_function :is_active, :uv_is_active, [:uv_handle_t], :int, :blocking => true
   attach_function :walk, :uv_walk, [:uv_loop_t, :uv_walk_cb, :pointer], :void, :blocking => true
   attach_function :close, :uv_close, [:uv_handle_t, :uv_close_cb], :void, :blocking => true
