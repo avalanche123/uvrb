@@ -1,7 +1,7 @@
 module UV
   module Resource
     def check_result(rc)
-      @loop.lookup_error(rc) unless rc.nil? || rc >= 0 
+      @loop.lookup_error(rc) if rc && rc < 0 
     end
 
     def check_result!(rc)
