@@ -1,4 +1,6 @@
 module UV
+  typedef :int, :uv_os_sock_t
+
   class UvBuf < FFI::Struct
     layout :base, :pointer, :len, :size_t
   end
@@ -9,4 +11,6 @@ module UV
     :st_blksize, :blksize_t, :st_blocks, :blkcnt_t, :st_atime, :time_t,
     :st_mtime, :time_t, :st_ctime, :time_t
   end
+
+  attach_function :ntohs, [:ushort], :ushort, :blocking => true
 end

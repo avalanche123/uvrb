@@ -4,6 +4,12 @@ module UV
   class TCP
     include Stream, Net
 
+    def open(fd)
+      check_result! UV.tcp_open(handle, fd)
+
+      self
+    end
+
     def bind(ip, port)
       assert_type(String, ip, "ip must be a String")
       assert_type(Integer, port, "port must be an Integer")

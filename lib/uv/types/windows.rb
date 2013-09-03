@@ -2,6 +2,8 @@ module UV
   typedef :uint32_t, :in_addr_t
   typedef :uint16, :in_port_t
   typedef :int, :mode_t
+  # http://stackoverflow.com/questions/1953639/is-it-safe-to-cast-socket-to-int-under-win64
+  typedef :int, :uv_os_sock_t
 
   module WS2
     extend FFI::Library

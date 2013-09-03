@@ -81,7 +81,7 @@ module UV
   attach_function :shutdown, :uv_shutdown, [:uv_shutdown_t, :uv_stream_t, :uv_shutdown_cb], :int, :blocking => true
 
   attach_function :tcp_init, :uv_tcp_init, [:uv_loop_t, :uv_tcp_t], :int, :blocking => true
-  #attach_function :tcp_open, :uv_tcp_open, [:uv_tcp_t, :uv_os_sock_t], :int
+  attach_function :tcp_open, :uv_tcp_open, [:uv_tcp_t, :uv_os_sock_t], :int, :blocking => true
   attach_function :tcp_nodelay, :uv_tcp_nodelay, [:uv_tcp_t, :int], :int, :blocking => true
   attach_function :tcp_keepalive, :uv_tcp_keepalive, [:uv_tcp_t, :int, :uint], :int, :blocking => true
   attach_function :tcp_simultaneous_accepts, :uv_tcp_simultaneous_accepts, [:uv_tcp_t, :int], :int, :blocking => true
@@ -93,6 +93,7 @@ module UV
   attach_function :tcp_connect6, :uv_tcp_connect6, [:uv_connect_t, :uv_tcp_t, :sockaddr_in6, :uv_connect_cb], :int, :blocking => true
 
   attach_function :udp_init, :uv_udp_init, [:uv_loop_t, :uv_udp_t], :int, :blocking => true
+  attach_function :udp_open, :uv_udp_open, [:uv_udp_t, :uv_os_sock_t], :int, :blocking => true
   attach_function :udp_bind, :uv_udp_bind, [:uv_udp_t, :sockaddr_in, :uint], :int, :blocking => true
   attach_function :udp_bind6, :uv_udp_bind6, [:uv_udp_t, :sockaddr_in6, :uint], :int, :blocking => true
   attach_function :udp_getsockname, :uv_udp_getsockname, [:uv_udp_t, :pointer, :pointer], :int, :blocking => true
@@ -242,9 +243,6 @@ module UV
 
   attach_function :handle_size, :uv_handle_size, [:uv_handle_type], :size_t, :blocking => true
   attach_function :req_size, :uv_req_size, [:uv_req_type], :size_t, :blocking => true
-
-  # This function is attached differently in windows - see ./types/windows.rb
-  attach_function :ntohs, [:ushort], :ushort, :blocking => true unless FFI::Platform.windows?
 
 
   def self.create_handle(type)

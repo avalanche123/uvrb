@@ -2,6 +2,12 @@ module UV
   class UDP
     include Handle, Net
 
+    def open(fd)
+      check_result! UV.udp_open(handle, fd)
+
+      self
+    end
+
     def bind(ip, port, ipv6_only = false)
       assert_type(String, ip, "ip must be a String")
       assert_type(Integer, port, "port must be an Integer")
