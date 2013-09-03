@@ -280,6 +280,16 @@ module UV
       fs_event
     end
 
+    # Public: Get a new Signal handle
+    # 
+    # Returns UV::Signal
+    def signal
+      signal_ptr = UV.create_handle(:uv_signal)
+
+      check_result! UV.signal_init(@pointer, signal_ptr)
+      Signal.new(self, signal_ptr)
+    end
+
     # Internal: Get a hold of internal loop pointer instance
     # 
     # Returns FFI::Pointer

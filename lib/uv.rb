@@ -141,6 +141,10 @@ module UV
   attach_function :timer_set_repeat, :uv_timer_set_repeat, [:uv_timer_t, :int64_t], :void, :blocking => true
   attach_function :timer_get_repeat, :uv_timer_get_repeat, [:uv_timer_t], :int64_t, :blocking => true
 
+  attach_function :signal_init, :uv_signal_init, [:uv_loop_t, :uv_signal_t], :int, :blocking => true
+  attach_function :signal_start, :uv_signal_start, [:uv_signal_t, :uv_signal_cb, :int], :int, :blocking => true
+  attach_function :signal_stop, :uv_signal_stop, [:uv_signal_t], :int, :blocking => true
+
   #attach_function :ares_init_options, :uv_ares_init_options, [:uv_loop_t, :ares_channel, :ares_options, :int], :int
   #attach_function :ares_destroy, :uv_ares_destroy, [:uv_loop_t, :ares_channel], :void
 
@@ -268,6 +272,7 @@ module UV
   autoload :Idle, 'uv/idle'
   autoload :Async, 'uv/async'
   autoload :Work, 'uv/work'
+  autoload :Signal, 'uv/signal'
   autoload :Filesystem, 'uv/filesystem'
   autoload :File, 'uv/file'
   autoload :FSEvent, 'uv/fs_event'

@@ -181,6 +181,7 @@ module UV
   typedef :pointer, :uv_write_t
   typedef :pointer, :uv_connect_t
   typedef :pointer, :uv_udp_send_t
+  typedef :pointer, :uv_signal_t
   typedef :int,     :uv_file
   typedef :pointer, :ares_channel
   typedef :pointer, :ares_options
@@ -213,6 +214,7 @@ module UV
   callback :uv_prepare_cb,     [:uv_prepare_t, :status],                           :void
   callback :uv_check_cb,       [:uv_check_t, :status],                             :void
   callback :uv_idle_cb,        [:uv_idle_t, :status],                              :void
+  callback :uv_signal_cb,      [:uv_signal_t, :status],                            :void
   callback :uv_getaddrinfo_cb, [:uv_getaddrinfo_t, :status, :addrinfo],            :void
   callback :uv_exit_cb,        [:uv_process_t, :int, :int],                        :void
   callback :uv_walk_cb,        [:uv_handle_t, :pointer],                           :void

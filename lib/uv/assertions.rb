@@ -26,5 +26,12 @@ module UV
         raise ArgumentError, msg, caller
       end
     end
+
+    def assert_signal(signo, msg = nil)
+      if not ::Signal.list.values.include?(signo)
+        msg ||= "undefined signal number: #{signo}"
+        raise ArgumentError, msg, caller
+      end
+    end
   end
 end
