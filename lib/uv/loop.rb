@@ -105,6 +105,10 @@ module UV
       run(:UV_RUN_ONCE)
     end
 
+    def stop
+      check_result! UV.stop(@pointer)
+    end
+
     # Public: forces loop time update, useful for getting more granular times
     # 
     # Returns nothing
