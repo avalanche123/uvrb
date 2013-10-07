@@ -8,6 +8,16 @@ describe UV::UDP do
 
   it_behaves_like 'a handle'
 
+  describe "#open" do
+    let(:fd) { 4 }
+
+    it "calls UV.udp_open" do
+      UV.should_receive(:udp_open).with(pointer, fd)
+
+      subject.open(fd)
+    end
+  end
+
   describe "#bind" do
     let(:ip_addr) { double() }
     let(:port) { 0 }

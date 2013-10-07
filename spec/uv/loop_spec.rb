@@ -32,6 +32,14 @@ describe UV::Loop do
     end
   end
 
+  describe "#stop" do
+    it "calls UV.stop" do
+      UV.should_receive(:stop).with(loop_pointer)
+
+      subject.stop
+    end
+  end
+
   describe "#update_time" do
     it "calls UV.update_time" do
       UV.should_receive(:update_time).with(loop_pointer)

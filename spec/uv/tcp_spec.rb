@@ -9,6 +9,16 @@ describe UV::TCP do
   it_behaves_like 'a handle'
   it_behaves_like 'a stream'
 
+  describe "#open" do
+    let(:fd) { 4 }
+
+    it "calls UV.tcp_open" do
+      UV.should_receive(:tcp_open).with(pointer, fd)
+
+      subject.open(fd)
+    end
+  end
+
   describe "#bind" do
     let(:ip_addr) { double() }
     let(:port) { 0 }
