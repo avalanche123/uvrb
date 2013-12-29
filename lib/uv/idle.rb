@@ -20,6 +20,7 @@ module UV
     end
 
     private
+
     def on_idle(handle, status)
       @idle_block.call(check_result(status))
     end
