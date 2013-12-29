@@ -2,25 +2,27 @@ require 'set'
 
 module UV
   module Listener
-    private
-    def callbacks
-      @callbacks ||= Set.new
+    @@callbacks = Hash.new { |hash, object_id| hash[object_id] = Hash.new }
+
+    class << self
+      def define_callback(object_id, name, callback)
+        @@callbacks[object_id][name] ||= callback
+      end
+
+      def undefine_callbacks(object_id)
+        @@callbacks.delete(object_id)
+        nil
+      end
     end
 
+    private
+
     def callback(name)
-      const_name = "#{name.upcase}_#{object_id}"
-      unless self.class.const_defined?(const_name)
-        callbacks << const_name
-        self.class.const_set(const_name, method(name))
-      end
-      self.class.const_get(const_name)
+      Listener.define_callback(object_id, name, method(name))
     end
 
     def clear_callbacks
-      callbacks.each do |name|
-        self.class.send(:remove_const, name)
-      end
-      callbacks.clear
+      Listener.undefine_callbacks(object_id)
     end
   end
 end
