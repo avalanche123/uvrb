@@ -2,8 +2,16 @@ module UV
   module Handle
     include Assertions, Resource, Listener
 
+    class << self
+      def close(handle)
+        proc { UV.close(handle, UV.method(:free)) }
+      end
+    end
+
     def initialize(loop, pointer)
       @loop, @pointer = loop, pointer
+
+      ObjectSpace.define_finalizer(self, Handle.close(@pointer))
     end
 
     # Public: Increment internal ref counter for the handle on the loop. Useful for
@@ -27,7 +35,11 @@ module UV
     end
 
     def close(&block)
-      if not block.nil?
+      return if @pointer.nil?
+
+      ObjectSpace.undefine_finalizer(self)
+
+      if block
         assert_block(block)
         assert_arity(0, block)
 
@@ -61,8 +73,10 @@ module UV
     def on_close(pointer)
       UV.free(pointer)
       clear_callbacks
-      
+
       @close_block.call unless @close_block.nil?
+
+      @pointer = nil
     end
   end
 end
