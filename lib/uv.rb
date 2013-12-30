@@ -48,7 +48,7 @@ module UV
   attach_function :stop, :uv_stop, [:uv_loop_t], :void, :blocking => true
   #attach_function :run_once, :uv_run_once, [:uv_loop_t], :int
   attach_function :update_time, :uv_update_time, [:uv_loop_t], :void, :blocking => true
-  attach_function :now, :uv_now, [:uv_loop_t], :int64, :blocking => true
+  attach_function :now, :uv_now, [:uv_loop_t], :uint64, :blocking => true
 
   attach_function :backend_timeout, :uv_backend_timeout, [:uv_loop_t], :int, :blocking => true
   attach_function :backend_fd, :uv_backend_fd, [:uv_loop_t], :int, :blocking => true

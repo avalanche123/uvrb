@@ -96,6 +96,8 @@ module UV
     # Raises UV::Error::ENOSPC
     def run(run_type = :UV_RUN_DEFAULT)
       check_result! UV.run(@pointer, run_type)
+
+      self
     end
 
     # Public: (Deprecated - use loop.run with a run_type specified) Runs outstanding events once, yields control back
@@ -103,10 +105,14 @@ module UV
     # Returns nothing
     def run_once
       run(:UV_RUN_ONCE)
+
+      self
     end
 
     def stop
       check_result! UV.stop(@pointer)
+
+      self
     end
 
     # Public: forces loop time update, useful for getting more granular times
@@ -114,6 +120,8 @@ module UV
     # Returns nothing
     def update_time
       UV.update_time(@pointer)
+
+      self
     end
 
     # Public: Get current time in microseconds
