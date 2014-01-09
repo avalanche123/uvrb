@@ -3,15 +3,18 @@ module UV
     include Assertions, Resource, Listener
 
     class << self
-      def close(handle)
-        proc { UV.close(handle, UV.method(:free)) }
+      def close(object_id, handle)
+        Proc.new do
+          Listener.undefine_callbacks(object_id)
+          UV.close(handle, UV.method(:free))
+        end
       end
     end
 
     def initialize(loop, pointer)
       @loop, @pointer = loop, pointer
 
-      ObjectSpace.define_finalizer(self, Handle.close(@pointer))
+      ObjectSpace.define_finalizer(self, Handle.close(object_id, @pointer))
     end
 
     # Public: Increment internal ref counter for the handle on the loop. Useful for
