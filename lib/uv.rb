@@ -53,7 +53,7 @@ module UV
   attach_function :backend_timeout, :uv_backend_timeout, [:uv_loop_t], :int, :blocking => true
   attach_function :backend_fd, :uv_backend_fd, [:uv_loop_t], :int, :blocking => true
 
-  #attach_function :last_error, :uv_last_error, [:uv_loop_t], :int
+  attach_function :last_error, :uv_last_error, [:uv_loop_t], :int
   attach_function :strerror, :uv_strerror, [:int], :string, :blocking => true
   attach_function :err_name, :uv_err_name, [:int], :string, :blocking => true
 

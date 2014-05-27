@@ -131,6 +131,13 @@ module UV
       UV.now(@pointer)
     end
 
+    # Internal: Get last error code from the loop
+    # 
+    # Returns an integer error code
+    def last_error
+      UV.last_error(@pointer)
+    end
+
     # Internal: Get last error from the loop
     # 
     # Returns one of UV::Error or nil
