@@ -1,4 +1,5 @@
 require 'forwardable'
+require 'timeout'
 require 'ffi'
 
 module UV

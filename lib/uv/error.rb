@@ -1,58 +1,58 @@
 module UV
-  class Error < StandardError
+  class Error < ::SystemCallError
     class UNKNOWN < Error; end
     class OK < Error; end
-    class EOF < Error; end
+    class EOF < ::EOFError; end
     class EADDRINFO < Error; end
-    class EACCES < Error; end
-    class EAGAIN < Error; end
-    class EADDRINUSE < Error; end
-    class EADDRNOTAVAIL < Error; end
-    class EAFNOSUPPORT < Error; end
-    class EALREADY < Error; end
-    class EBADF < Error; end
-    class EBUSY < Error; end
-    class ECONNABORTED < Error; end
-    class ECONNREFUSED < Error; end
-    class ECONNRESET < Error; end
-    class EDESTADDRREQ < Error; end
-    class EFAULT < Error; end
-    class EHOSTUNREACH < Error; end
-    class EINTR < Error; end
-    class EINVAL < Error; end
-    class EISCONN < Error; end
-    class EMFILE < Error; end
-    class EMSGSIZE < Error; end
-    class ENETDOWN < Error; end
-    class ENETUNREACH < Error; end
-    class ENFILE < Error; end
-    class ENOBUFS < Error; end
-    class ENOMEM < Error; end
-    class ENOTDIR < Error; end
-    class EISDIR < Error; end
-    class ENONET < Error; end
-    class ENOTCONN < Error; end
-    class ENOTSOCK < Error; end
-    class ENOTSUP < Error; end
-    class ENOENT < Error; end
-    class ENOSYS < Error; end
-    class EPIPE < Error; end
-    class EPROTO < Error; end
-    class EPROTONOSUPPORT < Error; end
-    class EPROTOTYPE < Error; end
-    class ETIMEDOUT < Error; end
+    class EACCES < ::Errno::EACCES; end
+    class EAGAIN < ::Errno::EAGAIN; end
+    class EADDRINUSE < ::Errno::EADDRINUSE; end
+    class EADDRNOTAVAIL < ::Errno::EADDRNOTAVAIL; end
+    class EAFNOSUPPORT < ::Errno::EAFNOSUPPORT; end
+    class EALREADY < ::Errno::EALREADY; end
+    class EBADF < ::Errno::EBADF; end
+    class EBUSY < ::Errno::EBUSY; end
+    class ECONNABORTED < ::Errno::ECONNABORTED; end
+    class ECONNREFUSED < ::Errno::ECONNREFUSED; end
+    class ECONNRESET < ::Errno::ECONNRESET; end
+    class EDESTADDRREQ < ::Errno::EDESTADDRREQ; end
+    class EFAULT < ::Errno::EFAULT; end
+    class EHOSTUNREACH < ::Errno::EHOSTUNREACH; end
+    class EINTR < ::Errno::EINTR; end
+    class EINVAL < ::Errno::EINVAL; end
+    class EISCONN < ::Errno::EISCONN; end
+    class EMFILE < ::Errno::EMFILE; end
+    class EMSGSIZE < ::Errno::EMSGSIZE; end
+    class ENETDOWN < ::Errno::ENETDOWN; end
+    class ENETUNREACH < ::Errno::ENETUNREACH; end
+    class ENFILE < ::Errno::ENFILE; end
+    class ENOBUFS < ::Errno::ENOBUFS; end
+    class ENOMEM < ::Errno::ENOMEM; end
+    class ENOTDIR < ::Errno::ENOTDIR; end
+    class EISDIR < ::Errno::EISDIR; end
+    class ENONET < ::Errno::ENONET; end
+    class ENOTCONN < ::Errno::ENOTCONN; end
+    class ENOTSOCK < ::Errno::ENOTSOCK; end
+    class ENOTSUP < ::Errno::ENOTSUP; end
+    class ENOENT < ::Errno::ENOENT; end
+    class ENOSYS < ::Errno::ENOSYS; end
+    class EPIPE < ::Errno::EPIPE; end
+    class EPROTO < ::Errno::EPROTO; end
+    class EPROTONOSUPPORT < ::Errno::EPROTONOSUPPORT; end
+    class EPROTOTYPE < ::Errno::EPROTOTYPE; end
+    class ETIMEDOUT < ::Timeout::Error; end
     class ECHARSE < Error; end
     class EAIFAMNOSUPPORT < Error; end
     class EAISERVICE < Error; end
     class EAISOCKTYPE < Error; end
-    class ESHUTDOWN < Error; end
-    class EEXIST < Error; end
-    class ESRCH < Error; end
-    class ENAMETOOLONG < Error; end
-    class EPERM < Error; end
-    class ELOOP < Error; end
-    class EXDEV < Error; end
-    class ENOTEMPTY < Error; end
-    class ENOSPC < Error; end
+    class ESHUTDOWN < ::Errno::ESHUTDOWN; end
+    class EEXIST < ::Errno::EEXIST; end
+    class ESRCH < ::Errno::ESRCH; end
+    class ENAMETOOLONG < ::Errno::ENAMETOOLONG; end
+    class EPERM < ::Errno::EPERM; end
+    class ELOOP < ::Errno::ELOOP; end
+    class EXDEV < ::Errno::EXDEV; end
+    class ENOTEMPTY < ::Errno::ENOTEMPTY; end
+    class ENOSPC < ::Errno::ENOSPC; end
   end
 end
