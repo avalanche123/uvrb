@@ -1,5 +1,16 @@
 module UV
   module Error
+    ruby_engine = defined?(RUBY_ENGINE)? RUBY_ENGINE : 'ruby'
+
+    case ruby_engine
+    when 'jruby', 'rbx'
+      class ENONET < ::SystemCallError; include Error; end
+      class ENOTSUP < ::SystemCallError; include Error; end
+    else
+      class ENONET < ::Errno::ENONET; include Error; end
+      class ENOTSUP < ::Errno::ENOTSUP; include Error; end
+    end
+
     class UNKNOWN < ::SystemCallError; include Error; end
     class OK < ::SystemCallError; include Error; end
     class EOF < ::EOFError; include Error; end
@@ -30,10 +41,8 @@ module UV
     class ENOMEM < ::Errno::ENOMEM; include Error; end
     class ENOTDIR < ::Errno::ENOTDIR; include Error; end
     class EISDIR < ::Errno::EISDIR; include Error; end
-    class ENONET < ::Errno::ENONET; include Error; end
     class ENOTCONN < ::Errno::ENOTCONN; include Error; end
     class ENOTSOCK < ::Errno::ENOTSOCK; include Error; end
-    class ENOTSUP < ::Errno::ENOTSUP; include Error; end
     class ENOENT < ::Errno::ENOENT; include Error; end
     class ENOSYS < ::Errno::ENOSYS; include Error; end
     class EPIPE < ::Errno::EPIPE; include Error; end

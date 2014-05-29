@@ -18,13 +18,9 @@ shared_examples_for 'a handle' do
   end
 
   describe "#close" do
-    it "requires a block" do
-      expect { subject.close }.to raise_error(ArgumentError)
-    end
-
     it "calls UV.close" do
       UV.should_receive(:close).once.with(pointer, subject.method(:on_close))
-      subject.close {}
+      subject.close
     end
   end
 
