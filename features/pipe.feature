@@ -81,6 +81,8 @@ Feature: Named pipes
     And I run `ruby ipc_client_example.rb`
     Then the output should contain ping pong exchange
 
+  @announce-stdout
+  @announce-stderr
   Scenario: unidirectional pipeline
     Given a named pipe "/tmp/exchange-pipe.pipe"
     And a file named "pipe_producer_example.rb" with:
