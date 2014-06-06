@@ -16,6 +16,11 @@ module UV
       @fs_event_block.call(check_result(status), filename, EVENTS[events])
     end
 
+    def on_close(pointer)
+      super
+      @fs_event_block = nil
+    end
+
     public :callback
   end
 end

@@ -16,6 +16,8 @@ module UV
     def stop
       check_result! UV.idle_stop(handle)
 
+      @idle_block = nil
+
       self
     end
 

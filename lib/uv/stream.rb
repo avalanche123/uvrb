@@ -36,6 +36,8 @@ module UV
     def stop_read
       check_result! UV.read_stop(handle)
 
+      @read_block = nil
+
       self
     end
 
@@ -95,11 +97,19 @@ module UV
     def on_write(req, status)
       UV.free(req)
       @write_block.call(check_result(status))
+      @write_block = nil
     end
 
     def on_shutdown(req, status)
       UV.free(req)
       @shutdown_block.call(check_result(status))
+      @shutdown_block = nil
+    end
+
+    def on_close(pointer)
+      super
+      @listen_block = nil if @listen_block
+      @read_block   = nil if @read_block
     end
   end
 end

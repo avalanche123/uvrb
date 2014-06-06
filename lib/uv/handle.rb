@@ -38,9 +38,9 @@ module UV
     end
 
     def close(&block)
-      return if @pointer.nil?
-
       ObjectSpace.undefine_finalizer(self)
+
+      return if @pointer.nil?
 
       if block
         assert_block(block)
@@ -77,7 +77,8 @@ module UV
       UV.free(pointer)
       clear_callbacks
 
-      @close_block.call unless @close_block.nil?
+      @close_block && @close_block.call
+      @close_block = nil
 
       @pointer = nil
     end

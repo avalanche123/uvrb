@@ -44,5 +44,10 @@ module UV
     def on_timer(handle, status)
       @timer_block.call(check_result(status))
     end
+
+    def on_close(pointer)
+      super
+      @fs_event_block = nil
+    end
   end
 end

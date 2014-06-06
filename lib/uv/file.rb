@@ -138,6 +138,7 @@ module UV
       UV.fs_req_cleanup(req)
       UV.free(req)
       @close_block.call(e) if @close_block
+      @close_block = nil
     end
 
     def on_read(req)
@@ -150,6 +151,7 @@ module UV
       @read_buffer = nil
       @read_buffer_length = nil
       @read_block.call(e, data)
+      @read_block = nil
     end
 
     def on_write(req)
@@ -159,6 +161,7 @@ module UV
       @write_buffer = nil
       @write_buffer_length = nil
       @write_block.call(e) if @write_block
+      @write_block = nil
     end
 
     def on_stat(req)
@@ -174,6 +177,7 @@ module UV
       UV.fs_req_cleanup(req)
       UV.free(req)
       @stat_block.call(e, stat)
+      @stat_block = nil
     end
 
     def on_sync(req)
@@ -181,6 +185,7 @@ module UV
       UV.fs_req_cleanup(req)
       UV.free(req)
       @sync_block.call(e)
+      @sync_block = nil
     end
 
     def on_datasync(req)
@@ -188,6 +193,7 @@ module UV
       UV.fs_req_cleanup(req)
       UV.free(req)
       @datasync_block.call(e)
+      @datasync_block = nil
     end
 
     def on_truncate(req)
@@ -195,6 +201,7 @@ module UV
       UV.fs_req_cleanup(req)
       UV.free(req)
       @truncate_block.call(e)
+      @truncate_block = @truncate_block
     end
 
     def on_utime(req)
@@ -202,6 +209,7 @@ module UV
       UV.fs_req_cleanup(req)
       UV.free(req)
       @utime_block.call(e)
+      @utime_block = nil
     end
 
     def on_chmod(req)
@@ -209,6 +217,7 @@ module UV
       UV.fs_req_cleanup(req)
       UV.free(req)
       @chmod_block.call(e)
+      @chmod_block = nil
     end
 
     def on_chown(req)
@@ -216,6 +225,7 @@ module UV
       UV.fs_req_cleanup(req)
       UV.free(req)
       @chown_block.call(e)
+      @chown_block = nil
     end
   end
 end

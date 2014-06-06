@@ -16,6 +16,8 @@ module UV
     def stop
       check_result! UV.check_stop(handle)
 
+      @check_block = nil
+
       self
     end
 

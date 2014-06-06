@@ -97,6 +97,7 @@ module UV
     def on_connect(req, status)
       UV.free(req)
       @connect_block.call(check_result(status))
+      @connect_block = nil
     end
 
     module SocketMethods

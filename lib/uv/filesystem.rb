@@ -195,6 +195,7 @@ module UV
       UV.free(req)
 
       @open_block.call(e, file)
+      @open_block = nil
     end
 
     def on_unlink(req)
@@ -204,6 +205,7 @@ module UV
       UV.free(req)
 
       @unlink_block.call(e)
+      @unlink_block = nil
     end
 
     def on_mkdir(req)
@@ -213,6 +215,7 @@ module UV
       UV.free(req)
 
       @mkdir_block.call(e)
+      @mkdir_block = nil
     end
 
     def on_rmdir(req)
@@ -222,6 +225,7 @@ module UV
       UV.free(req)
 
       @rmdir_block.call(e)
+      @rmdir_block = nil
     end
 
     def on_readdir(req)
@@ -236,6 +240,7 @@ module UV
       UV.free(req)
 
       @readdir_block.call(e, files)
+      @readdir_block = nil
     end
 
     def on_stat(req)
@@ -249,6 +254,7 @@ module UV
       UV.free(req)
 
       @stat_block.call(e, stat)
+      @stat_block = nil
     end
 
     def on_rename(req)
@@ -267,6 +273,7 @@ module UV
       UV.free(req)
 
       @chmod_block.call(e)
+      @chmod_block = nil
     end
 
     def on_utime(req)
@@ -276,6 +283,7 @@ module UV
       UV.free(req)
 
       @utime_block.call(e)
+      @utime_block = nil
     end
 
     def on_lstat(req)
@@ -289,6 +297,7 @@ module UV
       UV.free(req)
 
       @lstat_block.call(e, stat)
+      @lstat_block = nil
     end
 
     def on_link(req)
@@ -298,6 +307,7 @@ module UV
       UV.free(req)
 
       @link_block.call(e)
+      @link_block = nil
     end
 
     def on_symlink(req)
@@ -307,6 +317,7 @@ module UV
       UV.free(req)
 
       @symlink_block.call(e)
+      @symlink_block = nil
     end
 
     def on_readlink(req)
@@ -321,6 +332,7 @@ module UV
       UV.free(req)
 
       @readlink_block.call(e, path)
+      @readlink_block = nil
     end
 
     def on_chown(req)
@@ -330,6 +342,7 @@ module UV
       UV.free(req)
 
       @chown_block.call(e)
+      @chown_block = nil
     end
   end
 end

@@ -17,6 +17,8 @@ module UV
     def stop
       check_result! UV.signal_stop(handle)
 
+      @signal_block = nil
+
       self
     end
 

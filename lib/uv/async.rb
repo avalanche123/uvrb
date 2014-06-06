@@ -19,6 +19,11 @@ module UV
       @async_block.call(check_result(status))
     end
 
+    def on_close(pointer)
+      super
+      @async_block = nil
+    end
+
     public :callback
   end
 end

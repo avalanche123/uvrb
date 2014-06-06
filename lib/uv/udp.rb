@@ -56,6 +56,8 @@ module UV
 
     def stop_recv
       check_result! UV.udp_recv_stop(handle)
+
+      @recv_block = nil
     end
 
     def send(ip, port, data, &block)
@@ -115,6 +117,13 @@ module UV
 
     private
 
+
+    def on_close(pointer)
+      super
+
+      @recv_block   = nil if @read_block
+    end
+
     def on_allocate(client, suggested_size)
       UV.buf_init(UV.malloc(suggested_size), suggested_size)
     end
@@ -135,6 +144,7 @@ module UV
     def on_send(req, status)
       UV.free(req)
       @send_block.call(check_result(status))
+      @send_block = nil
     end
 
     def create_socket(ip, port)
