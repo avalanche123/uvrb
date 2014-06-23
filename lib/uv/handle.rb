@@ -6,7 +6,7 @@ module UV
       def close(object_id, handle)
         Proc.new do
           Listener.undefine_callbacks(object_id)
-          UV.close(handle, UV.method(:free))
+          UV.close(handle, UV.method(:free)) unless handle.null?
         end
       end
     end
