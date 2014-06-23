@@ -49,7 +49,7 @@ module UV
     class EPROTO < ::Errno::EPROTO; include Error; end
     class EPROTONOSUPPORT < ::Errno::EPROTONOSUPPORT; include Error; end
     class EPROTOTYPE < ::Errno::EPROTOTYPE; include Error; end
-    class ETIMEDOUT < ::Timeout::Error; include Error; end
+    class ETIMEDOUT < ::Errno::ETIMEDOUT; include Error; end
     class ECHARSE < ::SystemCallError; include Error; end
     class EAIFAMNOSUPPORT < ::SystemCallError; include Error; end
     class EAISERVICE < ::SystemCallError; include Error; end
