@@ -1,5 +1,4 @@
 require 'forwardable'
-require 'timeout'
 require 'ffi'
 
 module UV
@@ -12,12 +11,13 @@ module UV
     extend FFI::Library
     ffi_lib(FFI::Library::LIBC).first
 
-    attach_function :malloc, [:size_t], :pointer, :blocking => true
-    attach_function :free, [:pointer], :void, :blocking => true
+    attach_function :malloc,  [:size_t],           :pointer, :blocking => true
+    attach_function :realloc, [:pointer, :size_t], :pointer, :blocking => true
+    attach_function :free,    [:pointer],          :void,    :blocking => true
   end
 
-  def_delegators :LIBC, :malloc, :free
-  module_function :malloc, :free
+  def_delegators :LIBC, :malloc, :realloc, :free
+  module_function :malloc, :realloc, :free
 
   begin
     # bias the library discovery to a path inside the gem first, then

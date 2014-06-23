@@ -85,13 +85,20 @@ module UV
     end
 
     def on_read(handle, nread, buf)
-      e = check_result(nread)
       base = buf[:base]
-      unless e
-        data = base.read_string(nread)
+
+      if nread < 0
+        e = @loop.lookup_error(@loop.last_error)
+        UV.free(base) if base
+        @read_block.call(e, nil)
+      elsif nread == 0
+        UV.free(base) if base
+      else
+        base       = UV.realloc(base, nread)
+        data       = base.read_string(nread)
+        buf[:base] = base
+        @read_block.call(nil, data)
       end
-      UV.free(base)
-      @read_block.call(e, data)
     end
 
     def on_write(req, status)
