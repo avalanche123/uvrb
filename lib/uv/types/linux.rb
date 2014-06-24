@@ -4,6 +4,7 @@ module UV
   case ruby_engine
   when 'jruby'
     typedef :uint32, :in_addr_t
+    typedef :ushort, :in_port_t
   end
 
   class Sockaddr < FFI::Struct
