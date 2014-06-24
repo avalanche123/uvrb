@@ -4,17 +4,17 @@ module UV
 
     case ruby_engine
     when 'jruby', 'rbx'
-      class ENONET < ::SystemCallError; include Error; end
-      class ENOTSUP < ::SystemCallError; include Error; end
+      class ENONET < ::RuntimeError; include Error; end
+      class ENOTSUP < ::RuntimeError; include Error; end
     else
       class ENONET < ::Errno::ENONET; include Error; end
       class ENOTSUP < ::Errno::ENOTSUP; include Error; end
     end
 
-    class UNKNOWN < ::SystemCallError; include Error; end
-    class OK < ::SystemCallError; include Error; end
+    class UNKNOWN < ::RuntimeError; include Error; end
+    class OK < ::RuntimeError; include Error; end
     class EOF < ::EOFError; include Error; end
-    class EADDRINFO < ::SystemCallError; include Error; end
+    class EADDRINFO < ::RuntimeError; include Error; end
     class EACCES < ::Errno::EACCES; include Error; end
     class EAGAIN < ::Errno::EAGAIN; include Error; end
     class EADDRINUSE < ::Errno::EADDRINUSE; include Error; end
@@ -50,10 +50,10 @@ module UV
     class EPROTONOSUPPORT < ::Errno::EPROTONOSUPPORT; include Error; end
     class EPROTOTYPE < ::Errno::EPROTOTYPE; include Error; end
     class ETIMEDOUT < ::Errno::ETIMEDOUT; include Error; end
-    class ECHARSE < ::SystemCallError; include Error; end
-    class EAIFAMNOSUPPORT < ::SystemCallError; include Error; end
-    class EAISERVICE < ::SystemCallError; include Error; end
-    class EAISOCKTYPE < ::SystemCallError; include Error; end
+    class ECHARSE < ::RuntimeError; include Error; end
+    class EAIFAMNOSUPPORT < ::RuntimeError; include Error; end
+    class EAISERVICE < ::RuntimeError; include Error; end
+    class EAISOCKTYPE < ::RuntimeError; include Error; end
     class ESHUTDOWN < ::Errno::ESHUTDOWN; include Error; end
     class EEXIST < ::Errno::EEXIST; include Error; end
     class ESRCH < ::Errno::ESRCH; include Error; end
