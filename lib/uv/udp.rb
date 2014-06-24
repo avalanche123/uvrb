@@ -9,11 +9,11 @@ module UV
     end
 
     def bind(ip, port, ipv6_only = false)
-      assert_type(String, ip, "ip must be a String")
+      assert_type(IPAddr, ip, "ip must be a IPAddr")
       assert_type(Integer, port, "port must be an Integer")
       assert_boolean(ipv6_only, "ipv6_only must be a Boolean")
 
-      @socket = create_socket(IPAddr.new(ip), port)
+      @socket = create_socket(ip, port)
       @socket.bind(ipv6_only)
 
       self
@@ -63,13 +63,13 @@ module UV
     def send(ip, port, data, &block)
       assert_block(block)
       assert_arity(1, block)
-      assert_type(String, ip, "ip must be a String")
+      assert_type(IPAddr, ip, "ip must be a IPAddr")
       assert_type(Integer, port, "port must be an Integer")
       assert_type(String, data, "data must be a String")
 
       @send_block = block
 
-      @socket = create_socket(IPAddr.new(ip), port)
+      @socket = create_socket(ip, port)
       @socket.send(data, callback(:on_send))
 
       self
