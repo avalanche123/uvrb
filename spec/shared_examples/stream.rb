@@ -58,11 +58,14 @@ shared_examples_for 'a stream' do
     it "calls UV.write" do
       data = "some random string"
       size = data.size
+      callback = double('write callback')
+
+      UV::Listener.should_receive(:callback).and_return(callback)
 
       FFI::MemoryPointer.should_receive(:from_string).with(data).and_return(buffer_pointer)
       UV.should_receive(:buf_init).with(buffer_pointer, size).and_return(buffer)
       UV.should_receive(:create_request).with(:uv_write).and_return(write_request)
-      UV.should_receive(:write).with(write_request, pointer, buffer, 1, subject.method(:on_write))
+      UV.should_receive(:write).with(write_request, pointer, buffer, 1, callback)
 
       subject.write(data) { |e| }
     end
@@ -76,8 +79,12 @@ shared_examples_for 'a stream' do
     end
 
     it "calls UV.shutdown" do
+      callback = double('shutdown callback')
+
+      UV::Listener.should_receive(:callback).and_return(callback)
+
       UV.should_receive(:create_request).with(:uv_shutdown).and_return(shutdown_request)
-      UV.should_receive(:shutdown).with(shutdown_request, pointer, subject.method(:on_shutdown))
+      UV.should_receive(:shutdown).with(shutdown_request, pointer, callback)
 
       subject.shutdown { |e| }
     end
