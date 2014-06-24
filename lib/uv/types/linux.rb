@@ -1,4 +1,11 @@
 module UV
+  ruby_engine = defined?(RUBY_ENGINE) ? RUBY_ENGINE : 'ruby'
+
+  case ruby_engine
+  when 'jruby'
+    typedef :uint32, :in_addr_t
+  end
+
   class Sockaddr < FFI::Struct
     layout :sa_family, :sa_family_t,
            :sa_data, [:char, 14]
