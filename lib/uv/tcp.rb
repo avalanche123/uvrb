@@ -11,10 +11,10 @@ module UV
     end
 
     def bind(ip, port)
-      assert_type(String, ip, "ip must be a String")
+      assert_type(IPAddr, ip, "ip must be a IPAddr")
       assert_type(Integer, port, "port must be an Integer")
 
-      @socket = create_socket(IPAddr.new(ip), port)
+      @socket = create_socket(ip, port)
 
       @socket.bind
 
@@ -24,11 +24,11 @@ module UV
     def connect(ip, port, &block)
       assert_block(block)
       assert_arity(1, block)
-      assert_type(String, ip, "ip must be a String")
+      assert_type(IPAddr, ip, "ip must be a IPAddr")
       assert_type(Integer, port, "port must be an Integer")
 
       @connect_block = block
-      @socket        = create_socket(IPAddr.new(ip), port)
+      @socket        = create_socket(ip, port)
 
       @socket.connect(callback(:on_connect))
 
@@ -114,12 +114,6 @@ module UV
       def connect(callback)
         check_result! tcp_connect(callback)
       end
-
-      private
-
-      def connect_req
-        UV.create_request(:uv_connect)
-      end
     end
 
     class Socket4
@@ -136,7 +130,7 @@ module UV
 
       def tcp_connect(callback)
         UV.tcp_connect(
-          connect_req,
+          UV.create_request(:uv_connect),
           @tcp,
           @sockaddr,
           callback
@@ -158,7 +152,7 @@ module UV
 
       def tcp_connect(callback)
         UV.tcp_connect6(
-          connect_req,
+          UV.create_request(:uv_connect),
           @tcp,
           @sockaddr,
           callback
