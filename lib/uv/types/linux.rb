@@ -3,6 +3,8 @@ module UV
 
   case ruby_engine
   when 'jruby'
+    # blksize_t, in_addr_t and in_port_t are not present on jruby on linux
+    typedef :long, :blksize_t
     typedef :uint32, :in_addr_t
     typedef :ushort, :in_port_t
   end
