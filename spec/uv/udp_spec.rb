@@ -23,7 +23,7 @@ describe UV::UDP do
     let(:port) { 0 }
 
     context "ipv4" do
-      let(:ip) { "0.0.0.0" }
+      let(:ip) { IPAddr.new("0.0.0.0") }
 
       it "calls UV.udp_bind" do
         UV.should_receive(:ip4_addr).with(ip, port).and_return(ip_addr)
@@ -34,7 +34,7 @@ describe UV::UDP do
     end
 
     context "ipv6" do
-      let(:ip) { "::" }
+      let(:ip) { IPAddr.new("::") }
 
       it "calls UV.udp_bind6" do
         UV.should_receive(:ip6_addr).with(ip, port).and_return(ip_addr)
@@ -112,7 +112,7 @@ describe UV::UDP do
     end
 
     context "ipv4" do
-      let(:ip) { "0.0.0.0" }
+      let(:ip) { IPAddr.new("0.0.0.0") }
 
       before(:each) do
         UV.should_receive(:ip4_addr).with(ip, port).and_return(ip_addr)
@@ -129,7 +129,7 @@ describe UV::UDP do
     end
 
     context "ipv6" do
-      let(:ip) { "::" }
+      let(:ip) { IPAddr.new("::") }
 
       before(:each) do
         UV.should_receive(:ip6_addr).with(ip, port).and_return(ip_addr)

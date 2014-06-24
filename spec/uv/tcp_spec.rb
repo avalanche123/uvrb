@@ -24,7 +24,7 @@ describe UV::TCP do
     let(:port) { 0 }
 
     context "ipv4" do
-      let(:ip) { "0.0.0.0" }
+      let(:ip) { IPAddr.new("0.0.0.0") }
 
       it "calls UV.tcp_bind" do
         UV.should_receive(:ip4_addr).with(ip, port).and_return(ip_addr)
@@ -35,7 +35,7 @@ describe UV::TCP do
     end
 
     context "ipv6" do
-      let(:ip) { "::" }
+      let(:ip) { IPAddr.new("::") }
 
       it "calls UV.tcp_bind6" do
         UV.should_receive(:ip6_addr).with(ip, port).and_return(ip_addr)
@@ -56,7 +56,7 @@ describe UV::TCP do
     end
 
     context "ipv4" do
-      let(:ip) { "0.0.0.0" }
+      let(:ip) { IPAddr.new("0.0.0.0") }
 
       it "calls UV.tcp_connect" do
         UV.should_receive(:create_request).with(:uv_connect).and_return(connect_request)
@@ -68,7 +68,7 @@ describe UV::TCP do
     end
 
     context "ipv6" do
-      let(:ip) { "::" }
+      let(:ip) { IPAddr.new("::") }
 
       it "calls UV.tcp_connect6" do
         UV.should_receive(:create_request).with(:uv_connect).and_return(connect_request)
