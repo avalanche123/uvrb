@@ -67,10 +67,10 @@ module UV
       assert_type(Integer, port, "port must be an Integer")
       assert_type(String, data, "data must be a String")
 
-      @send_block = block
+      callback = Listener.callback {|req, status| UV.free(req); block.call(check_result(status))}
+      @socket  = create_socket(ip, port)
 
-      @socket = create_socket(ip, port)
-      @socket.send(data, callback(:on_send))
+      @socket.send(data, callback)
 
       self
     end
@@ -139,12 +139,6 @@ module UV
         ip, port = get_ip_and_port(UV::Sockaddr.new(sockaddr))
       end
       @recv_block.call(e, data, ip, port)
-    end
-
-    def on_send(req, status)
-      UV.free(req)
-      @send_block.call(check_result(status))
-      @send_block = nil
     end
 
     def create_socket(ip, port)

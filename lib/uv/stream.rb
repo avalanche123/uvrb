@@ -46,11 +46,11 @@ module UV
       assert_arity(1, block)
       assert_type(String, data, "data must be a String")
 
-      @write_block = block
-      size         = data.respond_to?(:bytesize) ? data.bytesize : data.size
-      buffer       = UV.buf_init(FFI::MemoryPointer.from_string(data), size)
+      size     = data.respond_to?(:bytesize) ? data.bytesize : data.size
+      buffer   = UV.buf_init(FFI::MemoryPointer.from_string(data), size)
+      callback = Listener.callback {|req, status| UV.free(req); block.call(check_result(status))}
 
-      check_result! UV.write(UV.create_request(:uv_write), handle, buffer, 1, callback(:on_write))
+      check_result! UV.write(UV.create_request(:uv_write), handle, buffer, 1, callback)
 
       self
     end
@@ -59,9 +59,8 @@ module UV
       assert_block(block)
       assert_arity(1, block)
 
-      @shutdown_block = block
-
-      check_result! UV.shutdown(UV.create_request(:uv_shutdown), handle, callback(:on_shutdown))
+      callback = Listener.callback {|req, status| UV.free(req); block.call(check_result(status))}
+      check_result! UV.shutdown(UV.create_request(:uv_shutdown), handle, callback)
 
       self
     end
@@ -99,18 +98,6 @@ module UV
         buf[:base] = base
         @read_block.call(nil, data)
       end
-    end
-
-    def on_write(req, status)
-      UV.free(req)
-      @write_block.call(check_result(status))
-      @write_block = nil
-    end
-
-    def on_shutdown(req, status)
-      UV.free(req)
-      @shutdown_block.call(check_result(status))
-      @shutdown_block = nil
     end
 
     def on_close(pointer)
