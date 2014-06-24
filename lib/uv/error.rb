@@ -1,6 +1,6 @@
 module UV
   module Error
-    ruby_engine = defined?(RUBY_ENGINE)? RUBY_ENGINE : 'ruby'
+    ruby_engine = defined?(RUBY_ENGINE) ? RUBY_ENGINE : 'ruby'
 
     case ruby_engine
     when 'jruby', 'rbx'
