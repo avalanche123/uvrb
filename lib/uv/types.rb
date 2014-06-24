@@ -5,10 +5,10 @@ module FFI::Platform
 end
 
 module UV
-  require 'uv/types/linux.rb' if FFI::Platform.linux?
-  require 'uv/types/unix.rb' if FFI::Platform.unix?
-  require 'uv/types/darwin_x64.rb' if FFI::Platform.mac? and FFI::Platform::ARCH == 'x86_64'
-  require 'uv/types/windows.rb' if FFI::Platform.windows?
+  require 'uv/types/linux' if FFI::Platform.linux?
+  require 'uv/types/unix' if FFI::Platform.unix?
+  require 'uv/types/darwin_x64' if FFI::Platform.mac? and FFI::Platform::ARCH == 'x86_64'
+  require 'uv/types/windows' if FFI::Platform.windows?
 
   enum :uv_handle_type, [
     :uv_unknown_handle, 0,
@@ -90,47 +90,8 @@ module UV
   typedef UvBuf.by_value, :uv_buf_t
   typedef UvFSStat.by_value, :uv_fs_stat_t
 
-
-  class Sockaddr < FFI::Struct
-    layout :sa_len, :uint8,
-           :sa_family, :sa_family_t,
-           :sa_data, [:char, 14]
-  end
-
-  class InAddr < FFI::Struct
-    layout :s_addr, :in_addr_t
-  end
-
-  class SockaddrIn < FFI::Struct
-    layout :sin_len, :uint8,
-           :sin_family, :sa_family_t,
-           :sin_port, :in_port_t,
-           :sin_addr, InAddr,
-           :sin_zero, [:char, 8]
-  end
-
   typedef SockaddrIn.by_value, :sockaddr_in
-
-  class U6Addr < FFI::Union
-    layout :__u6_addr8, [:uint8, 16],
-           :__u6_addr16, [:uint16, 8]
-  end
-
-  class In6Addr < FFI::Struct
-    layout :__u6_addr, U6Addr
-  end
-
-  class SockaddrIn6 < FFI::Struct
-    layout :sin6_len, :uint8,
-           :sin6_family, :sa_family_t,
-           :sin6_port, :in_port_t,
-           :sin6_flowinfo, :uint32,
-           :sin6_addr, In6Addr,
-           :sin6_scope_id, :uint32
-  end
-
   typedef SockaddrIn6.by_value, :sockaddr_in6
-
 
   class UvTimespec < FFI::Struct
     layout  :tv_sec,  :long,
@@ -157,6 +118,13 @@ module UV
   end
 
   typedef UvStat.by_value, :uv_stat_t
+
+  class UvErr < FFI::Struct
+    layout :code,       :int,
+           :sys_errno_, :int
+  end
+
+  typedef UvErr.by_value, :uv_err_t
 
   typedef :pointer, :uv_handle_t
   typedef :pointer, :uv_fs_event_t
