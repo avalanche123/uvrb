@@ -125,7 +125,7 @@ describe UV::UDP do
 
         FFI::MemoryPointer.should_receive(:from_string).with(data).and_return(buffer_pointer)
         UV.should_receive(:buf_init).with(buffer_pointer, size).and_return(buffer)
-        UV.should_receive(:create_request).with(:uv_udp_send).and_return(uv_udp_send_request)
+        UV.should_receive(:allocate_request_udp_send).and_return(uv_udp_send_request)
         UV.should_receive(:udp_send).with(uv_udp_send_request, pointer, buffer, 1, ip_addr, callback)
 
         subject.send(ip, port, data) { |e| }
@@ -146,7 +146,7 @@ describe UV::UDP do
 
         FFI::MemoryPointer.should_receive(:from_string).with(data).and_return(buffer_pointer)
         UV.should_receive(:buf_init).with(buffer_pointer, size).and_return(buffer)
-        UV.should_receive(:create_request).with(:uv_udp_send).and_return(uv_udp_send_request)
+        UV.should_receive(:allocate_request_udp_send).and_return(uv_udp_send_request)
         UV.should_receive(:udp_send6).with(uv_udp_send_request, pointer, buffer, 1, ip_addr, callback)
 
         subject.send(ip, port, data) { |e| }

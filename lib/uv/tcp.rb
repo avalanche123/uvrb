@@ -130,7 +130,7 @@ module UV
 
       def tcp_connect(callback)
         UV.tcp_connect(
-          UV.create_request(:uv_connect),
+          UV.allocate_request_connect,
           @tcp,
           @sockaddr,
           callback
@@ -152,7 +152,7 @@ module UV
 
       def tcp_connect(callback)
         UV.tcp_connect6(
-          UV.create_request(:uv_connect),
+          UV.allocate_request_connect,
           @tcp,
           @sockaddr,
           callback

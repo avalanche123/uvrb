@@ -74,7 +74,7 @@ describe UV::Loop do
     let(:timer) { double() }
 
     it "calls UV.timer_init" do
-      UV.should_receive(:create_handle).with(:uv_timer).and_return(timer_pointer)
+      UV.should_receive(:allocate_handle_timer).and_return(timer_pointer)
       UV.should_receive(:timer_init).with(loop_pointer, timer_pointer)
       UV::Timer.should_receive(:new).with(subject, timer_pointer).and_return(timer)
 
@@ -87,7 +87,7 @@ describe UV::Loop do
     let(:tcp) { double() }
 
     it "calls UV.tcp_init" do
-      UV.should_receive(:create_handle).with(:uv_tcp).and_return(tcp_pointer)
+      UV.should_receive(:allocate_handle_tcp).and_return(tcp_pointer)
       UV.should_receive(:tcp_init).with(loop_pointer, tcp_pointer)
       UV::TCP.should_receive(:new).with(subject, tcp_pointer).and_return(tcp)
 
@@ -101,7 +101,7 @@ describe UV::Loop do
     let(:fileno) { 6555 }
 
     before(:each) do
-      UV.should_receive(:create_handle).with(:uv_tty).and_return(tty_pointer)
+      UV.should_receive(:allocate_handle_tty).and_return(tty_pointer)
       UV::TTY.should_receive(:new).with(subject, tty_pointer).and_return(tty)
     end
 
@@ -127,7 +127,7 @@ describe UV::Loop do
     let(:pipe) { double() }
 
     before(:each) do
-      UV.should_receive(:create_handle).with(:uv_pipe).and_return(pipe_pointer)
+      UV.should_receive(:allocate_handle_pipe).and_return(pipe_pointer)
       UV::Pipe.should_receive(:new).with(subject, pipe_pointer).and_return(pipe)
     end
 
@@ -153,7 +153,7 @@ describe UV::Loop do
     let(:prepare) { double() }
 
     it "calls UV.prepare_init" do
-      UV.should_receive(:create_handle).with(:uv_prepare).and_return(prepare_pointer)
+      UV.should_receive(:allocate_handle_prepare).and_return(prepare_pointer)
       UV.should_receive(:prepare_init).with(loop_pointer, prepare_pointer)
       UV::Prepare.should_receive(:new).with(subject, prepare_pointer).and_return(prepare)
 
@@ -166,7 +166,7 @@ describe UV::Loop do
     let(:check) { double() }
 
     it "calls UV.check_init" do
-      UV.should_receive(:create_handle).with(:uv_check).and_return(check_pointer)
+      UV.should_receive(:allocate_handle_check).and_return(check_pointer)
       UV.should_receive(:check_init).with(loop_pointer, check_pointer)
       UV::Check.should_receive(:new).with(subject, check_pointer).and_return(check)
 
@@ -179,7 +179,7 @@ describe UV::Loop do
     let(:idle) { double() }
 
     it "calls UV.idle_init" do
-      UV.should_receive(:create_handle).with(:uv_idle).and_return(idle_pointer)
+      UV.should_receive(:allocate_handle_idle).and_return(idle_pointer)
       UV.should_receive(:idle_init).with(loop_pointer, idle_pointer)
       UV::Idle.should_receive(:new).with(subject, idle_pointer).and_return(idle)
 
@@ -197,7 +197,7 @@ describe UV::Loop do
     end
 
     it "calls UV.async_init" do
-      UV.should_receive(:create_handle).with(:uv_async).and_return(async_pointer)
+      UV.should_receive(:allocate_handle_async).and_return(async_pointer)
       UV.should_receive(:async_init).with(loop_pointer, async_pointer, async_callback)
       UV::Async.should_receive(:new).with(subject, async_pointer).and_return(async)
       async.should_receive(:callback).once.with(:on_async).and_return(async_callback)
@@ -228,7 +228,7 @@ describe UV::Loop do
     end
 
     it "calls UV.fs_event_init" do
-      UV.should_receive(:create_handle).with(:uv_fs_event).and_return(fs_event_pointer)
+      UV.should_receive(:allocate_handle_fs_event).and_return(fs_event_pointer)
       UV.should_receive(:fs_event_init).with(loop_pointer, fs_event_pointer, filename, fs_event_callback, 0)
       UV::FSEvent.should_receive(:new).with(subject, fs_event_pointer).and_return(fs_event)
       fs_event.should_receive(:callback).once.with(:on_fs_event).and_return(fs_event_callback)

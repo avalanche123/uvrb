@@ -15,7 +15,7 @@ module UV
 
       @open_block = block
 
-      check_result! UV.fs_open(loop.to_ptr, UV.create_request(:uv_fs), path, flags, mode, callback(:on_open))
+      check_result! UV.fs_open(loop.to_ptr, UV.allocate_request_fs, path, flags, mode, callback(:on_open))
 
       self
     end
@@ -27,7 +27,7 @@ module UV
 
       @unlink_block = block
 
-      check_result! UV.fs_unlink(loop.to_ptr, UV.create_request(:uv_fs), path, callback(:on_unlink))
+      check_result! UV.fs_unlink(loop.to_ptr, UV.allocate_request_fs, path, callback(:on_unlink))
 
       self
     end
@@ -40,7 +40,7 @@ module UV
 
       @mkdir_block = block
 
-      check_result! UV.fs_mkdir(loop.to_ptr, UV.create_request(:uv_fs), path, mode, callback(:on_mkdir))
+      check_result! UV.fs_mkdir(loop.to_ptr, UV.allocate_request_fs, path, mode, callback(:on_mkdir))
 
       self
     end
@@ -52,7 +52,7 @@ module UV
 
       @rmdir_block = block
 
-      check_result! UV.fs_rmdir(loop.to_ptr, UV.create_request(:uv_fs), path, callback(:on_rmdir))
+      check_result! UV.fs_rmdir(loop.to_ptr, UV.allocate_request_fs, path, callback(:on_rmdir))
 
       self
     end
@@ -64,7 +64,7 @@ module UV
 
       @readdir_block = block
 
-      check_result! UV.fs_readdir(loop.to_ptr, UV.create_request(:uv_fs), path, 0, callback(:on_readdir))
+      check_result! UV.fs_readdir(loop.to_ptr, UV.allocate_request_fs, path, 0, callback(:on_readdir))
 
       self
     end
@@ -76,7 +76,7 @@ module UV
 
       @stat_block = block
 
-      check_result! UV.fs_stat(loop.to_ptr, UV.create_request(:uv_fs), path, callback(:on_stat))
+      check_result! UV.fs_stat(loop.to_ptr, UV.allocate_request_fs, path, callback(:on_stat))
 
       self
     end
@@ -89,7 +89,7 @@ module UV
 
       @rename_block = block
 
-      check_result! UV.fs_rename(loop.to_ptr, UV.create_request(:uv_fs), old_path, new_path, callback(:on_rename))
+      check_result! UV.fs_rename(loop.to_ptr, UV.allocate_request_fs, old_path, new_path, callback(:on_rename))
 
       self
     end
@@ -102,7 +102,7 @@ module UV
 
       @chmod_block = block
 
-      check_result! UV.fs_chmod(loop.to_ptr, UV.create_request(:uv_fs), path, mode, callback(:on_chmod))
+      check_result! UV.fs_chmod(loop.to_ptr, UV.allocate_request_fs, path, mode, callback(:on_chmod))
 
       self
     end
@@ -116,7 +116,7 @@ module UV
 
       @utime_block = block
 
-      check_result! UV.fs_utime(loop.to_ptr, UV.create_request(:uv_fs), path, atime, mtime, callback(:on_utime))
+      check_result! UV.fs_utime(loop.to_ptr, UV.allocate_request_fs, path, atime, mtime, callback(:on_utime))
 
       self
     end
@@ -128,7 +128,7 @@ module UV
 
       @lstat_block = block
 
-      check_result! UV.fs_lstat(loop.to_ptr, UV.create_request(:uv_fs), path, callback(:on_lstat))
+      check_result! UV.fs_lstat(loop.to_ptr, UV.allocate_request_fs, path, callback(:on_lstat))
 
       self
     end
@@ -141,7 +141,7 @@ module UV
 
       @link_block = block
 
-      check_result! UV.fs_link(loop.to_ptr, UV.create_request(:uv_fs), old_path, new_path, callback(:on_link))
+      check_result! UV.fs_link(loop.to_ptr, UV.allocate_request_fs, old_path, new_path, callback(:on_link))
 
       self
     end
@@ -154,7 +154,7 @@ module UV
 
       @symlink_block = block
 
-      check_result! UV.fs_symlink(loop.to_ptr, UV.create_request(:uv_fs), old_path, new_path, 0, callback(:on_symlink))
+      check_result! UV.fs_symlink(loop.to_ptr, UV.allocate_request_fs, old_path, new_path, 0, callback(:on_symlink))
 
       self
     end
@@ -166,7 +166,7 @@ module UV
 
       @readlink_block = block
 
-      check_result! UV.fs_readlink(loop.to_ptr, UV.create_request(:uv_fs), path, callback(:on_readlink))
+      check_result! UV.fs_readlink(loop.to_ptr, UV.allocate_request_fs, path, callback(:on_readlink))
 
       self
     end
@@ -180,7 +180,7 @@ module UV
 
       @chown_block = block
 
-      check_result! UV.fs_chown(loop.to_ptr, UV.create_request(:uv_fs), path, uid, gid, callback(:on_chown))
+      check_result! UV.fs_chown(loop.to_ptr, UV.allocate_request_fs, path, uid, gid, callback(:on_chown))
 
       self
     end

@@ -1,6 +1,29 @@
 require 'forwardable'
 require 'ffi'
 
+require 'uv/assertions'
+require 'uv/resource'
+require 'uv/listener'
+require 'uv/net'
+require 'uv/handle'
+require 'uv/stream'
+require 'uv/loop'
+require 'uv/error'
+require 'uv/timer'
+require 'uv/tcp'
+require 'uv/udp'
+require 'uv/tty'
+require 'uv/pipe'
+require 'uv/prepare'
+require 'uv/check'
+require 'uv/idle'
+require 'uv/async'
+require 'uv/work'
+require 'uv/signal'
+require 'uv/filesystem'
+require 'uv/file'
+require 'uv/fs_event'
+
 module UV
   extend Forwardable
   extend FFI::Library
@@ -22,12 +45,12 @@ module UV
   begin
     # bias the library discovery to a path inside the gem first, then
     # to the usual system paths
-    path_to_internal_libuv = File.dirname(__FILE__) + '/../ext'
+    path_to_internal_libuv = ::File.dirname(__FILE__) + '/../ext'
     LIBUV_PATHS = [
       path_to_internal_libuv, '/usr/local/lib', '/opt/local/lib', '/usr/lib64'
     ].map{|path| "#{path}/libuv.#{FFI::Platform::LIBSUFFIX}"}
     libuv = ffi_lib(LIBUV_PATHS + %w{libuv}).first
-  rescue LoadError
+  rescue ::LoadError
     warn <<-WARNING
       Unable to load this gem. The libuv library (or DLL) could not be found.
       If this is a Windows platform, make sure libuv.dll is on the PATH.
@@ -245,35 +268,13 @@ module UV
   attach_function :handle_size, :uv_handle_size, [:uv_handle_type], :size_t, :blocking => true
   attach_function :req_size, :uv_req_size, [:uv_req_type], :size_t, :blocking => true
 
-
-  def self.create_handle(type)
-    LIBC.malloc(UV.handle_size(type))
+  enum_type(:uv_handle_type).symbols.each do |handle_type|
+    handle_size = UV.handle_size(handle_type)
+    define_singleton_method(:"allocate_handle_#{handle_type}") { LIBC.malloc(handle_size) }
   end
 
-  def self.create_request(type)
-    LIBC.malloc(UV.req_size(type))
+  enum_type(:uv_req_type).symbols.each do |request_type|
+    request_size = UV.req_size(request_type)
+    define_singleton_method(:"allocate_request_#{request_type}") { LIBC.malloc(request_size) }
   end
 end
-
-require 'uv/assertions'
-require 'uv/resource'
-require 'uv/listener'
-require 'uv/net'
-require 'uv/handle'
-require 'uv/stream'
-require 'uv/loop'
-require 'uv/error'
-require 'uv/timer'
-require 'uv/tcp'
-require 'uv/udp'
-require 'uv/tty'
-require 'uv/pipe'
-require 'uv/prepare'
-require 'uv/check'
-require 'uv/idle'
-require 'uv/async'
-require 'uv/work'
-require 'uv/signal'
-require 'uv/filesystem'
-require 'uv/file'
-require 'uv/fs_event'

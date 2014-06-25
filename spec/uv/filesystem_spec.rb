@@ -20,7 +20,7 @@ describe UV::Filesystem do
     end
 
     it "calls UV.fs_open" do
-      UV.should_receive(:create_request).with(:uv_fs).and_return(open_request)
+      UV.should_receive(:allocate_request_fs).and_return(open_request)
       UV.should_receive(:fs_open).with(loop_pointer, open_request, path, flags, mode, subject.method(:on_open))
 
       subject.open(path, flags, mode) { |e, file| }
@@ -36,7 +36,7 @@ describe UV::Filesystem do
     end
 
     it "calls UV.fs_unlink" do
-      UV.should_receive(:create_request).with(:uv_fs).and_return(unlink_request)
+      UV.should_receive(:allocate_request_fs).and_return(unlink_request)
       UV.should_receive(:fs_unlink).with(loop_pointer, unlink_request, path, subject.method(:on_unlink))
 
       subject.unlink(path) { |e| }
@@ -53,7 +53,7 @@ describe UV::Filesystem do
     end
 
     it "calls UV.fs_mkdir" do
-      UV.should_receive(:create_request).with(:uv_fs).and_return(mkdir_request)
+      UV.should_receive(:allocate_request_fs).and_return(mkdir_request)
       UV.should_receive(:fs_mkdir).with(loop_pointer, mkdir_request, path, mode, subject.method(:on_mkdir))
 
       subject.mkdir(path, mode) { |e| }
@@ -69,7 +69,7 @@ describe UV::Filesystem do
     end
 
     it "calls UV.fs_rmdir" do
-      UV.should_receive(:create_request).with(:uv_fs).and_return(rmdir_request)
+      UV.should_receive(:allocate_request_fs).and_return(rmdir_request)
       UV.should_receive(:fs_rmdir).with(loop_pointer, rmdir_request, path, subject.method(:on_rmdir))
 
       subject.rmdir(path) { |e| }
@@ -85,7 +85,7 @@ describe UV::Filesystem do
     end
 
     it "calls UV.fs_readdir" do
-      UV.should_receive(:create_request).with(:uv_fs).and_return(readdir_request)
+      UV.should_receive(:allocate_request_fs).and_return(readdir_request)
       UV.should_receive(:fs_readdir).with(loop_pointer, readdir_request, path, 0, subject.method(:on_readdir))
 
       subject.readdir(path) { |e, files| }
@@ -101,7 +101,7 @@ describe UV::Filesystem do
     end
 
     it "calls UV.fs_stat" do
-      UV.should_receive(:create_request).with(:uv_fs).and_return(stat_request)
+      UV.should_receive(:allocate_request_fs).and_return(stat_request)
       UV.should_receive(:fs_stat).with(loop_pointer, stat_request, path, subject.method(:on_stat))
 
       subject.stat(path) { |e, stat| }
@@ -118,7 +118,7 @@ describe UV::Filesystem do
     end
 
     it "calls UV.fs_rename" do
-      UV.should_receive(:create_request).with(:uv_fs).and_return(rename_request)
+      UV.should_receive(:allocate_request_fs).and_return(rename_request)
       UV.should_receive(:fs_rename).with(loop_pointer, rename_request, old_path, new_path, subject.method(:on_rename))
 
       subject.rename(old_path, new_path) { |e| }
@@ -135,7 +135,7 @@ describe UV::Filesystem do
     end
 
     it "calls UV.fs_chmod" do
-      UV.should_receive(:create_request).with(:uv_fs).and_return(chmod_request)
+      UV.should_receive(:allocate_request_fs).and_return(chmod_request)
       UV.should_receive(:fs_chmod).with(loop_pointer, chmod_request, path, mode, subject.method(:on_chmod))
 
       subject.chmod(path, mode) { |e| }
@@ -153,7 +153,7 @@ describe UV::Filesystem do
     end
 
     it "calls UV.fs_utime" do
-      UV.should_receive(:create_request).with(:uv_fs).and_return(utime_request)
+      UV.should_receive(:allocate_request_fs).and_return(utime_request)
       UV.should_receive(:fs_utime).with(loop_pointer, utime_request, path, atime, mtime, subject.method(:on_utime))
 
       subject.utime(path, atime, mtime) { |e| }
@@ -169,7 +169,7 @@ describe UV::Filesystem do
     end
 
     it "calls UV.fs_lstat" do
-      UV.should_receive(:create_request).with(:uv_fs).and_return(lstat_request)
+      UV.should_receive(:allocate_request_fs).and_return(lstat_request)
       UV.should_receive(:fs_lstat).with(loop_pointer, lstat_request, path, subject.method(:on_lstat))
 
       subject.lstat(path) { |e, stat| }
@@ -186,7 +186,7 @@ describe UV::Filesystem do
     end
 
     it "calls UV.fs_link" do
-      UV.should_receive(:create_request).with(:uv_fs).and_return(link_request)
+      UV.should_receive(:allocate_request_fs).and_return(link_request)
       UV.should_receive(:fs_link).with(loop_pointer, link_request, old_path, new_path, subject.method(:on_link))
 
       subject.link(old_path, new_path) { |e| }
@@ -203,7 +203,7 @@ describe UV::Filesystem do
     end
 
     it "calls UV.fs_link" do
-      UV.should_receive(:create_request).with(:uv_fs).and_return(symlink_request)
+      UV.should_receive(:allocate_request_fs).and_return(symlink_request)
       UV.should_receive(:fs_symlink).with(loop_pointer, symlink_request, old_path, new_path, 0, subject.method(:on_symlink))
 
       subject.symlink(old_path, new_path) { |e| }
@@ -219,7 +219,7 @@ describe UV::Filesystem do
     end
 
     it "calls UV.fs_readlink" do
-      UV.should_receive(:create_request).with(:uv_fs).and_return(readlink_request)
+      UV.should_receive(:allocate_request_fs).and_return(readlink_request)
       UV.should_receive(:fs_readlink).with(loop_pointer, readlink_request, path, subject.method(:on_readlink))
 
       subject.readlink(path) { |e, path| }
@@ -237,7 +237,7 @@ describe UV::Filesystem do
     end
 
     it "calls UV.fs_chown" do
-      UV.should_receive(:create_request).with(:uv_fs).and_return(chown_request)
+      UV.should_receive(:allocate_request_fs).and_return(chown_request)
       UV.should_receive(:fs_chown).with(loop_pointer, chown_request, path, uid, gid, subject.method(:on_chown))
 
       subject.chown(path, uid, gid) { |e| }

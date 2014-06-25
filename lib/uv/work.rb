@@ -6,7 +6,7 @@ module UV
       @loop, @work, @callback = loop, work, callback
       @complete = false
 
-      @pointer = UV.create_request(:uv_work)
+      @pointer = UV.allocate_request_work
       begin
         check_result! UV.queue_work(@loop, @pointer, callback(:on_work), callback(:on_complete))
       rescue StandardError => e

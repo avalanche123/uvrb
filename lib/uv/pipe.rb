@@ -27,7 +27,7 @@ module UV
       @connect_block = block
 
       name = windows_path name if FFI::Platform.windows?
-      UV.pipe_connect(UV.create_request(:uv_connect), handle, name, callback(:on_connect))
+      UV.pipe_connect(UV.allocate_request_connect, handle, name, callback(:on_connect))
 
       self
     end

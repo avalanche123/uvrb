@@ -11,38 +11,38 @@ module UV
   require 'uv/types/windows' if FFI::Platform.windows?
 
   enum :uv_handle_type, [
-    :uv_unknown_handle, 0,
-    :uv_async, # start UV_HANDLE_TYPE_MAP
-    :uv_check,
-    :uv_fs_event,
-    :uv_fs_poll,
-    :uv_handle,
-    :uv_idle,
-    :uv_pipe,
-    :uv_poll,
-    :uv_prepare,
-    :uv_process,
-    :uv_stream,
-    :uv_tcp,
-    :uv_timer,
-    :uv_tty,
-    :uv_udp,
-    :uv_signal, # end UV_HANDLE_TYPE_MAP
-    :uv_file,
-    :uv_handle_type_max
+    :unknown_handle, 0,
+    :async, # start UV_HANDLE_TYPE_MAP
+    :check,
+    :fs_event,
+    :fs_poll,
+    :handle,
+    :idle,
+    :pipe,
+    :poll,
+    :prepare,
+    :process,
+    :stream,
+    :tcp,
+    :timer,
+    :tty,
+    :udp,
+    :signal, # end UV_HANDLE_TYPE_MAP
+    :file,
+    :handle_type_max
   ]
   enum :uv_req_type, [
-    :uv_unknown_req, 0,
-    :uv_req,         # start UV_REQ_TYPE_MAP
-    :uv_connect,
-    :uv_write,
-    :uv_shutdown,
-    :uv_udp_send,
-    :uv_fs,
-    :uv_work,
-    :uv_getaddrinfo, # end UV_REQ_TYPE_MAP
-    :uv_req_type_private,
-    :uv_req_type_max
+    :unknown_req, 0,
+    :req,         # start UV_REQ_TYPE_MAP
+    :connect,
+    :write,
+    :shutdown,
+    :udp_send,
+    :fs,
+    :work,
+    :getaddrinfo, # end UV_REQ_TYPE_MAP
+    :req_type_private,
+    :req_type_max
   ]
   enum :uv_membership, [
     :uv_leave_group, 0,

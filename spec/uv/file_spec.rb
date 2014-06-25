@@ -18,7 +18,7 @@ describe UV::File do
     end
 
     it "calls UV.fs_close" do
-      UV.should_receive(:create_request).with(:uv_fs).and_return(close_request)
+      UV.should_receive(:allocate_request_fs).and_return(close_request)
       UV.should_receive(:fs_close).with(loop_pointer, close_request, fd, subject.method(:on_close))
 
       subject.close { |e| }
@@ -37,7 +37,7 @@ describe UV::File do
 
     it "calls UV.fs_read" do
       FFI::MemoryPointer.should_receive(:new).with(length).and_return(read_buffer)
-      UV.should_receive(:create_request).with(:uv_fs).and_return(read_request)
+      UV.should_receive(:allocate_request_fs).and_return(read_request)
       UV.should_receive(:fs_read).with(loop_pointer, read_request, fd, read_buffer, length, offset, subject.method(:on_read))
 
       subject.read(length, offset) { |e, data| }
@@ -57,7 +57,7 @@ describe UV::File do
 
     it "calls UV.fs_write" do
       FFI::MemoryPointer.should_receive(:from_string).with(data).and_return(write_buffer)
-      UV.should_receive(:create_request).with(:uv_fs).and_return(write_request)
+      UV.should_receive(:allocate_request_fs).and_return(write_request)
       UV.should_receive(:fs_write).with(loop_pointer, write_request, fd, write_buffer, write_buffer_length, offset, subject.method(:on_write))
 
       subject.write(data, offset) { |e| }
@@ -72,7 +72,7 @@ describe UV::File do
     end
 
     it "calls UV.fs_fstat" do
-      UV.should_receive(:create_request).with(:uv_fs).and_return(stat_request)
+      UV.should_receive(:allocate_request_fs).and_return(stat_request)
       UV.should_receive(:fs_fstat).with(loop_pointer, stat_request, fd, subject.method(:on_stat))
 
       subject.stat { |e, stat| }
@@ -87,7 +87,7 @@ describe UV::File do
     end
 
     it "calls UV.fs_fsync" do
-      UV.should_receive(:create_request).with(:uv_fs).and_return(sync_request)
+      UV.should_receive(:allocate_request_fs).and_return(sync_request)
       UV.should_receive(:fs_fsync).with(loop_pointer, sync_request, fd, subject.method(:on_sync))
 
       subject.sync { |e| }
@@ -102,7 +102,7 @@ describe UV::File do
     end
 
     it "calls UV.fs_fdatasync" do
-      UV.should_receive(:create_request).with(:uv_fs).and_return(datasync_request)
+      UV.should_receive(:allocate_request_fs).and_return(datasync_request)
       UV.should_receive(:fs_fdatasync).with(loop_pointer, datasync_request, fd, subject.method(:on_datasync))
 
       subject.datasync { |e| }
@@ -118,7 +118,7 @@ describe UV::File do
     end
 
     it "calls UV.fs_ftruncate" do
-      UV.should_receive(:create_request).with(:uv_fs).and_return(truncate_request)
+      UV.should_receive(:allocate_request_fs).and_return(truncate_request)
       UV.should_receive(:fs_ftruncate).with(loop_pointer, truncate_request, fd, offset, subject.method(:on_truncate))
 
       subject.truncate(offset) { |e| }
@@ -135,7 +135,7 @@ describe UV::File do
     end
 
     it "calls UV.fs_futime" do
-      UV.should_receive(:create_request).with(:uv_fs).and_return(utime_request)
+      UV.should_receive(:allocate_request_fs).and_return(utime_request)
       UV.should_receive(:fs_futime).with(loop_pointer, utime_request, fd, atime, mtime, subject.method(:on_utime))
 
       subject.utime(atime, mtime) { |e| }
@@ -151,7 +151,7 @@ describe UV::File do
     end
 
     it "calls UV.fs_fchmod" do
-      UV.should_receive(:create_request).with(:uv_fs).and_return(chmod_request)
+      UV.should_receive(:allocate_request_fs).and_return(chmod_request)
       UV.should_receive(:fs_fchmod).with(loop_pointer, chmod_request, fd, mode, subject.method(:on_chmod))
 
       subject.chmod(mode) { |e| }
@@ -168,7 +168,7 @@ describe UV::File do
     end
 
     it "calls UV.fs_fchown" do
-      UV.should_receive(:create_request).with(:uv_fs).and_return(chown_request)
+      UV.should_receive(:allocate_request_fs).and_return(chown_request)
       UV.should_receive(:fs_fchown).with(loop_pointer, chown_request, fd, uid, gid, subject.method(:on_chown))
 
       subject.chown(uid, gid) { |e| }

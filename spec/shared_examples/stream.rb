@@ -64,7 +64,7 @@ shared_examples_for 'a stream' do
 
       FFI::MemoryPointer.should_receive(:from_string).with(data).and_return(buffer_pointer)
       UV.should_receive(:buf_init).with(buffer_pointer, size).and_return(buffer)
-      UV.should_receive(:create_request).with(:uv_write).and_return(write_request)
+      UV.should_receive(:allocate_request_write).and_return(write_request)
       UV.should_receive(:write).with(write_request, pointer, buffer, 1, callback)
 
       subject.write(data) { |e| }
@@ -83,7 +83,7 @@ shared_examples_for 'a stream' do
 
       UV::Listener.should_receive(:callback).and_return(callback)
 
-      UV.should_receive(:create_request).with(:uv_shutdown).and_return(shutdown_request)
+      UV.should_receive(:allocate_request_shutdown).and_return(shutdown_request)
       UV.should_receive(:shutdown).with(shutdown_request, pointer, callback)
 
       subject.shutdown { |e| }

@@ -166,7 +166,7 @@ module UV
 
       private
       def send_req
-        UV.create_request(:uv_udp_send)
+        UV.allocate_request_udp_send
       end
 
       def buf_init(data)

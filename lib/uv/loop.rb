@@ -154,7 +154,7 @@ module UV
     # 
     # Returns UV::Timer
     def timer
-      timer_ptr = UV.create_handle(:uv_timer)
+      timer_ptr = UV.allocate_handle_timer
 
       check_result! UV.timer_init(@pointer, timer_ptr)
       Timer.new(self, timer_ptr)
@@ -164,7 +164,7 @@ module UV
     # 
     # Returns UV::TCP instance
     def tcp
-      tcp_ptr = UV.create_handle(:uv_tcp)
+      tcp_ptr = UV.allocate_handle_tcp
 
       check_result! UV.tcp_init(@pointer, tcp_ptr)
       TCP.new(self, tcp_ptr)
@@ -174,7 +174,7 @@ module UV
     #
     # Returns UV::UDP instance
     def udp
-      udp_ptr = UV.create_handle(:uv_udp)
+      udp_ptr = UV.allocate_handle_udp
 
       check_result! UV.udp_init(@pointer, udp_ptr)
       UV::UDP.new(self, udp_ptr)
@@ -193,7 +193,7 @@ module UV
       assert_type(Integer, fileno, "io#fileno must return an integer file descriptor, #{fileno.inspect} given")
       assert_boolean(readable)
 
-      tty_ptr = UV.create_handle(:uv_tty)
+      tty_ptr = UV.allocate_handle_tty
 
       check_result! UV.tty_init(@pointer, tty_ptr, fileno, readable ? 1 : 0)
       TTY.new(self, tty_ptr)
@@ -208,7 +208,7 @@ module UV
     def pipe(ipc = false)
       assert_boolean(ipc)
 
-      pipe_ptr = UV.create_handle(:uv_pipe)
+      pipe_ptr = UV.allocate_handle_pipe
 
       check_result! UV.pipe_init(@pointer, pipe_ptr, ipc ? 1 : 0)
       Pipe.new(self, pipe_ptr)
@@ -218,7 +218,7 @@ module UV
     # 
     # Returns UV::Prepare
     def prepare
-      prepare_ptr = UV.create_handle(:uv_prepare)
+      prepare_ptr = UV.allocate_handle_prepare
 
       check_result! UV.prepare_init(@pointer, prepare_ptr)
       Prepare.new(self, prepare_ptr)
@@ -228,7 +228,7 @@ module UV
     # 
     # Returns UV::Check
     def check
-      check_ptr = UV.create_handle(:uv_check)
+      check_ptr = UV.allocate_handle_check
 
       check_result! UV.check_init(@pointer, check_ptr)
       Check.new(self, check_ptr)
@@ -238,7 +238,7 @@ module UV
     # 
     # Returns UV::Handle
     def idle
-      idle_ptr = UV.create_handle(:uv_idle)
+      idle_ptr = UV.allocate_handle_idle
 
       check_result! UV.idle_init(@pointer, idle_ptr)
       Idle.new(self, idle_ptr)
@@ -253,7 +253,7 @@ module UV
       assert_block(block)
       assert_arity(1, block)
 
-      async_ptr = UV.create_handle(:uv_async)
+      async_ptr = UV.allocate_handle_async
       async     = Async.new(self, async_ptr, &block)
 
       check_result! UV.async_init(@pointer, async_ptr, async.callback(:on_async))
@@ -292,7 +292,7 @@ module UV
       assert_block(block)
       assert_arity(3, block)
 
-      fs_event_ptr = UV.create_handle(:uv_fs_event)
+      fs_event_ptr = UV.allocate_handle_fs_event
       fs_event     = FSEvent.new(self, fs_event_ptr, &block)
 
       check_result! UV.fs_event_init(@pointer, fs_event_ptr, path, fs_event.callback(:on_fs_event), 0)
@@ -303,7 +303,7 @@ module UV
     # 
     # Returns UV::Signal
     def signal
-      signal_ptr = UV.create_handle(:uv_signal)
+      signal_ptr = UV.allocate_handle_signal
 
       check_result! UV.signal_init(@pointer, signal_ptr)
       Signal.new(self, signal_ptr)

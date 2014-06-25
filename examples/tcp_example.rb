@@ -18,7 +18,7 @@ def on_alloc(handle, suggested_size)
 end
 
 def on_connect(server, status)
-  client = FFI::AutoPointer.new(UV.create_handle(:uv_tcp), UV.method(:free))
+  client = FFI::AutoPointer.new(UV.allocate_handle_tcp, UV.method(:free))
   UV.tcp_init(@loop, client)
 
   UV.accept(server, client)
@@ -28,7 +28,7 @@ end
 def main
   @loop = UV.default_loop
 
-  server = FFI::AutoPointer.new(UV.create_handle(:uv_tcp), UV.method(:free))
+  server = FFI::AutoPointer.new(UV.allocate_handle_tcp, UV.method(:free))
   UV.tcp_init(@loop, server)
 
   UV.tcp_bind(server, UV.ip4_addr('0.0.0.0', 10000))

@@ -59,7 +59,7 @@ describe UV::TCP do
       let(:ip) { IPAddr.new("0.0.0.0") }
 
       it "calls UV.tcp_connect" do
-        UV.should_receive(:create_request).with(:uv_connect).and_return(connect_request)
+        UV.should_receive(:allocate_request_connect).and_return(connect_request)
         UV.should_receive(:ip4_addr).with(ip, port).and_return(ip_addr)
         UV.should_receive(:tcp_connect).with(connect_request, pointer, ip_addr, subject.method(:on_connect))
 
@@ -71,7 +71,7 @@ describe UV::TCP do
       let(:ip) { IPAddr.new("::") }
 
       it "calls UV.tcp_connect6" do
-        UV.should_receive(:create_request).with(:uv_connect).and_return(connect_request)
+        UV.should_receive(:allocate_request_connect).and_return(connect_request)
         UV.should_receive(:ip6_addr).with(ip, port).and_return(ip_addr)
         UV.should_receive(:tcp_connect6).with(connect_request, pointer, ip_addr, subject.method(:on_connect))
 
