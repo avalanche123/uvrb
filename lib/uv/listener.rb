@@ -3,7 +3,7 @@ require 'set'
 module UV
   module Listener
     @@methods = Hash.new { |hash, object_id| hash[object_id] = Hash.new }
-    @@procs   = {}
+    @@procs   = Hash.new { |hash, object_id| hash[object_id] = Hash.new }
 
     class << self
       def define_callback(object_id, name, callback)
@@ -12,12 +12,13 @@ module UV
 
       def undefine_callbacks(object_id)
         @@methods.delete(object_id)
+        @@procs.delete(object_id)
         nil
       end
 
-      def callback(&block)
-        @@procs[block.object_id] = Proc.new do |*args|
-          @@procs.delete(block.object_id)
+      def callback(object_id, &block)
+        @@procs[object_id][block.object_id] = Proc.new do |*args|
+          @@procs[object_id].delete(block.object_id)
           block.call(*args)
         end
       end

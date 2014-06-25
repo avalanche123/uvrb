@@ -79,12 +79,8 @@ shared_examples_for 'a stream' do
     end
 
     it "calls UV.shutdown" do
-      callback = double('shutdown callback')
-
-      UV::Listener.should_receive(:callback).and_return(callback)
-
       UV.should_receive(:allocate_request_shutdown).and_return(shutdown_request)
-      UV.should_receive(:shutdown).with(shutdown_request, pointer, callback)
+      UV.should_receive(:shutdown).with(shutdown_request, pointer, subject.method(:on_shutdown))
 
       subject.shutdown { |e| }
     end

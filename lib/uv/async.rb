@@ -21,7 +21,6 @@ module UV
 
     def on_close(pointer)
       super
-      @async_block = nil
     end
 
     public :callback

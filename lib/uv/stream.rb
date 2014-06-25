@@ -48,7 +48,7 @@ module UV
 
       size     = data.respond_to?(:bytesize) ? data.bytesize : data.size
       buffer   = UV.buf_init(FFI::MemoryPointer.from_string(data), size)
-      callback = Listener.callback {|req, status| UV.free(req); block.call(check_result(status))}
+      callback = Listener.callback(object_id) {|req, status| UV.free(req); block.call(check_result(status))}
 
       check_result! UV.write(UV.allocate_request_write, handle, buffer, 1, callback)
 
@@ -59,8 +59,9 @@ module UV
       assert_block(block)
       assert_arity(1, block)
 
-      callback = Listener.callback {|req, status| UV.free(req); block.call(check_result(status))}
-      check_result! UV.shutdown(UV.allocate_request_shutdown, handle, callback)
+      @shutdown_block = block
+
+      check_result! UV.shutdown(UV.allocate_request_shutdown, handle, callback(:on_shutdown))
 
       self
     end
@@ -93,11 +94,17 @@ module UV
       elsif nread == 0
         UV.free(base) if base
       else
-        # base       = UV.realloc(base, nread)
+        base       = UV.realloc(base, nread)
         data       = base.read_string(nread)
-        # buf[:base] = base
+        buf[:base] = base
         @read_block.call(nil, data)
       end
+    end
+
+    def on_shutdown(req, status)
+      UV.free(req)
+      @shutdown_block.call(check_result(status))
+      @shutdown_block = nil
     end
 
     def on_close(pointer)
